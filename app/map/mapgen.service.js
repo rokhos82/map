@@ -1,4 +1,4 @@
-function controller(_tables, _objects, _lcg) {
+export function mapgenService(_tables, _objects, _lcg) {
   var _factory = {};
 
   var _sectors = [];
@@ -178,14 +178,10 @@ function controller(_tables, _objects, _lcg) {
   };
 
   _factory.staticMap = function() {
-    if (_map === null) {} else {
-      return _map;
-    }
+    return _map || {};
   };
 
   return _factory;
 }
 
-controller.$inject = ["mobius.mapgen.tables", "mobius.mapgen.objects", "mobius.core.lcg"];
-
-angular.module('mobius.mapgen').factory('mobius.mapgen.generator', controller);
+mapgenService.$inject = ["mobius-mapgen-tables", "mobius-mapgen-objects", "mobius-core-lcg"];
