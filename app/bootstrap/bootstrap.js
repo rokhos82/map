@@ -9,4 +9,5 @@ import _ from 'lodash';
 
 import "../main/ngmodule.js";
 import "../main/main.module.js";
+import "../core/core.module.js";
 import "../map/map.module.js";
