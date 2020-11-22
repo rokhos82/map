@@ -1,4 +1,4 @@
-function uuidService() {
+export function uuidService() {
   var _factory = {};
 
   _factory.v4 = function() {
@@ -20,5 +20,3 @@ function uuidService() {
 }
 
 uuidService.$inject = [];
-
-angular.module('mobius-core').factory('mobius-core-uuid',uuidController);

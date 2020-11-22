@@ -1,4 +1,4 @@
-function controller() {
+export function mapgenTables() {
   var _tables = {};
 
   _tables.stellarObject = [
@@ -228,6 +228,4 @@ function controller() {
   return _tables;
 }
 
-controller.$inject = [];
-
-angular.module('mobius.mapgen').factory('mobius.mapgen.tables',controller);
+mapgenTables.$inject = [];

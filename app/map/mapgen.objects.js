@@ -1,4 +1,4 @@
-function controller(tables,lcgParams) {
+export function mapgenObjects(tables,lcgParams) {
   var _factory = {};
 
   var _sectorObject = {
@@ -52,6 +52,4 @@ function controller(tables,lcgParams) {
   return _factory;
 }
 
-controller.$inject = ["mobius.mapgen.tables","mobius.mapgen.lcgParams"];
-
-angular.module('mobius.mapgen').factory('mobius.mapgen.objects', controller);
+mapgenObjects.$inject = ["mapgenTables","mobius-core-lcg"];

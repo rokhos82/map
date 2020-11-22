@@ -1,0 +1,44 @@
+<h1>Standard FOTS Map Generation</h1>
+<div class="row">
+  <label for="seed">Seed: </label>
+  <input id="seed" type="number" ng-model="$ctrl.seed" />
+</div>
+<div class="row">
+  <label for="coordx">X:</label>
+  <input id="coordx" type="number" ng-model="$ctrl.coords.x" />
+</div>
+<div class="row">
+  <label for="coordy">Y:</label>
+  <input id="coordy" type="number" ng-model="$ctrl.coords.y" />
+</div>
+<div class="row">
+  <label for="size">Size:</label>
+  <input id="size" type="number" ng-model="$ctrl.size" />
+</div>
+<div class="row">
+  <button ng-click="$ctrl.generate()">Generate Map</button>
+</div>
+<div>
+  <h3>Standard Map</h3>
+  <div class="right">
+    <pre>{{$ctrl.detailCell|json}}</pre>
+  </div>
+  <div class="map" ng-cloak>
+    <div class="sectorRow" ng-repeat="sectorRow in $ctrl.sectors">
+      <table class="sector" ng-cloak ng-repeat="sector in sectorRow">
+        <tr ng-repeat="row in sector.sections track by $index">
+          <td class="cell" ng-repeat="cell in row track by $index" ng-class="$ctrl.class(cell.text)" ng-mouseover="$ctrl.details(cell)">{{cell.text}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+<h3>Hex-Grid Map</h3>
+<div class="map">
+  <div class="sectorRow" ng-repeat="row in $ctrl.sectors">
+    <div class="sector" ng-repeat="sector in row">
+      <mapgen-hexmap sector="sector"></mapgen-hexmap>
+    </div>
+  </div>
+</div>

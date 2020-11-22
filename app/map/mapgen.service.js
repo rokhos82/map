@@ -184,4 +184,4 @@ export function mapgenService(_tables, _objects, _lcg) {
   return _factory;
 }
 
-mapgenService.$inject = ["mobius-mapgen-tables", "mobius-mapgen-objects", "mobius-core-lcg"];
+mapgenService.$inject = ["mapgenTables", "mapgenObjects", "mobius-core-lcg"];
