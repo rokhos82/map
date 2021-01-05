@@ -150,19 +150,28 @@ export function mapgenService(_tables, _objects, _lcg) {
     });
 
 
+    // Generate the sections
+    // Seed the local LCG using:
+    // - seed := the main seed for the sector
+    // - x := the x-coordinate for the sector
+    // - y := the y-coordinate for the sector
+    // - k := the x-coordinate for the section
+    // - l := the y-coordinate for the section
     for (var k = 0; k < size; k++) {
       sectors[k] = [];
       for (var l = 0; l < size; l++) {
-        var s = seed + (x + k) + (y + l);
-        var lcg = _lcg.create(s);
+        let sectorNumber = (k * 10) + l + 1;
+        let s = seed + sectorNumber + (k*1000) + (l*1000000);
+        let lcg = _lcg.create(s);
 
         // Generate the sections in the sector
-        var sectorData = [];
+        let sectorData = [];
         for (var i = 0; i < 10; i++) {
           sectorData[i] = [];
           for (var j = 0; j < 10; j++) {
             var rand = lcg.random(0, totalWeight - 1);
             var obj = _stellarObjects[rand];
+            obj.sectorNumber = sectorNumber;
             sectorData[i][j] = _objects.newSection(obj);
           }
         }
@@ -176,6 +185,14 @@ export function mapgenService(_tables, _objects, _lcg) {
 
     return sectors;
   };
+
+  _factory.generateSector = (seed,x,y) => {
+    
+  };
+
+  _factory.generateSystem = () => {};
+
+  _factory.generatePlanet = () => {};
 
   _factory.staticMap = function() {
     return _map || {};

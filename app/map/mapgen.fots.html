@@ -1,26 +1,34 @@
 <h1>Standard FOTS Map Generation</h1>
 <div class="row">
-  <label for="seed">Seed: </label>
-  <input id="seed" type="number" ng-model="$ctrl.seed" />
+  <label class="control-label col-sm-1" for="seed">Seed</label>
+  <div class="col-sm-10">
+    <input class="form-control" id="seed" type="number" ng-model="$ctrl.seed" />
+  </div>
 </div>
 <div class="row">
-  <label for="coordx">X:</label>
-  <input id="coordx" type="number" ng-model="$ctrl.coords.x" />
+  <label class="control-label col-sm-1" for="coordx">X</label>
+  <div class="col-sm-10">
+    <input class="form-control" id="coordx" type="number" ng-model="$ctrl.coords.x" />
+  </div>
 </div>
 <div class="row">
-  <label for="coordy">Y:</label>
-  <input id="coordy" type="number" ng-model="$ctrl.coords.y" />
+  <label class="control-label col-sm-1" for="coordy">Y</label>
+  <div class="col-sm-10">
+    <input class="form-control" id="coordy" type="number" ng-model="$ctrl.coords.y" />
+  </div>
 </div>
 <div class="row">
-  <label for="size">Size:</label>
-  <input id="size" type="number" ng-model="$ctrl.size" />
+  <label class="control-label col-sm-1" for="size">Size</label>
+  <div class="col-sm-10">
+    <input class="form-control" id="size" type="number" ng-model="$ctrl.size" />
+  </div>
 </div>
 <div class="row">
-  <button ng-click="$ctrl.generate()">Generate Map</button>
+  <button class="btn btn-primary" ng-click="$ctrl.generate()">Generate Map</button>
 </div>
-<div>
+<div class="row">
   <h3>Standard Map</h3>
-  <div class="right">
+  <div class="pull-right">
     <pre>{{$ctrl.detailCell|json}}</pre>
   </div>
   <div class="map" ng-cloak>
@@ -32,7 +40,6 @@
       </table>
     </div>
   </div>
-
 </div>
 <h3>Hex-Grid Map</h3>
 <div class="map">

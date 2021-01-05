@@ -6,7 +6,7 @@ function fotsMapController(mapgen) {
     x: 100,
     y: 100
   };
-  $this.size = 2;
+  $this.size = 1;
   $this.detailCell = {};
 
   var sectors = mapgen.generate($this.seed,$this.coords.x,$this.coords.y,$this.size);
@@ -26,10 +26,8 @@ function fotsMapController(mapgen) {
   };
 
   $this.generate = function() {
-    var sectors = mapgen.generate($this.seed,$this.coords.x,$this.coords.y,$this.size);
+    let sectors = mapgen.generate($this.seed,$this.coords.x,$this.coords.y,$this.size);
     $this.sectors = sectors;
-
-    //console.log(mapgen.noiseMap($this.seed,3));
   };
 
   $this.details = function(cell) {
