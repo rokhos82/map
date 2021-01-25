@@ -18,7 +18,8 @@ function engineConfigCallback($uiRouter) {
 
   const $stateRegistry = $uiRouter.stateRegistry;
   $stateRegistry.register(engineRootState);
-  $stateRegistry.register(engineTeamsState);
+  $stateRegistry.register(engineTeamState);
 }
 
 ENGINE_MODULE.component('engineRoot',engineRoot);
+ENGINE_MODULE.component('teamsManagement',teamsManagement);

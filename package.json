@@ -26,7 +26,8 @@
     "bootswatch": "^3.4.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "rxjs": "^6.6.3"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
