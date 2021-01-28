@@ -1,1 +1,44 @@
-<h1>Hello</h1>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Teams Management</h4>
+    <div class="well">
+      <p>
+        Team definitions are JSON strings.  There are a few required fields.  Right now those are:
+        <ul>
+          <li>units - an array of unit objects (see below for required fields)</li>
+        </ul>
+      </p>
+      <p>
+        Unit definitions are also JSON strings.  There are currently 3 required fields:
+        <ul>
+          <li>name</li>
+          <li>size</li>
+          <li>type</li>
+        </ul>
+      </p>
+      <div>
+        <h5>Here are some examples:</h5>
+        <div class="form-group">
+          <label class="control-label" for="blueExample">Blue:</label><input class="form-control" type="text" name="blueExample" ng-model="$ctrl.blueExample" readonly="readonly" />
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="redExample">Red:</label><input class="form-control" type="text" name="redExample" ng-model="$ctrl.redExample" readonly="readonly" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="well">
+      <h5>UDL:</h5>
+      <textarea class="form-control" name="udl" rows="8" ng-model="$ctrl.udl"></textarea>
+      <select class="form-control" ng-options="team as team.label for team in $ctrl.teamOptions track by team.value" ng-model="$ctrl.selectedTeam"></select>
+      <button type="button" class="btn">Parse</button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+  </div>
+</div>

@@ -2,7 +2,8 @@ export const engineRootState = {
   parent: 'app',
   name: 'engineRoot',
   url: '/engine',
-  component: 'engineRoot'
+  component: 'engineRoot',
+  redirectTo: 'engineWelcomeState'
 };
 
 export const engineTeamState = {
@@ -10,4 +11,11 @@ export const engineTeamState = {
   name: 'engineTeamsManagement',
   url: '/teams',
   component: 'teamsManagement'
+};
+
+export const engineWelcomeState = {
+  parent: 'engineRoot',
+  name: 'engineWelcomeState',
+  url: '/welcome',
+  component: 'engineWelcome'
 };
