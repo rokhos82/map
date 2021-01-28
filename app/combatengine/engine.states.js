@@ -19,3 +19,10 @@ export const engineWelcomeState = {
   url: '/welcome',
   component: 'engineWelcome'
 };
+
+export const engineTestState = {
+  parent: 'engineRoot',
+  name: 'engineTestState',
+  url: '/test',
+  component: 'engineTestBed'
+};
