@@ -12,7 +12,12 @@ class engineTestBedController {
   $onInit() {
     let baseHullComponent = {};
 
-    this.unitRaw = {};
+    this.unitRaw = {
+      info: {},
+      components: {
+        "uuid1": {}
+      }
+    };
   }
 }
 
