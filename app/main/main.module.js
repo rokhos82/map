@@ -6,7 +6,7 @@ import {welcome} from "./welcome.component.js";
 
 import {appState,welcomeState} from "./app.states.js";
 
-export const MAIN_MODULE = angular.module('mobius-main',["ui.router","ui.bootstrap","ngResource","mobius-core","mobius-map","mobius-engine"]);
+export const MAIN_MODULE = angular.module('mobius-main',["ui.router","ui.bootstrap","ngResource","mobius-core","mobius-map","mobius-engine","mobius-dev"]);
 
 MAIN_MODULE.config(['$uiRouterProvider',function($uiRouter) {
   // Enable tracing of each TRANSITION... (check the javascript console)

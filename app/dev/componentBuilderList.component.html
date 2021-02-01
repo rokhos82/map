@@ -1,0 +1,5 @@
+<div class="well-sm">
+  <ul class="nav nav-pills nav-stacked">
+    <li ng-repeat="component in $ctrl.list track by component.id"><a ui-sref="devComponentBuilderEdit({id:component.id})">{{component.label}}</a></li>
+  </ul>
+</div>
