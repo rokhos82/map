@@ -25,7 +25,7 @@ componentBuilderEditController.$inject = ["$scope","componentLibrary"];
 export const componentBuilderEdit = {
   bindings: {
     componentId: "<",
-    onUpdate: "&"
+    onUpdate: "<"
   },
   controller: componentBuilderEditController,
   template: require('./componentBuilderEdit.component.html')
