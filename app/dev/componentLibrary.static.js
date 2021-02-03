@@ -9,11 +9,22 @@ export const componentLibrary = {
         "channels": {
           "armor": {
             "name": "armor",
-            "attributes":{
+            "attributes": {
               "magnitude": "<unit.size>"
             }
           }
         }
+      },
+      "space": {
+        "channels": {
+          "ship": {
+            "attributes": {
+              "magnitude": "<unit.size>*<tech.pst.level>"
+            },
+            "name": "ship"
+          }
+        },
+        "name": "space"
       }
     }
   },
@@ -25,10 +36,23 @@ export const componentLibrary = {
         "channels": {
           "armor": {
             "attributes": {
-              "magnitude": 1
-            }
+              "magnitude": "1"
+            },
+            "name": "armor"
           }
-        }
+        },
+        "name": "hitpoints"
+      },
+      "space": {
+        "channels": {
+          "ship": {
+            "attributes": {
+              "magnitude": "-1"
+            },
+            "name": "ship"
+          }
+        },
+        "name": "space"
       }
     }
   }

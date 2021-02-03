@@ -16,6 +16,10 @@ class componentBuilderEditController {
   onNewAttribute(newAttributeString) {
     let newAttributeObject = this.library.parseAttribute(newAttributeString);
     _.merge(this.component,newAttributeObject);
+    //this.onUpdate(this.component.id,this.component);
+  }
+
+  updateComponent() {
     this.onUpdate(this.component.id,this.component);
   }
 }
