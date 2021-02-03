@@ -1,4 +1,31 @@
-<div class="well-sm">
-  <form>
+<div class="well well-sm">
+  <form class="form" ng-submit="$ctrl.onNewAttribute(newAttribute)">
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">New Attribute</span>
+        <input class="form-control" type="text" name="newAttribute" ng-model="newAttribute" />
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="submit">Add</button>
+        </span>
+      </div>
+    </div>
   </form>
+</div>
+<div class="well well-sm">
+  <h4>{{$ctrl.component.id}}:{{$ctrl.component.label}}</h4>
+  <form class="form">
+    <div class="form-group">
+      <ul>
+        <li><label class="control-label">id</label><input class="form-control" type="text" ng-model="$ctrl.component.id" /></li>
+        <li><label class="control-label">label</label><input class="form-control" type="text" ng-model="$ctrl.component.label" /></li>
+        <li>
+          <label class="control-label">channels</label>
+          <component-part part="$ctrl.component"></component-part>
+        </li>
+      </ul>
+    </div>
+  </form>
+</div>
+<div class="well well-sm">
+  <pre>{{$ctrl.component | json}}</pre>
 </div>

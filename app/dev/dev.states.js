@@ -23,6 +23,20 @@ export const devComponentBuilderListState = {
 export const devComponentBuilderEditState = {
   parent: "devComponentBuilder",
   name: "devComponentBuilderEdit",
-  url: "/edit/{id}",
-  component: "componentBuilderEdit"
+  url: "/edit/{componentId}",
+  component: "componentBuilderEdit",
+  resolve: {
+    componentId: componentIdResolver,
+    onUpdate: componentUpdateResolver
+  }
 };
+
+componentIdResolver.$inject = ["$stateParams"];
+function componentIdResolver($stateParams) {
+  return $stateParams.componentId;
+}
+
+componentUpdateResolver.$inject = ["componentLibrary"];
+function componentUpdateResolver(library) {
+  return library.setComponent;
+}

@@ -1,0 +1,5 @@
+<label class="control-label">{{$ctrl.part.name}}</label>
+<ul>
+  <li ng-repeat="(attr,value) in $ctrl.part.attributes"><label class="control-label">{{attr}}</label><input class="form-control" type="text" ng-model="value" /></li>
+  <li ng-repeat="(channels,partObject) in $ctrl.part.channels"><component-part part="partObject"></component-part></li>
+</ul>

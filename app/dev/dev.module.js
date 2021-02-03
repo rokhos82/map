@@ -7,6 +7,7 @@ import {devRoot} from "./devRoot.component.js";
 import {componentBuilder} from "./componentBuilder.component.js";
 import {componentBuilderList} from "./componentBuilderList.component.js";
 import {componentBuilderEdit} from "./componentBuilderEdit.component.js";
+import {componentPart} from "./componentPart.component.js";
 
 import {componentLibrary} from "./componentLibrary.service.js";
 
@@ -32,5 +33,6 @@ DEV_MODULE.component("devRoot",devRoot);
 DEV_MODULE.component("componentBuilder",componentBuilder);
 DEV_MODULE.component("componentBuilderList",componentBuilderList);
 DEV_MODULE.component("componentBuilderEdit",componentBuilderEdit);
+DEV_MODULE.component("componentPart",componentPart);
 
 DEV_MODULE.factory("componentLibrary",componentLibrary);

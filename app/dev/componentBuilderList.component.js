@@ -10,7 +10,7 @@ class componentBuilderListController {
   }
 
   $onInit() {
-    this.list = this.library.getComponents();
+    this.list = this.library.listComponents();
     this.selectedComponent = "";
   }
 }
