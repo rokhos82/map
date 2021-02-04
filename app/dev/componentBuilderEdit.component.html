@@ -1,5 +1,13 @@
+<div uib-alert ng-repeat="alert in $ctrl.messages track by $index" ng-class="'alert-' + (alert.type || 'warning')" close="$ctrl.closeAlert($index)" dismiss-on-timeout="{{alert.timeout || 5000}}">{{alert.message}}</div>
 <div class="well well-sm">
   <form class="form" ng-submit="$ctrl.onNewAttribute(newAttribute)">
+    <div class="form-group">
+      <div class="btn-group btn-group-justified">
+        <a class="btn btn-primary" ng-click="$ctrl.copyComponent();">Copy</a>
+        <a class="btn btn-primary" ng-click="$ctrl.updateComponent();">Update</a>
+        <a class="btn btn-danger" ng-click="$ctrl.deleteComponent();">Delete</a>
+      </div>
+    </div>
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon">New Attribute</span>
@@ -11,26 +19,35 @@
     </div>
   </form>
 </div>
-<div class="btn-group btn-group-justified">
-  <a class="btn btn-primary">Copy</a>
-  <a class="btn btn-primary" ng-click="$ctrl.updateComponent();">Update</a>
-  <a class="btn btn-danger">Delete</a>
-</div>
 <div class="well well-sm">
   <h4>{{$ctrl.component.id}}:{{$ctrl.component.label}}</h4>
   <form class="form">
     <div class="form-group">
-      <ul>
-        <li><label class="control-label">id</label><input class="form-control" type="text" ng-model="$ctrl.component.id" /></li>
-        <li><label class="control-label">label</label><input class="form-control" type="text" ng-model="$ctrl.component.label" /></li>
-        <li>
-          <label class="control-label">channels</label>
-          <component-part part="$ctrl.component"></component-part>
-        </li>
-      </ul>
+      <div class="input-group">
+        <span class="input-group-addon">id</span>
+        <input class="form-control" type="text" ng-model="$ctrl.component.id" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">label</span>
+        <input class="form-control" type="text" ng-model="$ctrl.component.label" />
+      </div>
+    </div>
+    <div class="form-group" ng-repeat="attribute in $ctrl.component.attributes track by $index">
+      <div class="input-group">
+        <span class="input-group-addon">attribute {{$index}}</span>
+        <input class="form-control" type="text" ng-model="attribute" ng-blur="$ctrl.updateAttribute($index,attribute)" />
+        <span class="input-group-btn">
+          <button class="btn btn-danger" type="button" ng-click="$ctrl.deleteAttribute($index)">Delete</button>
+        </span>
+      </div>
     </div>
   </form>
 </div>
 <div class="well well-sm">
   <pre>{{$ctrl.component | json}}</pre>
+</div>
+<div class="well well-sm">
+  <pre>{{$ctrl.messages | json}}</pre>
 </div>

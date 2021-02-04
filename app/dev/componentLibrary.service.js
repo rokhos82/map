@@ -4,37 +4,47 @@ export function componentLibrary() {
   let _library = require("./componentLibrary.static.js");
 
   _service.listComponents = () => {
-    return _library.componentLibrary;
+    return _library.components;
   };
 
   _service.getComponent = (id) => {
-    return _library.componentLibrary[id];
+    return _library.components[id];
   };
 
   _service.setComponent = (id,obj) => {
     console.log(id,obj);
-    _library.componentLibrary[id] = obj;
+    _library.components[id] = obj;
   };
 
-  _service.parseAttribute = (attributeString) => {
+  _service.appendAttribute = (componentId,attributeString) => {
+    let response = {};
+    let attribute = _service.validateAttribute(attributeString);
+    if(_.has(attribute,"error")) {
+      response.error = attribute.error;
+    } else {
+      _library.components[componentId].attributes.push(attribute.attributes[0]);
+    }
+    return response;
+  };
+
+  _service.validateAttribute = (attributeString) => {
     // Split the attribute string on the ':' character.  This character denotes
     // the path for the attribute.
     let parts = _.split(attributeString,":")
 
-    // The path is all but the last part
-    let pathParts = _.slice(parts,1,parts.length -1);
+    // The type of attribute is the first part
+    let type = parts[0];
 
-    // The attribute name and value is the last part.
-    let attribute = _.last(parts);
-
-    let attributeParts = _.split(attribute,"=");
-    let attributeKey = attributeParts[0];
-    let attributeValue = attributeParts[1];
-    let path = "channels." + _.join(pathParts,".channels.") + ".attributes." + attributeKey;
-    console.log(path,attributeValue);
-    let mergeObj = _.set({},path,attributeValue);
-    forOwnDeep(mergeObj.channels);
-    console.log(mergeObj);
+    let mergeObj = {
+      attributes: []
+    };
+    if(type === "channels" || type === "verbs" || type === "effects") {
+      mergeObj.attributes.push(attributeString);
+    } else {
+      let err = "components Service:attributeParser:invalidType";
+      console.error(err);
+      mergeObj.error = err;
+    }
     return mergeObj;
   };
 
