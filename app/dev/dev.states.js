@@ -40,3 +40,10 @@ componentUpdateResolver.$inject = ["componentLibrary"];
 function componentUpdateResolver(library) {
   return library.setComponent;
 }
+
+export const devComponentBuilderNewState = {
+  parent: "devComponentBuilder",
+  name: "devComponentBuilderNew",
+  url: "/new",
+  component: "componentBuilderNew"
+};

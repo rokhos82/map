@@ -1,0 +1,15 @@
+<div class="well well-sm">
+  <form class="form" ng-submit="$ctrl.createComponent()">
+    <div class="form-group">
+      <label class="control-label" for="newComponentId">ID</label>
+      <input class="form-control" type="text" name="newComponentId" ng-model="$ctrl.component.id" />
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="newComponentLabel">Label</label>
+      <input class="form-control" type="text" name="newComponentLabel" ng-model="$ctrl.component.label" />
+    </div>
+    <div class="form-group">
+      <button class="btn btn-success" type="submit">Create Component</button>
+    </div>
+  </form>
+</div>
