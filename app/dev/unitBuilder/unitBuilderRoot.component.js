@@ -3,16 +3,16 @@
  * @memberOf mobius-dev
  * @desc A basic unit builder
  */
-class unitBuilderController {
+class unitBuilderRootController {
   constructor($scope) {
     this.$scope = $scope;
   }
 }
 
-unitBuilderController.$inject = ["$scope"];
+unitBuilderRootController.$inject = ["$scope"];
 
-export const unitBuilder = {
+export const unitBuilderRoot = {
   bindings: {},
-  controller: unitBuilderController,
-  template: require('./unitBuilder.component.html')
+  controller: unitBuilderRootController,
+  template: require('./unitBuilderRoot.component.html')
 };
