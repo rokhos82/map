@@ -2,11 +2,12 @@ export const unitBuilderState = {
   parent: "devRoot",
   name: "unitBuilder",
   url: "/unitbuilder",
-  component: "unitBuilderRoot"
+  component: "unitBuilderRoot",
+  redirectTo: "unitBuilderList"
 };
 
 export const unitBuilderListState = {
-  parent: "devRoot",
+  parent: "unitBuilder",
   name: "unitBuilderList",
   url: "/list",
   component: "unitBuilderList"

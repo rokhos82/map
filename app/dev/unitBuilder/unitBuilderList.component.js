@@ -2,16 +2,21 @@
 * @memberOf main
 */
 class unitBuilderListController {
- constructor($scope,$state,$transitions) {
-   this.$scope = $scope;
-   this.$state = $state;
-   this.$transitions = $transitions;
- }
+  constructor($scope,$state,unitLibrary) {
+    this.$scope = $scope;
+    this.$state = $state;
+    this.library = unitLibrary;
+  }
+
+  $onInit() {
+    this.list = this.library.listUnits();
+  }
 }
 
-unitBuilderListController.$inject = ['$scope','$state','$transitions'];
+unitBuilderListController.$inject = ["$scope","$state","mobius-core-unit-library"];
 
 export const unitBuilderList = {
- controller: unitBuilderListController,
- template: require('./unitBuilderList.component.html')
+  bindings: {},
+  controller: unitBuilderListController,
+  template: require("./unitBuilderList.component.html")
 };

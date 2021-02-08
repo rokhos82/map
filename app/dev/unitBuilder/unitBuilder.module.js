@@ -1,4 +1,6 @@
 import {unitBuilderRoot} from "./unitBuilderRoot.component.js";
+import {unitBuilderList} from "./unitBuilderList.component.js";
+import {unitBuilderEdit} from "./unitBuilderEdit.component.js";
 
 import {unitBuilderState,unitBuilderListState} from "./unitBuilder.state.js";
 
@@ -15,3 +17,5 @@ function unitBuilderModuleController($uiRouter) {
 }
 
 UNITBUILDER_MODULE.component("unitBuilderRoot",unitBuilderRoot);
+UNITBUILDER_MODULE.component("unitBuilderList",unitBuilderList);
+UNITBUILDER_MODULE.component("unitBuilderEdit",unitBuilderEdit);

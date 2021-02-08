@@ -4,8 +4,8 @@ export const components = {
     "label": "Base Hull (Starship)",
     "attributes": [
       "channels:hitpoints:armor:magnitude=<unit.size>",
-      "channels:space:ship:magnitude=<unit.size>*<tech.pst.level.space>",
-      "channels:power:ship:magnitude=<unit.size>*<tech.pst.level.power>"
+      "channels:space:ship:magnitude=<unit.size>*<tech.powerSystemsTech.level.space>",
+      "channels:power:ship:magnitude=<unit.size>*<tech.powerSystemsTech.level.power>"
     ]
   },
   "structuralReinforcement": {
