@@ -14,7 +14,7 @@ import {componentLibrary} from "./componentLibrary.service.js";
 
 import {devRootState,devComponentBuilderState,devComponentBuilderListState,devComponentBuilderEditState,devComponentBuilderNewState} from "./dev.states.js";
 
-export const DEV_MODULE = angular.module("mobius-dev",["mobius-unit-builder","mobius-core","ui.router"]);
+export const DEV_MODULE = angular.module("mobius-dev",["mobius-unit-builder","mobius-tech-builder","mobius-core","ui.router"]);
 
 DEV_MODULE.config(["$uiRouterProvider",devModuleController]);
 
