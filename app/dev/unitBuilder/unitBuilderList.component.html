@@ -1,6 +1,6 @@
 <div class="well well-sm">
   <p>This is the simple unit builder</p>
   <ul class="nav nav-pills nav-stacked">
-    <li ng-repeat="unit in $ctrl.list track by id"><a ui-sref="unitBuilderEdit({unitId:unit.id})">{{unit.info.name}} ({{unit.info.type}})</a></li>
+    <li ng-repeat="unit in $ctrl.list track by $index"><a ui-sref="unitBuilderEdit({unitId:unit.id})">{{unit.info.name}} ({{unit.info.type}} - {{unit.info.size}})</a></li>
   </ul>
 </div>
