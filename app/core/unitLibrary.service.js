@@ -8,7 +8,7 @@ export function unitLibrary() {
   };
 
   _service.getUnit = (id) => {
-    return _library.units[id];
+    return _.cloneDeep(_library.units[id]);
   };
 
   _service.setUnit = (id,obj) => {

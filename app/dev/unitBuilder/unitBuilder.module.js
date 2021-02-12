@@ -2,7 +2,7 @@ import {unitBuilderRoot} from "./unitBuilderRoot.component.js";
 import {unitBuilderList} from "./unitBuilderList.component.js";
 import {unitBuilderEdit} from "./unitBuilderEdit.component.js";
 
-import {unitBuilderState,unitBuilderListState} from "./unitBuilder.state.js";
+import {unitBuilderState,unitBuilderListState,unitBuilderEditState} from "./unitBuilder.state.js";
 
 export const UNITBUILDER_MODULE = angular.module("mobius-unit-builder",["mobius-core"]);
 
@@ -14,6 +14,7 @@ function unitBuilderModuleController($uiRouter) {
   const $stateRegistry = $uiRouter.stateRegistry;
   $stateRegistry.register(unitBuilderState);
   $stateRegistry.register(unitBuilderListState);
+  $stateRegistry.register(unitBuilderEditState);
 }
 
 UNITBUILDER_MODULE.component("unitBuilderRoot",unitBuilderRoot);

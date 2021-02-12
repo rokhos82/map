@@ -12,3 +12,18 @@ export const unitBuilderListState = {
   url: "/list",
   component: "unitBuilderList"
 };
+
+export const unitBuilderEditState = {
+  parent: "unitBuilder",
+  name: "unitBuilderEdit",
+  url: "/edit/{unitId}",
+  component: "unitBuilderEdit",
+  resolve: {
+    unit: unitIdResolver
+  }
+};
+
+unitIdResolver.$inject = ["$stateParams","mobius-core-unit-library"];
+function unitIdResolver($stateParams,unitLibrary) {
+  return unitLibrary.getUnit($stateParams.unitId);
+}

@@ -1,3 +1,43 @@
-<div class="well well-sm">
-  <p>A simple unit editor</p>
+<div uib-alert ng-repeat="alert in $ctrl.messages track by $index" ng-class="'alert-' + (alert.type || 'warning')" close="$ctrl.closeAlert($index)">{{alert.message}}</div>
+<div class="panel panel-default">
+  <div class="panel-heading">{{$ctrl.unit.id}}:{{$ctrl.unit.info.name}}</div>
+  <div class="panel-body">
+    <div class="well well-sm">
+      <form class="form">
+        <fieldset>
+          <legend>General Information</legend>
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">id</span>
+              <input class="form-control" type="text" ng-model="$ctrl.unit.id" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">name</span>
+              <input class="form-control" type="text" ng-model="$ctrl.unit.info.name" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-addon">size</span>
+              <input class="form-control" type="number" ng-model="$ctrl.unit.info.size" />
+            </div>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Components</legend>
+        </fieldset>
+        <fieldset>
+          <legend>Techs</legend>
+        </fieldset>
+        <fieldset>
+          <legend>Effects</legend>
+        </fieldset>
+      </form>
+    </div>
+    <div class="well well-sm">
+      <pre>{{$ctrl.unit | json}}</pre>
+    </div>
+  </div>
 </div>

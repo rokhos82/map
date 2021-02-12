@@ -10,7 +10,7 @@ export const units = {
       "component:baseHullStarship()"
     ],
     "techs": [
-      "tech:powerSystemsTech:gen=2" // => {tech: { powerSystemsTech: { gen: 2 }}}
+      "tech:powerSystemsTech:level=3" // => {tech: { powerSystemsTech: { level: 2 }}}
     ],
     "effects": []
   },
