@@ -9,7 +9,7 @@ class techBuilderListController {
     this.library = techLibrary;
   }
 
-  $OnInit() {
+  $onInit() {
     this.list = this.library.listTechs();
   }
 }
