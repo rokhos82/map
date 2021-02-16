@@ -1,6 +1,8 @@
 import {techBuilderRoot} from "./techBuilderRoot.component.js";
+import {techBuilderEdit} from "./techBuilderEdit.component.js";
+import {techBuilderList} from "./techBuilderList.component.js";
 
-import {techBuilderState} from "./techBuilder.state.js";
+import {techBuilderState,techBuilderListState,techBuilderEditState} from "./techBuilder.state.js";
 
 export const TECHBUILDER_MODULE = angular.module("mobius-tech-builder",["mobius-core"]);
 
@@ -11,6 +13,10 @@ function techBuilderModuleController($uiRouter) {
 
   const $stateRegistry = $uiRouter.stateRegistry;
   $stateRegistry.register(techBuilderState);
+  $stateRegistry.register(techBuilderEditState);
+  $stateRegistry.register(techBuilderListState);
 }
 
 TECHBUILDER_MODULE.component("techBuilderRoot",techBuilderRoot);
+TECHBUILDER_MODULE.component("techBuilderEdit",techBuilderEdit);
+TECHBUILDER_MODULE.component("techBuilderList",techBuilderList);

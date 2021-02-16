@@ -1,0 +1,5 @@
+class Tech {
+  constructor(config) {
+
+  }
+}

@@ -27,12 +27,39 @@
         </fieldset>
         <fieldset>
           <legend>Components</legend>
+          <div class="form-group" ng-repeat="component in $ctrl.unit.components track by $index">
+            <div class="input-group">
+              <span class="input-group-addon">component {{$index}}</span>
+              <input class="form-control" type="text" ng-model="component" />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" ng-click="$ctrl.deleteComponent($index)">-</button>
+              </span>
+            </div>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Techs</legend>
+          <div class="form-group" ng-repeat="tech in $ctrl.unit.techs track by $index">
+            <div class="input-group">
+              <span class="input-group-addon">tech {{$index}}</span>
+              <input class="form-control" type="text" ng-model="tech" />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" ng-click="$ctrl.deleteTech($index)">-</button>
+              </span>
+            </div>
+          </div>
         </fieldset>
         <fieldset>
           <legend>Effects</legend>
+          <div class="form-group" ng-repeat="effect in $ctrl.unit.effects track by $index">
+            <div class="input-group">
+              <span class="input-group-addon">effect {{$index}}</span>
+              <input class="form-control" type="text" ng-model="effect" />
+              <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" ng-click="$ctrl.deleteEffect($index)">-</button>
+              </span>
+            </div>
+          </div>
         </fieldset>
       </form>
     </div>

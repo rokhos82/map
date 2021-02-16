@@ -1,3 +1,17 @@
-<div class="well well-sm">
-  <p>The root of the tech builder</p>
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Tech Builder</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-2">
+    <div class="well well-sm">
+      <ul class="nav nav-pills nav-stacked">
+        <li ui-sref-active="active"><a ui-sref="techBuilderList">List</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-10">
+    <ui-view></ui-view>
+  </div>
 </div>

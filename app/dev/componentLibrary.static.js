@@ -47,5 +47,22 @@ export const components = {
     "attributes": [
       "verbs:"
     ]
+  },
+  "missileLauncher": {
+    "id": "missileLauncher",
+    "label": "Missile Launcher",
+    "attributes": [],
+    "effects": [],
+    "verbs": []
+  },
+  "stl": {
+    "id": "stl",
+    "label": "Slow Than Light (STL)",
+    "attributes": [
+      "channels:space:ship:amplifier=0.25",
+      "channels:cost:ship:amplifier=-0.25"
+    ],
+    "effects": [],
+    "verbs": []
   }
 };

@@ -5,6 +5,7 @@
 import {lcgService} from './lcg.service.js';
 import {uuidService} from './uuid.service.js';
 import {unitLibrary} from "./unitLibrary.service.js";
+import {techLibrary} from "./techLibrary.service.js";
 
 export const CORE_MODULE = angular.module('mobius-core',["ui.router"]);
 
@@ -20,3 +21,4 @@ function coreConfigCallback($uiRouter) {
 CORE_MODULE.factory('mobius-core-lcg',lcgService);
 CORE_MODULE.factory('mobius-core-uuid',uuidService);
 CORE_MODULE.factory('mobius-core-unit-library',unitLibrary);
+CORE_MODULE.factory('mobius-core-tech-library',techLibrary);

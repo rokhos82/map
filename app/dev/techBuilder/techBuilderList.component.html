@@ -1,0 +1,6 @@
+<div class="well well-sm">
+  <p>This is a simple tech builder</p>
+  <ul class="nav nav-pills nav-stacked">
+    <li ng-repeat="tech in $ctrl.list track by $index"><a ui-sref="techBuilderEdit({techId:tech.id})">{{tech.name}}</a></li>
+  </ul>
+</div>

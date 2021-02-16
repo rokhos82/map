@@ -7,12 +7,16 @@ export const units = {
       "size": 6
     },
     "components": [
-      "component:baseHullStarship()"
+      "component:baseHullStarship()",
+      "component:battery:0:weapon:beamEmitter({\"rating\":1,\"size\":0.5,\"rof\":1,\"caliber\":1})",
+      "component:battery:0:weapon:quantity=4"
     ],
     "techs": [
-      "tech:powerSystemsTech:level=3" // => {tech: { powerSystemsTech: { level: 2 }}}
+      "tech:powerSystemsTech({level:3})" // => {tech: { powerSystemsTech: { level: 2 }}}
     ],
-    "effects": []
+    "effects": [
+      "effect:crew:grade=pirate"
+    ]
   },
   "test002": {
     "id": "test002",
