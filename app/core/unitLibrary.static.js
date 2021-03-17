@@ -8,8 +8,8 @@ export const units = {
     },
     "components": [
       "component:baseHullStarship()",
-      "component:battery:0:weapon:beamEmitter({\"rating\":1,\"size\":0.5,\"rof\":1,\"caliber\":1})",
-      "component:battery:0:weapon:quantity=4"
+      "battery:0:weapon:beamEmitter({\"rating\":1,\"size\":0.5,\"rof\":1,\"caliber\":1})",
+      "battery:0:weapon:quantity=4"
     ],
     "techs": [
       "tech:powerSystemsTech({level:3})" // => {tech: { powerSystemsTech: { level: 2 }}}

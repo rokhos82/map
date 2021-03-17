@@ -9,6 +9,7 @@ import {engineWelcome} from "./engineWelcome.component.js";
 import {engineTestBed} from "./engineTestBed.component.js";
 
 import {unitCompilerService} from "./compiler.service.js";
+import {engineServiceFactory} from "./engine.service.js";
 
 import {engineRootState,engineTeamState,engineWelcomeState,engineTestState} from "./engine.states.js";
 
@@ -33,3 +34,4 @@ ENGINE_MODULE.component('engineWelcome',engineWelcome);
 ENGINE_MODULE.component('engineTestBed',engineTestBed);
 
 ENGINE_MODULE.factory('unitCompilerService',unitCompilerService);
+ENGINE_MODULE.factory("mobius-engine-service",engineServiceFactory);

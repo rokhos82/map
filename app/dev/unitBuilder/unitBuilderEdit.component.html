@@ -64,6 +64,10 @@
       </form>
     </div>
     <div class="well well-sm">
+      <button class="btn btn-default" type="button" ng-click="$ctrl.compile()">Compile</button>
+      <pre>{{$ctrl.compiledUnit | json}}</pre>
+    </div>
+    <div class="well well-sm">
       <pre>{{$ctrl.unit | json}}</pre>
     </div>
   </div>
