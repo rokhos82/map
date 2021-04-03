@@ -46,38 +46,10 @@ export function engineServiceFactory(componentLibrary) {
   _factory.loadFleets = (fleetHash) => {
   };
 
-  _factory.compileUnit = (unitHash) => {
-    let compiled = {};
-
-    compiled.info = {};
-    compiled.components = {};
-
-    _.defaults(compiled.info,unitHash.info);
-
-    _.forEach(unitHash.components,(component) => {
-      let compiledComponent = _factory.compileComponent(component);
-      _.defaults(compiled.components,compiledComponent);
-    });
-
-    console.log("Hash: ",unitHash);
-    console.log("Compiled: ",compiled);
+  _factory.compileUnit = (unit) => {
+    let channels = 
 
     return compiled;
-  };
-
-  _factory.compileComponent = (componentHash) => {
-    console.log("Hash: ",componentHash);
-    let parts = _.split(componentHash,":");
-    console.log("Parts: ",parts);
-
-    let type = _.first(parts);
-    if(type === "component") {
-      let componentId = _.last(parts);
-      componentId = componentId.slice(0,componentId.indexOf("("));
-      let rawComponent = componentLibrary.getComponent(componentId).attributes;
-
-      console.log("Component: ",rawComponent);
-    }
   };
 
   return _factory;
