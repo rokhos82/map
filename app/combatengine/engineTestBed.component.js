@@ -10,12 +10,45 @@ class engineTestBedController {
   }
 
   $onInit() {
-    let baseHullComponent = {};
-
-    this.unitRaw = {
-      info: {},
-      components: {
-        "uuid1": {}
+    this.unit = {
+      "uuid": "7e17e9c6-72c7-4796-b5b7-d659c95b3bfe",
+      "name": "Heavy Beam Frigate",
+      "type": "starship",
+      "size": 6,
+      "components": [],
+      "channels": {
+        "hitpoints": {
+          "channels": {
+            "hull": {
+              "pool": 6
+            },
+            "armor": {
+              "pool": 3
+            },
+            "shield": {
+              "pool": 10
+            }
+          },
+          "priority": ["shield","armor","hull"]
+        }
+      },
+      "effects": [],
+      "verbs": {
+        "Main Volley": {
+          "type": "attack",
+          "attack": {
+            "effects": {
+              "damage": {
+                "volley": 4,
+                "quantity": 10,
+                "target": 70,
+                "yield": 20,
+                "long": true,
+                "channels": ["hitpoints:shield","hitpoints:armor","hitpoints:hull"]
+              }
+            }
+          }
+        }
       }
     };
   }
