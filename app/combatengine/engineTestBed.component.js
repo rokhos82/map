@@ -15,6 +15,13 @@ class engineTestBedController {
       "name": "Heavy Beam Frigate",
       "type": "starship",
       "size": 6,
+      "raw": [
+        "component:starshipBaseHull(size=6)",
+        "component:ablativeArmor(multiplier=0.5)",
+        "component:forceCurtain(rating=10)",
+        "battery:main:quantity=4",
+        "battery:main:beamEmitter(rating=1,class=2)"
+      ],
       "components": [],
       "channels": {
         "hitpoints": {
@@ -34,7 +41,7 @@ class engineTestBedController {
       },
       "effects": [],
       "verbs": {
-        "Main Volley": {
+        "main": {
           "type": "attack",
           "attack": {
             "effects": {
@@ -49,7 +56,8 @@ class engineTestBedController {
             }
           }
         }
-      }
+      },
+      "applied": []
     };
   }
 }

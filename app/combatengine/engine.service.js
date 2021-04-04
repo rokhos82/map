@@ -47,7 +47,7 @@ export function engineServiceFactory(componentLibrary) {
   };
 
   _factory.compileUnit = (unit) => {
-    let channels = 
+    let channels = [];
 
     return compiled;
   };

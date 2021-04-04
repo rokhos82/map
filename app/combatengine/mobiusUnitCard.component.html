@@ -1,0 +1,26 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">{{$ctrl.unit.name}}</div>
+  <div class="panel-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">Raw Unit Definition</div>
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="component in $ctrl.unit.raw track by $index">{{component}}</li>
+      </ul>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Channels</div>
+      <div class="panel-body">
+        <mobius-channel-card-hitpoints info="$ctrl.unit.channels.hitpoints" title="Hitpoints"></mobius-channel-card-hitpoints>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Verbs</div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Applied</div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Effects</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="panel panel-default">
+  <div class="panel-heading">{{$ctrl.title}}</div>
+  <ul class="list-group">
+    <li class="list-group-item" ng-if="$ctrl.info.channels.hull">Hull Capacity: {{$ctrl.info.channels.hull.pool}}</li>
+    <li class="list-group-item" ng-if="$ctrl.info.channels.armor">Armor Capacity: {{$ctrl.info.channels.armor.pool}}</li>
+    <li class="list-group-item" ng-if="$ctrl.info.channels.shield">Shield Capacity: {{$ctrl.info.channels.shield.pool}}</li>
+  </ul>
+</div>

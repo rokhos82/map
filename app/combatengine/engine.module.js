@@ -11,6 +11,9 @@ import {engineTestBed} from "./engineTestBed.component.js";
 import {unitCompilerService} from "./compiler.service.js";
 import {engineServiceFactory} from "./engine.service.js";
 
+import {mobiusUnitCard} from "./mobiusUnitCard.component.js";
+import {mobiusChannelCardHitpoints} from "./mobiusChannelCardHitpoints.component.js";
+
 import {engineRootState,engineTeamState,engineWelcomeState,engineTestState} from "./engine.states.js";
 
 export const ENGINE_MODULE = angular.module('mobius-engine',['mobius-core','ui.router','ui.bootstrap']);
@@ -35,3 +38,6 @@ ENGINE_MODULE.component('engineTestBed',engineTestBed);
 
 ENGINE_MODULE.factory('unitCompilerService',unitCompilerService);
 ENGINE_MODULE.factory("mobius-engine-service",engineServiceFactory);
+
+ENGINE_MODULE.component('mobiusUnitCard',mobiusUnitCard);
+ENGINE_MODULE.component('mobiusChannelCardHitpoints',mobiusChannelCardHitpoints);
