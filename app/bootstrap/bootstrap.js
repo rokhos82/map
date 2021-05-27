@@ -13,5 +13,6 @@ import "../dev/unitBuilder/unitBuilder.module.js";
 import "../dev/techBuilder/techBuilder.module.js";
 import "../map/map.module.js";
 import "../combatengine/engine.module.js";
+import "../ber/ber.module.js";
 import "../dev/dev.module.js";
 import "../main/main.module.js";
