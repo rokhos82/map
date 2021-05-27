@@ -4,8 +4,9 @@
  */
 
 import {berRoot} from "./berRoot.component.js";
+import {berWelcome} from "./berWelcome.component.js";
 
-import {berRootState} from "./ber.states.js";
+import {berRootState,berWelcomeState} from "./ber.states.js";
 
 export const BER = angular.module("mobius-ber",["ui.router"]);
 
@@ -18,6 +19,8 @@ function berModuleController($uiRouter) {
   // Setup the states that the Incident module will use
   const $stateRegistry = $uiRouter.stateRegistry;
   $stateRegistry.register(berRootState);
+  $stateRegistry.register(berWelcomeState);
 }
 
 BER.component('berRoot',berRoot);
+BER.component('berWelcome',berWelcome);
