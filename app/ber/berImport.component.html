@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Fleets Import</h4>
+    <p>Here is where you import your attacking fleet and defending fleet.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="well">
+      <div class="form">
+        <div class="form-group">
+          <button class="btn btn-primary" type="button" ng-click="$ctrl.importFleets()">Import</button>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="attackers">Attackers</label>
+          <textarea class="form-control" rows="20" name="attackers" ng-model="$ctrl.attackers"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="defenders">Defenders</label>
+          <textarea class="form-control" rows="20" name="defenders" ng-model="$ctrl.defenders"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

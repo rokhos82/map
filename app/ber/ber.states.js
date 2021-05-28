@@ -12,3 +12,10 @@ export const berWelcomeState = {
   url: '/welcome',
   component: 'berWelcome'
 };
+
+export const berImportState = {
+  parent: 'berRoot',
+  name: 'berImport',
+  url: '/import',
+  component: 'berImport'
+};

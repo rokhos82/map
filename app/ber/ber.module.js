@@ -5,8 +5,12 @@
 
 import {berRoot} from "./berRoot.component.js";
 import {berWelcome} from "./berWelcome.component.js";
+import {berImport} from "./berImport.component.js";
 
-import {berRootState,berWelcomeState} from "./ber.states.js";
+import {fleets} from "./fleet.service.js";
+import {parser} from "./parser.service.js";
+
+import {berRootState,berWelcomeState,berImportState} from "./ber.states.js";
 
 export const BER = angular.module("mobius-ber",["ui.router"]);
 
@@ -20,7 +24,12 @@ function berModuleController($uiRouter) {
   const $stateRegistry = $uiRouter.stateRegistry;
   $stateRegistry.register(berRootState);
   $stateRegistry.register(berWelcomeState);
+  $stateRegistry.register(berImportState);
 }
 
 BER.component('berRoot',berRoot);
 BER.component('berWelcome',berWelcome);
+BER.component('berImport',berImport);
+
+BER.factory('berFleets',fleets);
+BER.factory('berParser',parser);
