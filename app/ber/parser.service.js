@@ -67,9 +67,42 @@ export function parser() {
     // Repeatedly strip the first substring out; analyze it; consume more depending on the tag; end when string is empty.
     // Look for brackets first.
     let brackets = _(tagString).words(/\[.+?\]/g).value();
-    let defense = _(tagString).words(/DEFENSE \d+/g).value();
-    console.log(brackets,defense);
+    // Get the unit's defense value
+    let unitDefense = _(tagString).words(/DEFENSE \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's target value
+    let unitTarget = _(tagString).words(/TARGET \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's resist value
+    let unitResist = _(tagString).words(/RESIST \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's flicker value
+    let unitFlicker = _(tagString).words(/FLICKER \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's break value if it exists.  Default value of 100 := fights to the last man
+    let unitBreak = _(tagString).words(/BREAK \d+/).words(/\d+/).map(x=>+x).value()[0] || 100;
+    // Get the unit's damage value if it exists.  Default value of 0 := fights to the death.
+    let unitDamage = _(tagString).words(/DAMAGE \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's delay value if it exists.  Default value of 0 := arrive at start of fight.
+    let unitDelay = _(tagString).words(/DELAY \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the unit's time value if it exists.  Default value of...
+    let unitTime = _(tagString).words(/TIME \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
+    // Get the carrier status flag if it exists.
+    let unitCarrier = _(tagString).words(/CARRIER/).map(x=>_.isString(x)).value()[0] || false;
+
+    let unit = {};
+
+    unit.defense = unitDefense;
+    unit.resist = unitResist;
+    unit.flicker = unitFlicker;
+    unit.break = unitBreak;
+    unit.damage = unitDamage;
+
+    unit.flags = {};
+    unit.flags.carrier = unitCarrier;
+
+    console.log(unit);
+
+    return unit;
   };
+
+  _service.parseBrackets = (bracketString) => {};
 
   return _service;
 }
