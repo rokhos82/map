@@ -58,13 +58,14 @@ export function parser() {
 
     unit.tags = _service.parseTags(tags);
 
-    console.log(unit);
+    //console.log(unit);
 
     return unit;
   };
 
   _service.parseTags = (tagString) => {
     // Repeatedly strip the first substring out; analyze it; consume more depending on the tag; end when string is empty.
+    // Could I modularize this using a pair of TAG and mapFunction for each tag in a UDL?  I would need a default value too.
     // Look for brackets first.
     let brackets = _(tagString).words(/\[.+?\]/g).value();
     // Get the unit's defense value
@@ -83,26 +84,66 @@ export function parser() {
     let unitDelay = _(tagString).words(/DELAY \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
     // Get the unit's time value if it exists.  Default value of...
     let unitTime = _(tagString).words(/TIME \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
+    // Get the unit's datalink group if it exits.
+    let unitDL = _(tagString).words(/DL \w+/).words(/\w+$/).value()[0] || undefined;
     // Get the carrier status flag if it exists.
     let unitCarrier = _(tagString).words(/CARRIER/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the unit's reserve value if it exists.
+    let unitReserve = _(tagString).words(/RESERVE \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the NOMOVE status flag if it exists.
+    let unitNoMove = _(tagString).words(/NOMOVE/).map(x=>_.isString(x)).value()[0] || false;
 
-    let unit = {};
+    let tags = {};
 
-    unit.defense = unitDefense;
-    unit.resist = unitResist;
-    unit.flicker = unitFlicker;
-    unit.break = unitBreak;
-    unit.damage = unitDamage;
+    tags.defense = unitDefense;
+    tags.resist = unitResist;
+    tags.flicker = unitFlicker;
+    tags.break = unitBreak;
+    tags.damage = unitDamage;
+    tags.delay = unitDelay;
+    tags.time = unitTime;
+    tags.dl = unitDL;
 
-    unit.flags = {};
-    unit.flags.carrier = unitCarrier;
+    tags.flags = {};
+    tags.flags.carrier = unitCarrier;
 
-    console.log(unit);
+    tags.brackets = _.map(brackets,_service.parseBrackets);
 
-    return unit;
+    //console.log(tags);
+
+    return tags;
   };
 
-  _service.parseBrackets = (bracketString) => {};
+  _service.parseBrackets = (bracketString) => {
+    // Braket format: [VOLLEY tags]
+    // The first value is always the size of the VOLLEY
+    let volley = _(bracketString).words(/^\[\d+/).words(/\d+/).map(x=>+x).value()[0];
+    // if there is a multi tag it is always next
+    let multi = _(bracketString).words(/multi \d+/).words(/\d+/).map(x=>+x).value()[0];
+    // also look for the missile tag
+    let missile = _(bracketString).words(/mis(?<bm>.)(?<sh>.)(?<tp>.)(?<hl>.)/).value().groups;
+    // Now look for the other tags
+    let target = _(bracketString).words(/target \d+/).words(/\d+/).map(x=>+x).value()[0];
+    let yld = _(bracketString).words(/yield \d+/).words(/\d+/).map(x=>+x).value()[0];
+    // Get the boolean flags
+    let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
+    let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
+    let glbl = _(bracketString).words(/global/).map(x=>_.isString(x)).value()[0] || false;
+    let offline = _(bracketString).words(/offline/g).map(x=>.isString(x)).value().length || false;
+
+    let bracket = {};
+    bracket.volley = volley;
+    bracket.multi = multi;
+    bracket.missile = missile;
+    bracket.target = target;
+    bracket.yield = yld;
+    bracket.long = long;
+    bracket.artillery = artillery;
+    bracket.global = glbl;
+
+    //console.log(bracket);
+    return bracket;
+  };
 
   return _service;
 }
