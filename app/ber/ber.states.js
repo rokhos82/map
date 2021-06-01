@@ -19,3 +19,10 @@ export const berImportState = {
   url: '/import',
   component: 'berImport'
 };
+
+export const berFleetsViewState = {
+  parent: 'berRoot',
+  name: 'berFleetsView',
+  url: '/fleets',
+  component: 'berFleetsView'
+};

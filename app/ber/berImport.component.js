@@ -17,8 +17,8 @@ class berImportController {
 
   importFleets() {
     // Parse the attacking fleet
-    console.log(this.attackers);
-    this.parser.parseFleet(this.attackers);
+    this.fleets.setAttackers(this.parser.parseFleet(this.attackers));
+    this.fleets.setDefenders(this.parser.parseFleet(this.defenders));
   }
 }
 

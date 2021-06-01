@@ -7,9 +7,9 @@ export function parser() {
     // All subsequent lines are units
 
     // Break the fleet string by new line character
-    console.log(fleetString);
+    //console.log(fleetString);
     let lines = _(fleetString).split(/(\n|\r|\n\r|\r\n)/).filter((str) => { return str === "\n" ? null : str; }).value();
-    console.log(lines);
+    //console.log(lines);
 
     // Extract fleet info
     let fleet = {};
@@ -42,17 +42,17 @@ export function parser() {
     let unit = {};
 
     let unitInfo = _(unitString).split(",").value();
-    console.log(unitInfo);
+    //console.log(unitInfo);
 
     unit.name = unitInfo[0];
-    unit.bmMax = unitInfo[1];
-    unit.bmCur = unitInfo[2];
-    unit.shMax = unitInfo[3];
-    unit.shCur = unitInfo[4];
-    unit.tpMax = unitInfo[5];
-    unit.tpCur = unitInfo[6];
-    unit.hlMax = unitInfo[7];
-    unit.hlCur = unitInfo[8];
+    unit.bmMax = +unitInfo[1];
+    unit.bmCur = +unitInfo[2];
+    unit.shMax = +unitInfo[3];
+    unit.shCur = +unitInfo[4];
+    unit.tpMax = +unitInfo[5];
+    unit.tpCur = +unitInfo[6];
+    unit.hlMax = +unitInfo[7];
+    unit.hlCur = +unitInfo[8];
 
     let tags = unitInfo[12];
 
@@ -129,7 +129,7 @@ export function parser() {
     let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
     let glbl = _(bracketString).words(/global/).map(x=>_.isString(x)).value()[0] || false;
-    let offline = _(bracketString).words(/offline/g).map(x=>.isString(x)).value().length || false;
+    let offline = _(bracketString).words(/offline/g).map(x=>_.isString(x)).value().length || false;
 
     let bracket = {};
     bracket.volley = volley;

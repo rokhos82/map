@@ -12,11 +12,11 @@ export function fleets() {
   };
 
   _service.getAttackers = () => {
-    return _attackers;
+    return _.cloneDeep(_attackers);
   };
 
   _service.getDefenders = () => {
-    return _defenders;
+    return _.cloneDeep(_defenders);
   };
 
   return _service;

@@ -1,0 +1,78 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Attackers</div>
+      <div class="panel-body">
+        Fleet Name: {{$ctrl.attackers.name}} ({{$ctrl.attackers.race}})
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Unit</th>
+            <th>Max BM</th>
+            <th>Cur BM</th>
+            <th>Max SH</th>
+            <th>Cur SH</th>
+            <th>Max TP</th>
+            <th>Cur TP</th>
+            <th>Max HL</th>
+            <th>Cur HL</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="attacker in $ctrl.attackers.units track by $index">
+            <td>{{attacker.name}}</td>
+            <td>{{attacker.bmMax}}</td>
+            <td>{{attacker.bmCur}}</td>
+            <td>{{attacker.shMax}}</td>
+            <td>{{attacker.shCur}}</td>
+            <td>{{attacker.tpMax}}</td>
+            <td>{{attacker.tpCur}}</td>
+            <td>{{attacker.hlMax}}</td>
+            <td>{{attacker.hlCur}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">Defenders</div>
+      <div class="panel-body">
+        Fleet Name: {{$ctrl.defenders.name}} ({{$ctrl.defenders.race}})
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Unit</th>
+            <th>Max BM</th>
+            <th>Cur BM</th>
+            <th>Max SH</th>
+            <th>Cur SH</th>
+            <th>Max TP</th>
+            <th>Cur TP</th>
+            <th>Max HL</th>
+            <th>Cur HL</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="defender in $ctrl.defenders.units track by $index">
+            <td>{{defender.name}}</td>
+            <td>{{defender.bmMax}}</td>
+            <td>{{defender.bmCur}}</td>
+            <td>{{defender.shMax}}</td>
+            <td>{{defender.shCur}}</td>
+            <td>{{defender.tpMax}}</td>
+            <td>{{defender.tpCur}}</td>
+            <td>{{defender.hlMax}}</td>
+            <td>{{defender.hlCur}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
