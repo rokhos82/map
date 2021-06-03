@@ -9,8 +9,8 @@ export function simulator() {
     _state.defenders = defenders;
     _state.options = options;
 
-    _.forEach(_state.attackers,(attacker) => { attacker.targetFaction = "defenders"; });
-    _.forEach(_state.defenders,(defender) => { defender.targetFaction = "attackers"; });
+    _.forEach(_state.attackers,(attacker) => { attacker.faction = "attackers"; });
+    _.forEach(_state.defenders,(defender) => { defender.faction = "defenders"; });
 
     // Build the target lists
     _state.attackers.targets = targetList(_state.defenders);
@@ -21,6 +21,7 @@ export function simulator() {
 
   _service.singleRound = () => {
     if(_initialized) {
+      let state = _
       _state.events = [];
       doRound();
       return _state;
@@ -62,15 +63,16 @@ function doRound(state) {
     let attacks = getAttacks(unit);
     _.forEach(attacks,(attack) => {
       attack.type = "attack";
+      attack.actor = unit;
       resolveStack.push(attack);
     });
     unit = unitStack.pop();
   }
 
-  let attack = resolveStack.pop();
-  while(attack) {
-    if(attack.type === "attack") {
-      let target = _.sample()
+  let action = resolveStack.pop();
+  while(action) {
+    if(action.type === "attack") {
+      let target = _.sample(_state[])
     }
 
     attack = resolveStack.pop();
