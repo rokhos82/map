@@ -13,8 +13,8 @@ export function simulator() {
     _state.units = {};
 
     // Setup factions on each unit
-    _.forEach(_state.attackers,(attacker) => { attacker.faction = "attackers"; });
-    _.forEach(_state.defenders,(defender) => { defender.faction = "defenders"; });
+    _.forEach(_state.attackers.units,(attacker) => { attacker.faction = "attackers"; });
+    _.forEach(_state.defenders.units,(defender) => { defender.faction = "defenders"; });
 
     // Build the target lists
     _state.attackers.targets = targetList(_state.defenders,_state);
@@ -27,7 +27,7 @@ export function simulator() {
     if(_initialized) {
       let state = _
       _state.events = [];
-      doRound();
+      doRound(_state);
       return _state;
     }
     else {
@@ -65,12 +65,12 @@ function applyDamage(action,target) {
   }
 }
 
-function doDamage(action,target) {
+function doDamage(action) {
   // Roll the damage die.
   let damageRoll = _.random(1,100,false);
-  let yield = action.yield;
-  let resist = target.resist;
-  damageRoll = damageRoll + yeild - resist;
+  let yld = action.yield;
+  let resist = action.actee.tags.resist;
+  damageRoll = damageRoll + yld - resist;
 
   // Bounds check the damageRoll: 0 <= damageRoll <= 100
   if(damageRoll > 100) {
@@ -81,12 +81,14 @@ function doDamage(action,target) {
   }
 
   let damage = action.volley * damageRoll / 100;
+
+  console.info(`damage: ${damage}`);
   return damage;
 }
 
-function doHitRoll(action,target) {
+function doHitRoll(action) {
   let t = action.target;
-  let d = target.defense;
+  let d = action.actee.tags.defense;
 
   // Bounds check the hit modifier
   // TODO: Make this work with globals for non 50.1 to hit values
@@ -98,7 +100,10 @@ function doHitRoll(action,target) {
     mod = (t-d) < -40 ? -40 : (t-d);
   }
 
-  return _.random(1,100,false) + mod;
+  let toHit = _.random(1,100,false) + mod;
+  console.info(`to hit roll: ${toHit}`);
+
+  return toHit;
 }
 
 function doRound(state) {
@@ -111,7 +116,7 @@ function doRound(state) {
   // For each effect in resolve stack
   //  Apply the effect to the target
 
-  let unitStack = _.merge(_state.attackers,_state.defenders);
+  let unitStack = _.flatten([state.attackers.units,state.defenders.units]);
   let resolveStack = [];
 
   let unit = unitStack.pop();
@@ -127,28 +132,51 @@ function doRound(state) {
   }
 
   let action = resolveStack.pop();
-  while(action) {
+  //console.log(resolveStack);
+  while(resolveStack.length > 0) {
+    let event = {};
+    event.type = action.type;
     if(action.type === "attack") {
-      let target = getTarget(action.unit,state);
-      action.target = getUnit(target,state);
-      let hitRoll = doHitRoll(action,action.target);
+      console.info(`Processing attack for ${action.actor.name}`);
+      let target = getTarget(action.actor,state);
+      action.actee = getUnit(target,state);
+      let hitRoll = doHitRoll(action);
       // TODO: Add options that will determine what the baseToHit is
       if(hitRoll > 50) {
-        action.type = "hit";
-        resolveStack.push(action);
+        let a = _.cloneDeep(action);
+        a.type = "hit";
+        resolveStack.push(a);
+        console.log(_.cloneDeep(resolveStack));
       }
+
+      event.actor = action.actor.name;
+      event.target = action.actee.name;
+      event.payload = hitRoll;
     }
     else if(action.type === "hit") {
-      let damage = doDamage(action,action.target);
-      action.type = "damage";
-      action.damage = damage;
-      resolveStack.push(action);
+      console.info(`Processing hit for ${action.actor.name}`);
+      let damage = doDamage(action);
+      let a = _.cloneDeep(action);
+      a.type = "damage";
+      a.damage = damage;
+      resolveStack.push(a);
+
+      event.actor = a.actor.name;
+      event.target = a.actee.name;
+      event.payload = damage;
     }
     else if(action.type === "damage") {
-      let target = action.target;
+      console.info(`Processing damage for ${action.actor.name}`);
+      let target = action.actee;
+
+      event.actor = action.actor.name;
+      event.target = action.actee.name
     }
 
+    state.events.push(event);
+    //console.log(resolveStack);
     action = resolveStack.pop();
+    //console.log(action);
   }
 }
 
@@ -156,6 +184,7 @@ function getAttacks(unit) {
   // Clone the brackets array from the unit.
   // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks
+  console.log(unit);
   return _.cloneDeep(unit.tags.brackets);
 }
 
@@ -164,5 +193,5 @@ function getTarget(unit,state) {
 }
 
 function getUnit(hash,state) {
-  return state.unit[hash];
+  return state.units[hash];
 }

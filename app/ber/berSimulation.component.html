@@ -3,7 +3,16 @@
     <div class="panel panel-default">
       <div class="panel-heading">Simulation Engine</div>
       <div class="panel-body">
-        <button class="btn btn-default" type="button" ng-click="$ctrl.setup()">Setup</button>
+        <div class="btn-group btn-group-justified">
+          <a class="btn btn-default" ng-click="$ctrl.setup()">Setup</a>
+          <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">Combat Log</div>
+      <div class="panel-body">
+        <pre>{{$ctrl.events | json}}</pre>
       </div>
     </div>
   </div>

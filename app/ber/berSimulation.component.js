@@ -13,10 +13,16 @@ class berSimulationController {
   $onInit() {
     this.attackers = this.fleets.getAttackers();
     this.defenders = this.fleets.getDefenders();
+    this.events = [];
   }
 
   setup() {
     this.simulator.setup(this.attackers,this.defenders,{});
+  }
+
+  round() {
+    this.state = this.simulator.singleRound();
+    this.events = this.state.events;
   }
 }
 
