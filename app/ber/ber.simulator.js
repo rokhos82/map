@@ -3,32 +3,42 @@ export function simulator() {
   let _state = {};
   let _initialized = false;
 
+  // The master simulation state object
+  let _simulation = {
+    units: {},
+    turns: [],
+    initialized: false;
+  };
+
   _service.setup = (attackers,defenders,options) => {
     // Save the passed information to the state object
-    _state.attackers = attackers;
-    _state.defenders = defenders;
-    _state.options = options;
-
-    // Setup the master unit index
-    _state.units = {};
+    _simulation.attackers = attackers;
+    _simulation.defenders = defenders;
+    _simulation.options = options;
 
     // Setup factions on each unit
-    _.forEach(_state.attackers.units,(attacker) => { attacker.faction = "attackers"; });
-    _.forEach(_state.defenders.units,(defender) => { defender.faction = "defenders"; });
+    _.forEach(_simulation.attackers.units,(attacker) => { attacker.faction = "attackers"; });
+    _.forEach(_simulation.defenders.units,(defender) => { defender.faction = "defenders"; });
 
     // Build the target lists
-    _state.attackers.targets = targetList(_state.defenders,_state);
-    _state.defenders.targets = targetList(_state.attackers,_state);
+    _simulation.attackers.targets = targetList(_simulation.defenders,_simulation);
+    _simulation.defenders.targets = targetList(_simulation.attackers,_simulation);
 
-    _initialized = true;
+    // Build the first state object
+    _simulation.state = {
+      events: [],
+      attackers: _.cloneDeep(attackers.attackers),
+      defenders: _.cloneDeep(defenders.defenders)
+    };
+
+    _simulation.initialized = true;
   };
 
   _service.singleRound = () => {
     if(_initialized) {
-      let state = _
-      _state.events = [];
-      doRound(_state);
-      return _state;
+      let state = newState(_simulation);
+      doRound(state);
+      return state;
     }
     else {
       console.error("Simulator not initialized!");
@@ -42,16 +52,26 @@ simulator.$inject = [];
 
 // Service Function Definitions Below //////////////////////////////////////////
 
-function targetList(fleet,state) {
+function targetList(fleet,simulation) {
   // Build a list of targets from the provided fleet.
   let names = [];// _(fleet.units).map(x=>x.name).map(x=>_.camelCase(x)).value();
   _.forEach(fleet.units,(unit) => {
     let prehash = fleet.name + unit.name;
     let hash = _.camelCase(prehash);
     names.push(hash);
-    state.units[hash] = unit;
+    simulation.units[hash] = unit;
   });
   return names;
+}
+
+function newState(simulation) {
+  let state = {
+    events: [],
+    attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
+    defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
+    units: simulation.units
+  };
+  return state;
 }
 
 function applyDamage(action,target) {
@@ -80,7 +100,7 @@ function doDamage(action) {
     damageRoll = 0;
   }
 
-  let damage = action.volley * damageRoll / 100;
+  let damage = _.round(action.volley * damageRoll / 100,0);
 
   console.info(`damage: ${damage}`);
   return damage;
@@ -132,7 +152,7 @@ function doRound(state) {
   }
 
   let action = resolveStack.pop();
-  //console.log(resolveStack);
+
   while(resolveStack.length > 0) {
     let event = {};
     event.type = action.type;
@@ -174,9 +194,7 @@ function doRound(state) {
     }
 
     state.events.push(event);
-    //console.log(resolveStack);
     action = resolveStack.pop();
-    //console.log(action);
   }
 }
 
