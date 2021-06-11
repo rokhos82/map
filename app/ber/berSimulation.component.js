@@ -21,8 +21,7 @@ class berSimulationController {
   }
 
   round() {
-    this.state = this.simulator.singleRound();
-    this.events = this.state.events;
+    this.simulation = this.simulator.singleRound();
   }
 }
 

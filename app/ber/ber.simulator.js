@@ -7,7 +7,7 @@ export function simulator() {
   let _simulation = {
     units: {},
     turns: [],
-    initialized: false;
+    initialized: false
   };
 
   _service.setup = (attackers,defenders,options) => {
@@ -24,21 +24,15 @@ export function simulator() {
     _simulation.attackers.targets = targetList(_simulation.defenders,_simulation);
     _simulation.defenders.targets = targetList(_simulation.attackers,_simulation);
 
-    // Build the first state object
-    _simulation.state = {
-      events: [],
-      attackers: _.cloneDeep(attackers.attackers),
-      defenders: _.cloneDeep(defenders.defenders)
-    };
-
     _simulation.initialized = true;
   };
 
   _service.singleRound = () => {
-    if(_initialized) {
+    if(_simulation.initialized) {
       let state = newState(_simulation);
       doRound(state);
-      return state;
+      _simulation.turns.push(state);
+      return _simulation;
     }
     else {
       console.error("Simulator not initialized!");
@@ -52,6 +46,16 @@ simulator.$inject = [];
 
 // Service Function Definitions Below //////////////////////////////////////////
 
+function newState(simulation) {
+  let state = {
+    events: [],
+    attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
+    defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
+    units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units
+  };
+  return state;
+}
+
 function targetList(fleet,simulation) {
   // Build a list of targets from the provided fleet.
   let names = [];// _(fleet.units).map(x=>x.name).map(x=>_.camelCase(x)).value();
@@ -62,16 +66,6 @@ function targetList(fleet,simulation) {
     simulation.units[hash] = unit;
   });
   return names;
-}
-
-function newState(simulation) {
-  let state = {
-    events: [],
-    attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
-    defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
-    units: simulation.units
-  };
-  return state;
 }
 
 function applyDamage(action,target) {

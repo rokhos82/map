@@ -6,13 +6,20 @@
         <div class="btn-group btn-group-justified">
           <a class="btn btn-default" ng-click="$ctrl.setup()">Setup</a>
           <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>
+          <a class="btn btn-default" ng-click="$ctrl.run()">Fight</a>
         </div>
       </div>
     </div>
     <div class="panel panel-default">
-      <div class="panel-heading">Combat Log</div>
+      <div class="panel-heading">Simulation Object</div>
       <div class="panel-body">
-        <pre>{{$ctrl.events | json}}</pre>
+        <pre>{{$ctrl.simulation | json}}</pre>
+      </div>
+    </div>
+    <div class="panel panel-default" ng-repeat="turn in $ctrl.simulation.turns track by $index">
+      <div class="panel-heading">Turn {{$index+1}} - Combat Log</div>
+      <div class="panel-body">
+        <pre>{{turn.events | json}}</pre>
       </div>
     </div>
   </div>
