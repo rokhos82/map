@@ -67,7 +67,7 @@ function newState(simulation) {
     attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
     units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units,
-    turn: _.isObject(simulation.state) ? simulation.state.turn+1 : 1
+    turn: _.isObject(simulation.state) ? simulation.turns.length+1 : 1
   };
   return state;
 }
@@ -78,21 +78,33 @@ function targetList(fleet,simulation) {
   _.forEach(fleet.units,(unit) => {
     let prehash = fleet.name + unit.name;
     let hash = _.camelCase(prehash);
+    unit.hash = hash;
     names.push(hash);
     simulation.units[hash] = unit;
   });
   return names;
 }
 
-function applyDamage(action,target) {
+function applyDamage(action,state) {
   // Apply damage from the action to the target
   // Account for SR/AR and select health pool
-  if(target.curSH > 0) {
+  let actor = action.actor;
+  let actee = state.units[action.actee.hash];
+  console.log(state,action,actee);
+  let damage = action.damage;
+
+  if(actee.shCur > 0) {
     // Damage the shields
+    actee.shCur = (actee.shCur <= damage) ? 0 : actee.shCur - damage;
   }
   else {
     // Damage the hull
+    actee.hlCur = (actee.hlCur <= damage) ? 0 : actee.hlCur - damage;
   }
+
+  console.log(actee);
+
+  return (actee.curHL > 0);
 }
 
 function doDamage(action) {
@@ -114,6 +126,12 @@ function doDamage(action) {
 
   console.info(`damage: ${damage}`);
   return damage;
+}
+
+function doDeath(action,state) {
+  let actee = action.actee;
+  let faction = (actee.faction === "attackers") ? "defenders" : "attackers";
+  _.pull(state[faction].units,actee.hash);
 }
 
 function doHitRoll(action) {
@@ -171,6 +189,7 @@ function doRound(state) {
       let target = getTarget(action.actor,state);
       action.actee = getUnit(target,state);
       let hitRoll = doHitRoll(action);
+      action.hitRoll = hitRoll;
       // TODO: Add options that will determine what the baseToHit is
       if(hitRoll > 50) {
         let a = _.cloneDeep(action);
@@ -181,7 +200,6 @@ function doRound(state) {
 
       event.actor = action.actor.name;
       event.target = action.actee.name;
-      event.payload = hitRoll;
     }
     else if(action.type === "hit") {
       console.info(`Processing hit for ${action.actor.name}`);
@@ -193,14 +211,30 @@ function doRound(state) {
 
       event.actor = a.actor.name;
       event.target = a.actee.name;
-      event.payload = damage;
+      event.payload = a.hitRoll;
     }
     else if(action.type === "damage") {
       console.info(`Processing damage for ${action.actor.name}`);
-      let target = action.actee;
+
+      let dead = applyDamage(action,state);
+
+      if(dead) {
+        let a = _.cloneDeep(action);
+        a.type = "death";
+        a.dead = dead;
+        resolveStack.push(a);
+      }
 
       event.actor = action.actor.name;
-      event.target = action.actee.name
+      event.target = action.actee.name;
+      event.payload = action.damage;
+    }
+    else if(action.type === "death") {
+      console.info(`Processing death for ${action.actee.name}`);
+
+      doDeath(action,state);
+
+      event.actor = action.actee.name;
     }
 
     state.events.push(event);

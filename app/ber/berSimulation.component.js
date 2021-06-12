@@ -22,10 +22,12 @@ class berSimulationController {
 
   round() {
     this.simulation = this.simulator.singleRound();
+    console.log(this.simulation);
   }
 
   run() {
     this.simulation = this.simulator.fight();
+    console.log(this.simulation);
   }
 }
 
