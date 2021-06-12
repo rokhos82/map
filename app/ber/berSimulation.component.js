@@ -17,11 +17,15 @@ class berSimulationController {
   }
 
   setup() {
-    this.simulator.setup(this.attackers,this.defenders,{});
+    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:5});
   }
 
   round() {
     this.simulation = this.simulator.singleRound();
+  }
+
+  run() {
+    this.simulation = this.simulator.fight();
   }
 }
 

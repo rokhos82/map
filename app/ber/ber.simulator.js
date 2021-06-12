@@ -29,13 +29,28 @@ export function simulator() {
 
   _service.singleRound = () => {
     if(_simulation.initialized) {
-      let state = newState(_simulation);
-      doRound(state);
-      _simulation.turns.push(state);
+      if(_simulation.options.turns > _simulation.turns.length) {
+        let state = newState(_simulation);
+        doRound(state);
+        _simulation.turns.push(state);
+      }
+      else {
+        console.warn("Maximum number of turns reached.")
+      }
       return _simulation;
     }
     else {
       console.error("Simulator not initialized!");
+    }
+  };
+
+  _service.fight = () => {
+    if(_simulation.initialized) {
+      while(_simulation.options.turns > _simulation.turns.length) {
+        _service.singleRound();
+      }
+
+      return _simulation;
     }
   };
 
@@ -51,7 +66,8 @@ function newState(simulation) {
     events: [],
     attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
-    units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units
+    units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units,
+    turn: _.isObject(simulation.state) ? simulation.state.turn+1 : 1
   };
   return state;
 }
