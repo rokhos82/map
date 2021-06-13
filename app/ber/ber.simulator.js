@@ -12,19 +12,17 @@ export function simulator() {
 
   _service.setup = (attackers,defenders,options) => {
     // Save the passed information to the state object
-    _simulation.attackers = attackers;
-    _simulation.defenders = defenders;
+    _simulation.attackers = setupFleet(attackers,"attackers");
+    _simulation.defenders = setupFleet(defenders,"defenders");
     _simulation.options = options;
-
-    // Setup factions on each unit
-    _.forEach(_simulation.attackers.units,(attacker) => { attacker.faction = "attackers"; });
-    _.forEach(_simulation.defenders.units,(defender) => { defender.faction = "defenders"; });
 
     // Build the target lists
     _simulation.attackers.targets = targetList(_simulation.defenders,_simulation);
     _simulation.defenders.targets = targetList(_simulation.attackers,_simulation);
 
     _simulation.initialized = true;
+
+    console.info(_simulation);
   };
 
   _service.singleRound = () => {
@@ -76,7 +74,7 @@ function targetList(fleet,simulation) {
   // Build a list of targets from the provided fleet.
   let names = [];// _(fleet.units).map(x=>x.name).map(x=>_.camelCase(x)).value();
   _.forEach(fleet.units,(unit) => {
-    let prehash = fleet.name + unit.name;
+    let prehash = fleet.info.name + unit.name;
     let hash = _.camelCase(prehash);
     unit.hash = hash;
     names.push(hash);
@@ -134,9 +132,12 @@ function doDeath(action,state) {
   _.pull(state[faction].units,actee.hash);
 }
 
-function doHitRoll(action) {
+function doHitRoll(action,state) {
+  let actor = getUnit(action.actor,state);
+  let actee = getUnit(action.actee,state);
+
   let t = action.target;
-  let d = action.actee.tags.defense;
+  let d = actee.tags.defense;
 
   // Bounds check the hit modifier
   // TODO: Make this work with globals for non 50.1 to hit values
@@ -164,17 +165,17 @@ function doRound(state) {
   // For each effect in resolve stack
   //  Apply the effect to the target
 
-  let unitStack = _.flatten([state.attackers.units,state.defenders.units]);
+  let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
   let resolveStack = [];
 
   let unit = unitStack.pop();
   while(unit) {
     // Get attacks from the unit object.
-    let attacks = getAttacks(unit);
-    _.forEach(attacks,(attack) => {
-      attack.type = "attack";
-      attack.actor = unit;
-      resolveStack.push(attack);
+    let attacks = getAttacks(unit,state);
+    _.forEach(attacks,(action) => {
+      action.type = "attack";
+      action.actor = unit;
+      resolveStack.push(action);
     });
     unit = unitStack.pop();
   }
@@ -185,10 +186,12 @@ function doRound(state) {
     let event = {};
     event.type = action.type;
     if(action.type === "attack") {
-      console.info(`Processing attack for ${action.actor.name}`);
+      let actor = getUnit(action.actor,state);
+      console.info(`Processing attack for ${actor.name}`);
       let target = getTarget(action.actor,state);
-      action.actee = getUnit(target,state);
-      let hitRoll = doHitRoll(action);
+      action.actee = target;
+      let actee = getUnit(target,state);
+      let hitRoll = doHitRoll(action,state);
       action.hitRoll = hitRoll;
       // TODO: Add options that will determine what the baseToHit is
       if(hitRoll > 50) {
@@ -198,8 +201,9 @@ function doRound(state) {
         console.log(_.cloneDeep(resolveStack));
       }
 
-      event.actor = action.actor.name;
+      event.actor = actor.name;
       event.target = action.actee.name;
+      event.msg = `${event.actor} targets ${event.target}.`;
     }
     else if(action.type === "hit") {
       console.info(`Processing hit for ${action.actor.name}`);
@@ -212,6 +216,7 @@ function doRound(state) {
       event.actor = a.actor.name;
       event.target = a.actee.name;
       event.payload = a.hitRoll;
+      event.msg = `${event.actor} hit ${event.target} (${event.payload}) for ${damage} damage.`;
     }
     else if(action.type === "damage") {
       console.info(`Processing damage for ${action.actor.name}`);
@@ -235,6 +240,7 @@ function doRound(state) {
       doDeath(action,state);
 
       event.actor = action.actee.name;
+      event.msg = `${event.actor} died.`;
     }
 
     state.events.push(event);
@@ -242,18 +248,41 @@ function doRound(state) {
   }
 }
 
-function getAttacks(unit) {
+function getAttacks(unit,state) {
   // Clone the brackets array from the unit.
   // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks
   console.log(unit);
-  return _.cloneDeep(unit.tags.brackets);
+  return _.cloneDeep(state.units[unit].tags.brackets);
 }
 
-function getTarget(unit,state) {
+function getTarget(unitHash,state) {
+  let unit = state.units[unitHash];
   return _.sample(state[unit.faction].targets);
 }
 
 function getUnit(hash,state) {
   return state.units[hash];
+}
+
+function setupFleet(fleet,faction) {
+  console.log(faction,fleet);
+  let f = {};
+
+  f.hash = _.camelCase(fleet.race + fleet.name);
+  f.info = {
+    name: fleet.name,
+    race: fleet.race
+  };
+
+  f.units = {};
+  f.unitHashList = [];
+  _.forEach(fleet.units,(unit) => {
+    unit.faction = faction;
+    unit.hash = _.camelCase(f.info.name + unit.name);
+    f.units[unit.hash] = unit;
+    f.unitHashList.push(unit.hash);
+  });
+
+  return f;
 }
