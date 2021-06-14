@@ -83,12 +83,9 @@ function targetList(fleet,simulation) {
   return names;
 }
 
-function applyDamage(action,state) {
+function applyDamage(action,actor,actee) {
   // Apply damage from the action to the target
   // Account for SR/AR and select health pool
-  let actor = action.actor;
-  let actee = state.units[action.actee.hash];
-  console.log(state,action,actee);
   let damage = action.damage;
 
   if(actee.shCur > 0) {
@@ -102,14 +99,14 @@ function applyDamage(action,state) {
 
   console.log(actee);
 
-  return (actee.curHL > 0);
+  return !(actee.hlCur > 0);
 }
 
-function doDamage(action) {
+function doDamage(action,actor,actee) {
   // Roll the damage die.
   let damageRoll = _.random(1,100,false);
   let yld = action.yield;
-  let resist = action.actee.tags.resist;
+  let resist = actee.tags.resist;
   damageRoll = damageRoll + yld - resist;
 
   // Bounds check the damageRoll: 0 <= damageRoll <= 100
@@ -126,16 +123,15 @@ function doDamage(action) {
   return damage;
 }
 
-function doDeath(action,state) {
-  let actee = action.actee;
-  let faction = (actee.faction === "attackers") ? "defenders" : "attackers";
-  _.pull(state[faction].units,actee.hash);
+function doDeath(action,state,actor,actee) {
+  if(!actee.dead) {
+    let faction = (actee.faction === "attackers") ? "defenders" : "attackers";
+    actee.dead = true;
+    _.pull(state[faction].units,actee.hash);
+  }
 }
 
-function doHitRoll(action,state) {
-  let actor = getUnit(action.actor,state);
-  let actee = getUnit(action.actee,state);
-
+function doHitRoll(action,actor,actee) {
   let t = action.target;
   let d = actee.tags.defense;
 
@@ -191,7 +187,7 @@ function doRound(state) {
       let target = getTarget(action.actor,state);
       action.actee = target;
       let actee = getUnit(target,state);
-      let hitRoll = doHitRoll(action,state);
+      let hitRoll = doHitRoll(action,actor,actee);
       action.hitRoll = hitRoll;
       // TODO: Add options that will determine what the baseToHit is
       if(hitRoll > 50) {
@@ -202,45 +198,52 @@ function doRound(state) {
       }
 
       event.actor = actor.name;
-      event.target = action.actee.name;
+      event.target = actee.name;
       event.msg = `${event.actor} targets ${event.target}.`;
     }
     else if(action.type === "hit") {
-      console.info(`Processing hit for ${action.actor.name}`);
-      let damage = doDamage(action);
+      let actor = getUnit(action.actor,state);
+      let actee = getUnit(action.actee,state);
+      console.info(`Processing hit for ${actor.name}`);
+      let damage = doDamage(action,actor,actee);
       let a = _.cloneDeep(action);
       a.type = "damage";
       a.damage = damage;
       resolveStack.push(a);
 
-      event.actor = a.actor.name;
-      event.target = a.actee.name;
+      event.actor = actor.name;
+      event.target = actee.name;
       event.payload = a.hitRoll;
       event.msg = `${event.actor} hit ${event.target} (${event.payload}) for ${damage} damage.`;
     }
     else if(action.type === "damage") {
-      console.info(`Processing damage for ${action.actor.name}`);
+      let actor = getUnit(action.actor,state);
+      let actee = getUnit(action.actee,state);
+      console.info(`Processing damage for ${actor.name}`);
 
-      let dead = applyDamage(action,state);
+      let dead = applyDamage(action,actor,actee);
 
-      if(dead) {
+      if(dead && !actee.dead) {
         let a = _.cloneDeep(action);
         a.type = "death";
         a.dead = dead;
         resolveStack.push(a);
       }
 
-      event.actor = action.actor.name;
-      event.target = action.actee.name;
+      event.actor = actor.name;
+      event.target = actee.name;
       event.payload = action.damage;
+      event.msg = `${event.target} has taken ${event.payload} damage.`;
     }
     else if(action.type === "death") {
-      console.info(`Processing death for ${action.actee.name}`);
+      let actor = getUnit(action.actor,state);
+      let actee = getUnit(action.actee,state);
+      console.info(`Processing death for ${actee.name}`);
 
-      doDeath(action,state);
+      doDeath(action,state,actor,actee);
 
-      event.actor = action.actee.name;
-      event.msg = `${event.actor} died.`;
+      event.actor = actee.name;
+      event.msg = `${event.actor} has died.`;
     }
 
     state.events.push(event);
