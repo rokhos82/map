@@ -190,7 +190,7 @@ function doRound(state) {
       let hitRoll = doHitRoll(action,actor,actee);
       action.hitRoll = hitRoll;
       // TODO: Add options that will determine what the baseToHit is
-      if(hitRoll > 50) {
+      if(hitRoll > _simulation.options.baseToHit) {
         let a = _.cloneDeep(action);
         a.type = "hit";
         resolveStack.push(a);

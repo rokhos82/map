@@ -22,7 +22,7 @@ class berSimulationController {
   }
 
   setup() {
-    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:5});
+    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:10});
   }
 
   round() {
