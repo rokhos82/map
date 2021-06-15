@@ -3,6 +3,10 @@
     <div class="panel panel-default">
       <div class="panel-heading">Simulation Engine</div>
       <div class="panel-body">
+        <div class="form-group">
+          <label class="control-label" for="maxTurns">Max Turns</label>
+          <input class="form-control" name="maxTurns" type="number" ng-model="$ctrl.ui.maxTurns" />
+        </div>
         <div class="btn-group btn-group-justified">
           <a class="btn btn-default" ng-click="$ctrl.setup()">Setup</a>
           <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>

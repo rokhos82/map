@@ -19,10 +19,11 @@ class berSimulationController {
     this.ui.sim = false;
     this.ui.turns = [false,false,false,false,false];
     this.ui.lastState = false;
+    this.ui.maxTurns = 10;
   }
 
   setup() {
-    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:10});
+    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:this.ui.maxTurns});
   }
 
   round() {

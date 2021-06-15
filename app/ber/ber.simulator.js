@@ -29,7 +29,7 @@ export function simulator() {
     if(_simulation.initialized) {
       if(_simulation.options.turns > _simulation.turns.length) {
         let state = newState(_simulation);
-        doRound(state);
+        doRound(state,_simulation.options);
         _simulation.turns.push(state);
       }
       else {
@@ -151,7 +151,7 @@ function doHitRoll(action,actor,actee) {
   return toHit;
 }
 
-function doRound(state) {
+function doRound(state,options) {
   // Build a list of attacks to process (attack stack)
   // For each attack:
   //  Select a target
@@ -190,7 +190,7 @@ function doRound(state) {
       let hitRoll = doHitRoll(action,actor,actee);
       action.hitRoll = hitRoll;
       // TODO: Add options that will determine what the baseToHit is
-      if(hitRoll > _simulation.options.baseToHit) {
+      if(hitRoll > options.baseToHit) {
         let a = _.cloneDeep(action);
         a.type = "hit";
         resolveStack.push(a);
