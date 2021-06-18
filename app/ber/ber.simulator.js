@@ -53,8 +53,10 @@ export function simulator() {
 
   _service.fight = () => {
     if(_simulation.initialized) {
-      while(_simulation.options.turns > _simulation.turns.length) {
+      let done = false;
+      while(_simulation.options.turns > _simulation.turns.length && !done) {
         _service.singleRound();
+        done = victoryCheck(_.last(_simulation.turns));
       }
 
       console.log(_simulation);
@@ -71,13 +73,16 @@ simulator.$inject = [];
 // Service Function Definitions Below //////////////////////////////////////////
 
 function newState(simulation) {
+  // TODO: Rebuild units list from scratch, don't clone it
   let state = {
     events: [],
     attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
-    units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units,
+    units: {},
     turn: _.isObject(simulation.state) && _.isNumber(simulation.state.turn) ? simulation.turns.length + 1 : 1
   };
+  _.forEach(state.attackers.units,(attacker) => { state.units[attacker.hash] = attacker; });
+  _.forEach(state.defenders.units,(defender) => { state.units[defender.hash] = defender; });
   return state;
 }
 
@@ -178,6 +183,7 @@ function doRound(state,options) {
   // Log the message of the new turn
   state.events.push({msg:`Turn ${state.turn}`});
   console.info(`Turn ${state.turn}`);
+  console.log(state);
 
   let unit = unitStack.pop();
   while(unit) {
@@ -303,4 +309,21 @@ function setupFleet(fleet,faction) {
   });
 
   return f;
+}
+
+function victoryCheck(state) {
+  let done = (fleetDestroyedCheck(state.attackers) || fleetDestroyedCheck(state.defenders));
+  return done;
+}
+
+function fleetDestroyedCheck(fleet) {
+  let dead = true;
+
+  _.forEach(fleet.units,(unit) => {
+    if(unit.hlCur > 0) {
+      dead = false;
+    }
+  });
+
+  return dead;
 }
