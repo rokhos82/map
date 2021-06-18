@@ -28,9 +28,18 @@ export function simulator() {
   _service.singleRound = () => {
     if(_simulation.initialized) {
       if(_simulation.options.turns > _simulation.turns.length) {
+        // Make a copy of the current state
         let state = newState(_simulation);
+
+        // Perform the round ==> Update the new state
         doRound(state,_simulation.options);
+
+        // Save the new state
         _simulation.turns.push(state);
+
+        // Make the new state the current start.
+        _simulation.state = state;
+        console.log(state);
       }
       else {
         console.warn("Maximum number of turns reached.")
@@ -47,6 +56,8 @@ export function simulator() {
       while(_simulation.options.turns > _simulation.turns.length) {
         _service.singleRound();
       }
+
+      console.log(_simulation);
 
       return _simulation;
     }
@@ -65,7 +76,7 @@ function newState(simulation) {
     attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
     units: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.units) : simulation.units,
-    turn: _.isObject(simulation.state) ? simulation.turns.length+1 : 1
+    turn: _.isObject(simulation.state) && _.isNumber(simulation.state.turn) ? simulation.turns.length + 1 : 1
   };
   return state;
 }
@@ -163,6 +174,10 @@ function doRound(state,options) {
 
   let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
   let resolveStack = [];
+
+  // Log the message of the new turn
+  state.events.push({msg:`Turn ${state.turn}`});
+  console.info(`Turn ${state.turn}`);
 
   let unit = unitStack.pop();
   while(unit) {

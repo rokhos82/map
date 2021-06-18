@@ -15,7 +15,10 @@
       </div>
     </div>
     <div class="panel panel-default">
-      <div class="panel-heading">Units</div>
+      <div class="panel-heading">Results</div>
+      <div class="panel-body">
+        <ul uib-pagination total-items="$ctrl.simulation.turns.length" items-per-page="1" ng-model="$ctrl.ui.currentPage" ng-change="$ctrl.changeTurn()"></ul>
+      </div>
       <div class="panel-body">
         Fleet Name: {{$ctrl.lastState.attackers.name}} ({{$ctrl.lastState.attackers.race}})
       </div>
@@ -31,11 +34,10 @@
             <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
-            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="attacker in $ctrl.lastState.attackers.units track by $index">
+          <tr ng-repeat="attacker in $ctrl.ui.currentTurn.attackers.units track by $index" ng-class="{danger: attacker.hlCur == 0, warning: attacker.hlCur < attacker.hlMax && attacker.hlCur > 0, info: attacker.shCur < attacker.shMax, success: attacker.shCur == attacker.shMax}">
             <td>{{attacker.name}}</td>
             <td>{{attacker.bmMax}}</td>
             <td>{{attacker.bmCur}}</td>
@@ -63,11 +65,10 @@
             <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
-            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="defender in $ctrl.lastState.defenders.units track by $index">
+          <tr ng-repeat="defender in $ctrl.ui.currentTurn.defenders.units track by $index" ng-class="{danger: defender.hlCur == 0, warning: defender.hlCur < defender.hlMax && defender.hlCur > 0, info: defender.shCur < defender.shMax, success: defender.shCur == defender.shMax}">
             <td>{{defender.name}}</td>
             <td>{{defender.bmMax}}</td>
             <td>{{defender.bmCur}}</td>
@@ -80,31 +81,16 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="panel panel-default" ng-click="$ctrl.toggleView('output')">
-      <div class="panel-heading">Output</div>
-      <div class="panel-body" ng-repeat="turn in $ctrl.simulation.turns track by $index" ng-show="$ctrl.ui.output">
+      <div class="panel-body">
         <ul class="list-group">
-          <li class="list-group-item" ng-repeat="event in turn.events track by $index">{{event.msg}}</li>
+          <li class="list-group-item" ng-repeat="event in $ctrl.ui.currentTurn.events track by $index">{{event.msg}}</li>
         </ul>
-      </div>
-    </div>
-    <div class="panel panel-default" ng-click="$ctrl.toggleView('lastState')">
-      <div class="panel-heading">Last State</div>
-      <div class="panel-body" ng-show="$ctrl.ui.lastState">
-        <pre>{{$ctrl.lastState}}</pre>
       </div>
     </div>
     <div class="panel panel-default" ng-click="$ctrl.toggleView('sim')">
       <div class="panel-heading">Simulation Object</div>
       <div class="panel-body" ng-show="$ctrl.ui.sim">
         <pre>{{$ctrl.simulation | json}}</pre>
-      </div>
-    </div>
-    <div class="panel panel-default" ng-repeat="turn in $ctrl.simulation.turns track by $index" ng-click="$ctrl.toggleView('turns',$index)">
-      <div class="panel-heading">Turn {{$index+1}} - Combat Log</div>
-      <div class="panel-body" ng-show="$ctrl.ui.turns[{{$index}}]">
-        <pre>{{turn.events | json}}</pre>
       </div>
     </div>
   </div>
