@@ -177,7 +177,23 @@ function doRound(state,options) {
   // For each effect in resolve stack
   //  Apply the effect to the target
 
-  let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
+  // Build the list of units that are participating in combat this round
+  //let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
+
+  // TODO: Put unit objects in the unitStack.  Need to rewrite getAttacks to need a unit object rather than hash and state objects
+  let unitStack = [];
+  _.forEach(state.attackers.units,(hash,unit) => {
+    let unit = state.unit[hash];
+    if(!unit.dead) {
+      unitStack.push(hash);
+    }
+  });
+  _.forEach(state.defenders.unitHashList,(hash) => {
+    let unit = state.unit[hash];
+    if(!unit.dead) {
+      unitStack.push(hash);
+    }
+  });
   let resolveStack = [];
 
   // Log the message of the new turn
