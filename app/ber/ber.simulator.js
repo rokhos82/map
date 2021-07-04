@@ -1,3 +1,5 @@
+import {Simulation,Unit} from "./ber.classes.js";
+
 export function simulator() {
   let _service = {};
   let _state = {};
@@ -12,6 +14,14 @@ export function simulator() {
 
   _service.setup = (attackers,defenders,options) => {
     // Save the passed information to the state object
+    let sim = new Simulation({
+      factions: {
+        attackers: attackers,
+        defenders: defenders
+      },
+      options: options
+    });
+    console.log(sim);
     _simulation.attackers = setupFleet(attackers,"attackers");
     _simulation.defenders = setupFleet(defenders,"defenders");
     _simulation.options = options;
@@ -178,18 +188,18 @@ function doRound(state,options) {
   //  Apply the effect to the target
 
   // Build the list of units that are participating in combat this round
-  //let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
+  // let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
 
   // TODO: Put unit objects in the unitStack.  Need to rewrite getAttacks to need a unit object rather than hash and state objects
   let unitStack = [];
+
   _.forEach(state.attackers.units,(hash,unit) => {
-    let unit = state.unit[hash];
+    //let unit = state.unit[hash];
     if(!unit.dead) {
       unitStack.push(hash);
     }
   });
-  _.forEach(state.defenders.unitHashList,(hash) => {
-    let unit = state.unit[hash];
+  _.forEach(state.defenders.units,(hash,unit) => {
     if(!unit.dead) {
       unitStack.push(hash);
     }

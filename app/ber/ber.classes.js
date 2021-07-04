@@ -29,7 +29,7 @@ export class Unit {
       },
       transitions: {
         next: () => {
-          // Put state graph decision login in here...
+          // Put state graph decision logic in here...
         }
       }
     },
@@ -42,15 +42,56 @@ export class Unit {
           // Clean up tasks
         }
       },
-      transitions: {}
+      transitions: {
+        next: () => {
+          // Put state graph decision logic in here...
+        }
+      }
     },
     leave: {
-      actions: {},
-      transitions: {}
+      actions: {
+        onEnter: () => {
+          // Setup tasks
+        },
+        onExit: () => {
+          // CLean up tasks
+        }
+      },
+      transitions: {
+        next: () => {
+          // Put state graph decision logic in here...
+        }
+      }
+    },
+    death: {
+      actions: {
+        onEnter: () => {
+          // Setup tasks
+        },
+        onExit: () => {
+          // Clean up tasks
+        }
+      },
+      transitions: {
+        next: () => {
+          // Put state graph decision logic in here...
+        }
+      }
     },
     end: {
-      actions: {},
-      transitions: {}
+      actions: {
+        onEnter: () => {
+          // Setup tasks
+        },
+        onExit: () => {
+          // Clean up tasks
+        }
+      },
+      transitions: {
+        next: () => {
+          // Put state graph decision logic in here...
+        }
+      }
     }
   }
 
@@ -68,10 +109,39 @@ export class Unit {
   }
 }
 
-export class Fleet {}
+export class Fleet {
+  constructor(data) {
+    this.hash = _.camelCase(data.race + data.name);
+    this.info = {
+      name: data.name,
+      race: data.race,
+      faction: data.faction
+    };
+    this.units = {};
+    this.unitHashList = [];
+    _.forEach(data.units,(unit) => {
+      unit.faction = this.faction;
+      unit.hash = _.camelCase(this.hash + unit.name);
+      this.units[unit.hash] = unit;
+      this.unitHashList.push(unit.hash);
+    });
+  }
+}
 
-export class Faction {}
+export class Faction {
+  constructor(data) {}
+}
 
-export class State {}
+export class State {
+  constructor(data) {}
+}
 
-export class Simulation {}
+export class Simulation {
+  constructor(data) {
+    this.factions = {};
+    data.factions.attackers.faction = "attackers";
+    data.factions.defenders.faction = "defenders";
+    this.factions.attackers = new Fleet(data.factions.attackers);
+    this.factions.defenders = new Fleet(data.factions.defenders);
+  }
+}
