@@ -1,4 +1,4 @@
-import {Simulation,Unit} from "./ber.classes.js";
+import {Simulation,Turn,Faction,Fleet,Unit} from "./ber.classes.js";
 
 export function simulator() {
   let _service = {};
@@ -14,6 +14,10 @@ export function simulator() {
 
   _service.setup = (attackers,defenders,options) => {
     // Save the passed information to the state object
+    attackers.faction = "attackers";
+    attackers.enemies = ["defenders"];
+    defenders.faction = "defenders";
+    defenders.enemies = ["attackers"];
     let sim = new Simulation({
       factions: {
         attackers: attackers,
@@ -226,10 +230,12 @@ function doRound(state,options) {
   let action = resolveStack.pop();
 
   while(resolveStack.length > 0) {
+    console.info(resolveStack);
     let event = {};
     event.type = action.type;
     if(action.type === "attack") {
-      let actor = getUnit(action.actor,state);
+      //let actor = getUnit(action.actor,state);
+      let actor = action.actor;
       console.info(`Processing attack for ${actor.name}`);
       let target = getTarget(action.actor,state);
       action.actee = target;
@@ -249,7 +255,8 @@ function doRound(state,options) {
       event.msg = `${event.actor} targets ${event.target}.`;
     }
     else if(action.type === "hit") {
-      let actor = getUnit(action.actor,state);
+      //let actor = getUnit(action.actor,state);
+      let actor = action.actor;
       let actee = getUnit(action.actee,state);
       console.info(`Processing hit for ${actor.name}`);
       let damage = doDamage(action,actor,actee);
@@ -264,7 +271,8 @@ function doRound(state,options) {
       event.msg = `${event.actor} hit ${event.target} (${event.payload}) for ${damage} damage.`;
     }
     else if(action.type === "damage") {
-      let actor = getUnit(action.actor,state);
+      //let actor = getUnit(action.actor,state);
+      let actor = action.actor;
       let actee = getUnit(action.actee,state);
       console.info(`Processing damage for ${actor.name}`);
 
@@ -283,7 +291,8 @@ function doRound(state,options) {
       event.msg = `${event.target} has taken ${event.payload} damage.`;
     }
     else if(action.type === "death") {
-      let actor = getUnit(action.actor,state);
+      //let actor = getUnit(action.actor,state);
+      let actor = action.actor;
       let actee = getUnit(action.actee,state);
       console.info(`Processing death for ${actee.name}`);
 
@@ -303,11 +312,11 @@ function getAttacks(unit,state) {
   // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks
   console.log(unit);
-  return _.cloneDeep(state.units[unit].tags.brackets);
+  return _.cloneDeep(unit.tags.brackets);
 }
 
-function getTarget(unitHash,state) {
-  let unit = state.units[unitHash];
+function getTarget(unit,state) {
+  //let unit = state.units[unitHash];
   return _.sample(state[unit.faction].targets);
 }
 
