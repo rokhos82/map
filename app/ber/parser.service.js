@@ -103,6 +103,8 @@ export function parser() {
     tags.delay = unitDelay;
     tags.time = unitTime;
     tags.dl = unitDL;
+    tags.reserve = unitReserve;
+    tags.nomove = unitNoMove;
 
     tags.flags = {};
     tags.flags.carrier = unitCarrier;

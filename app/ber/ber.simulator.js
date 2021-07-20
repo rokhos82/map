@@ -45,6 +45,8 @@ export function simulator() {
         // Make a copy of the current state
         let state = newState(_simulation);
 
+        // Update the target list
+
         // Perform the round ==> Update the new state
         doRound(state,_simulation.options);
 
@@ -101,16 +103,22 @@ function newState(simulation) {
 }
 
 function targetList(fleet,simulation) {
-  // Build a list of targets from the provided fleet.
-  let names = [];// _(fleet.units).map(x=>x.name).map(x=>_.camelCase(x)).value();
+  let hashList = [];
+
   _.forEach(fleet.units,(unit) => {
-    let prehash = fleet.info.name + unit.name;
-    let hash = _.camelCase(prehash);
-    unit.hash = hash;
-    names.push(hash);
-    simulation.units[hash] = unit;
+    let include = true;
+    // Filter out the units that are in reserve.
+    if(unit.tags.reserve > 0) {
+      include = false;
+    }
+
+    if(include) {
+      hashList.push(unit.hash);
+    }
   });
-  return names;
+
+  fleet.unitHashList = hashList;
+  return fleet.unitHashList;
 }
 
 function applyDamage(action,actor,actee) {
@@ -198,17 +206,17 @@ function doRound(state,options) {
   let unitStack = [];
   let movementStack = [];
 
-  _.forEach(state.attackers.units,(hash,unit) => {
+  _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
     if(!unit.dead) {
-      unitStack.push(hash);
-      movementStack.push(hash);
+      unitStack.push(unit);
+      movementStack.push(unit);
     }
   });
-  _.forEach(state.defenders.units,(hash,unit) => {
+  _.forEach(state.defenders.units,(unit) => {
     if(!unit.dead) {
-      unitStack.push(hash);
-      movementStack.push(hash);
+      unitStack.push(unit);
+      movementStack.push(unit);
     }
   });
 
@@ -222,6 +230,7 @@ function doRound(state,options) {
   let unit = unitStack.pop();
   while(unit) {
     // Get attacks from the unit object.
+    console.info(`Processing attacks for unit: ${unit.hash}`);
     let attacks = getAttacks(unit,state);
     _.forEach(attacks,(action) => {
       action.type = "attack";
@@ -230,11 +239,13 @@ function doRound(state,options) {
     });
     unit = unitStack.pop();
   }
+  console.info("Initial Stack",_.cloneDeep(resolveStack));
 
   let action = resolveStack.pop();
 
-  while(resolveStack.length > 0) {
-    console.info(resolveStack);
+  while(!!action) {
+    console.info("Current Action",_.cloneDeep(action));
+    console.info("Working Stack",_.cloneDeep(resolveStack));
     let event = {};
     event.type = action.type;
     if(action.type === "attack") {
@@ -333,7 +344,7 @@ function doRound(state,options) {
     }
     else if(unit.tags.flee) {
       // The unit has been fleeing.  Mark it as fled.
-      doFled(unit);
+      doFled(unit,state);
     }
     else if(unitDamageCheck(unit)) {
       // The unit has recieved enough damage.  Mark it as fleeing.
@@ -359,18 +370,20 @@ function doRound(state,options) {
 }
 
 function doFlee(unit) {
-  console.info(`Entering doFlee()`);
+  console.info(`Entering doFlee(${unit.hash})`);
   // Moves the unit to a fleeing state
   unit.tags.flee = true;
 }
 
-function doFled(unit) {
-  console.info(`Entering doFled()`);
+function doFled(unit,state) {
+  console.info(`Entering doFled(${unit.hash})`);
   // Moves the unit to the fled state
   // First, remove any existing flee tag
   delete unit.tags.flee;
   // Then, set the fled tag to true
   unit.tags.fled = true;
+  // Remove the unit from the battle
+  removeUnit(unit,state);
 }
 
 function unitDamageCheck(unit) {
@@ -426,11 +439,19 @@ function unitReserveCheck(unit,state) {
   console.info(`Entering unitReserveCheck()`);
   // Return true if the reserve level has been reached.
   let move = false;
+
+  // Check if the unit has a reserve tag
+  if(unit.tags.reserve && unit.tags.reserve > 0) {
+    // Determine if the faction has lost enough HULL points to move the unit out of reserve.
+    let reservePercentage = unit.tags.reserve/100;
+    let reserveThreshold = state[unit.faction].hullMax * reservePercentage;
+  }
+
   return move;
 }
 
 function unitRemoveTag(unit,tag) {
-  console.info(`Entering unitRemoveTag()`);
+  console.info(`Entering unitRemoveTag(${unit.hash},${tag})`);
   // Remove a specific tag from the unit
 }
 
@@ -449,7 +470,7 @@ function unitTimeCheck(unit) {
 }
 
 function removeUnit(unit,state) {
-  console.info(`Entering removeUnit()`);
+  console.info(`Entering removeUnit(${unit.hash})`);
   // This function removes a unit from actively participating in the combat simulation.
   // This can be due to the unit being destroyed or fleeing from combat.
 
@@ -475,7 +496,7 @@ function getAttacks(unit,state) {
   // Clone the brackets array from the unit.
   // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks
-  console.log(unit);
+  console.log(unit.tags.brackets);
   return _.cloneDeep(unit.tags.brackets);
 }
 
@@ -509,7 +530,6 @@ function setupFleet(fleet,faction) {
     unit.faction = faction;
     unit.hash = _.camelCase(f.info.name + unit.name);
     f.units[unit.hash] = unit;
-    f.unitHashList.push(unit.hash);
     hullTotal += unit.hlMax;
     unitTotal++;
   });
