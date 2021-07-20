@@ -196,18 +196,22 @@ function doRound(state,options) {
 
   // TODO: Put unit objects in the unitStack.  Need to rewrite getAttacks to need a unit object rather than hash and state objects
   let unitStack = [];
+  let movementStack = [];
 
   _.forEach(state.attackers.units,(hash,unit) => {
     //let unit = state.unit[hash];
     if(!unit.dead) {
       unitStack.push(hash);
+      movementStack.push(hash);
     }
   });
   _.forEach(state.defenders.units,(hash,unit) => {
     if(!unit.dead) {
       unitStack.push(hash);
+      movementStack.push(hash);
     }
   });
+
   let resolveStack = [];
 
   // Log the message of the new turn
@@ -305,6 +309,166 @@ function doRound(state,options) {
     state.events.push(event);
     action = resolveStack.pop();
   }
+
+  // Now that combat is done.  Do movement.
+  // The movement checks from highest to lowest priority are:
+  // 1 - fled
+  // 2 - flee
+  // 3 - damage
+  // 4 - break
+  // 5 - reserve
+  // 6 - delay
+  // 7 - time
+  console.info(`Starting movement checks`);
+  console.log(movementStack);
+  while(movementStack.length > 0) {
+    // Get the unit object
+    let unit = movementStack.pop();
+
+    // Check the unit tags in the order specified above.
+    // fled >> flee >> damage >> break >> reserve >> delay >> time
+    if(unit.tags.fled) {
+      // The unit has fled combat.  Remove the unit from the simulation.
+      removeUnit(unit,state);
+    }
+    else if(unit.tags.flee) {
+      // The unit has been fleeing.  Mark it as fled.
+      doFled(unit);
+    }
+    else if(unitDamageCheck(unit)) {
+      // The unit has recieved enough damage.  Mark it as fleeing.
+      doFlee(unit);
+    }
+    else if(unitBreakCheck(unit,state)) {
+      // The unit has reached its breakoff level.  Mark it as fleeing.
+      doFlee(unit);
+    }
+    else if(unitReserveCheck(unit,state)) {
+      // The unit has reached its reserve level.  Remove the unit from reserve.
+      unitRemoveTag(unit,"reserve");
+    }
+    else if(unitDelayCheck(unit)) {
+      // The unit has reached its delay counter.  Move the unit into combat.
+      unitRemoveTag(unit,"delay");
+    }
+    else if(unitTimeCheck(unit)) {
+      // The unit has been in combat for its limit.  Mark it as fleeing.
+      doFlee(unit);
+    }
+  }
+}
+
+function doFlee(unit) {
+  console.info(`Entering doFlee()`);
+  // Moves the unit to a fleeing state
+  unit.tags.flee = true;
+}
+
+function doFled(unit) {
+  console.info(`Entering doFled()`);
+  // Moves the unit to the fled state
+  // First, remove any existing flee tag
+  delete unit.tags.flee;
+  // Then, set the fled tag to true
+  unit.tags.fled = true;
+}
+
+function unitDamageCheck(unit) {
+  console.info(`Entering unitDamageCheck()`);
+  // Return true if the unit has sustained enough damage.
+  let flee = false;
+
+  // TODO: I can move some of the threshold code to the Unit object in the constructor.  As long as the damage tag is static.
+
+  // First, check if the damage values is greater than 100.  If so, deal with shields.
+  if(unit.tags.damage > 100) {
+    // The damage value is greater than 100.
+    // Subtract 100 and convert to percentage.  This is the percentage of shields that must remain for the unit to stay in combat.
+    let shPercent = (unit.tags.damage - 100)/100;
+    let shMax = unit.shMax;
+    let shCur = unit.shCur;
+    let shThreshold = _.round(shMax * shPercent);
+    if(shCur < shThreshold) {
+      flee = true;
+    }
+  }
+  else {
+    // The damage values is less than or equal to 100.
+    // Convert to percentage.  This is the percentage of hull points that must remain for the unit to stay in combat.
+    let hlPercent = unit.tags.damage / 100;
+    let hlMax = unit.hlMax;
+    let hlCur = unit.hlCur;
+    let hlThreshold = _.round(hlMax * hlPercent);
+    if(hlCur < hlThreshold) {
+      flee = true;
+    }
+  }
+
+  return flee;
+}
+
+function unitBreakCheck(unit,state) {
+  console.info(`Entering unitBreakCheck()`);
+  // Return true if the unit's breakoff level has been reached.
+  // The breakoff threshold is the break value as a percentage of the maximum hull in the fleet.
+  let flee = false;
+
+  // Get the breakoff level from the unit or the unit's fleet.
+  // TODO: Add a step to setup that adds a fleet's break value to units that do not have one specified.
+  let breakPercentage = unit.tags.break/100;
+  let breakThreshold = state[unit.faction].hullTotal * breakPercentage;
+  // How am I going to track current hull level for a fleet/faction?
+
+  return flee;
+}
+
+function unitReserveCheck(unit,state) {
+  console.info(`Entering unitReserveCheck()`);
+  // Return true if the reserve level has been reached.
+  let move = false;
+  return move;
+}
+
+function unitRemoveTag(unit,tag) {
+  console.info(`Entering unitRemoveTag()`);
+  // Remove a specific tag from the unit
+}
+
+function unitDelayCheck(unit) {
+  console.info(`Entering unitDelayCheck()`);
+  // Check for a delay tag.  If present update the value.  If the value <= 0 then return true.
+  let arrive = false;
+  return arrive;
+}
+
+function unitTimeCheck(unit) {
+  console.info(`Entering unitTimeCheck()`)
+  // Check for a time tag.
+  let flee = false;
+  return flee;
+}
+
+function removeUnit(unit,state) {
+  console.info(`Entering removeUnit()`);
+  // This function removes a unit from actively participating in the combat simulation.
+  // This can be due to the unit being destroyed or fleeing from combat.
+
+  let fleet = state[unit.faction];
+  // Why is the unit being removed?
+  if(unit.dead) {
+    // The unit has been destroyed
+    fleet.destroyed.push(unit);
+  }
+  else if(unit.tags.flee) {
+    // The unit has fled the battle space
+    fleet.fled.push(unit);
+  }
+  else {
+    // Not sure why we are removing the unit.  Should we generate an error?
+  }
+  // Remove the unit from the hashlist and the unit dictionary
+  _.pullAt(fleet.unitsHashList,_.findIndex(unit.hash));
+  delete fleet.units[unit.hash];
 }
 
 function getAttacks(unit,state) {
@@ -336,12 +500,22 @@ function setupFleet(fleet,faction) {
 
   f.units = {};
   f.unitHashList = [];
+  f.destroyed = [];
+  f.fled = [];
+  let hullTotal = 0;
+  let unitTotal = 0;
+
   _.forEach(fleet.units,(unit) => {
     unit.faction = faction;
     unit.hash = _.camelCase(f.info.name + unit.name);
     f.units[unit.hash] = unit;
     f.unitHashList.push(unit.hash);
+    hullTotal += unit.hlMax;
+    unitTotal++;
   });
+
+  f.hullMax = hullTotal;
+  f.unitMax = unitTotal;
 
   return f;
 }
