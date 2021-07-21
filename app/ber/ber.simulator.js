@@ -46,6 +46,8 @@ export function simulator() {
         let state = newState(_simulation);
 
         // Update the target list
+        state.attackers.targets = targetList(state.defenders);
+        state.defenders.targets = targetList(state.attackers);
 
         // Perform the round ==> Update the new state
         doRound(state,_simulation.options);
@@ -111,6 +113,9 @@ function targetList(fleet,simulation) {
     if(unit.tags.reserve > 0) {
       include = false;
     }
+    else if(unit.dead) {
+      include = false;
+    }
 
     if(include) {
       hashList.push(unit.hash);
@@ -163,9 +168,10 @@ function doDamage(action,actor,actee) {
 
 function doDeath(action,state,actor,actee) {
   if(!actee.dead) {
-    let faction = (actee.faction === "attackers") ? "defenders" : "attackers";
+    let faction = actee.faction;
     actee.dead = true;
     _.pull(state[faction].units,actee.hash);
+    removeUnit(actee,state);
   }
 }
 
@@ -208,13 +214,13 @@ function doRound(state,options) {
 
   _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
-    if(!unit.dead) {
+    if(!unit.dead && !unit.tags.fled) {
       unitStack.push(unit);
       movementStack.push(unit);
     }
   });
   _.forEach(state.defenders.units,(unit) => {
-    if(!unit.dead) {
+    if(!unit.dead && !unit.tags.fled) {
       unitStack.push(unit);
       movementStack.push(unit);
     }
@@ -443,8 +449,14 @@ function unitReserveCheck(unit,state) {
   // Check if the unit has a reserve tag
   if(unit.tags.reserve && unit.tags.reserve > 0) {
     // Determine if the faction has lost enough HULL points to move the unit out of reserve.
-    let reservePercentage = unit.tags.reserve/100;
+    let reservePercentage = (unit.tags.reserve-100)/100;
     let reserveThreshold = state[unit.faction].hullMax * reservePercentage;
+
+    if(reserveThreshold <= state[unit.faction].hullCur) {
+      // The unit is leaving the reserve
+      console.info(`Unit ${unit.hash} is leaving reserve!`);
+      move = true;
+    }
   }
 
   return move;
@@ -490,6 +502,10 @@ function removeUnit(unit,state) {
   // Remove the unit from the hashlist and the unit dictionary
   _.pullAt(fleet.unitsHashList,_.findIndex(unit.hash));
   delete fleet.units[unit.hash];
+
+  // Update the current fleet HULL and COUNT variables for RESERVE tracking
+  fleet.hullCur -= unit.hlMax;
+  fleet.unitCur--;
 }
 
 function getAttacks(unit,state) {
@@ -535,7 +551,9 @@ function setupFleet(fleet,faction) {
   });
 
   f.hullMax = hullTotal;
+  f.hullCur = hullTotal;
   f.unitMax = unitTotal;
+  f.unitCur = unitTotal;
 
   return f;
 }
