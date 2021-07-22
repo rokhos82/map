@@ -168,9 +168,9 @@ function doDamage(action,actor,actee) {
 
 function doDeath(action,state,actor,actee) {
   if(!actee.dead) {
-    let faction = actee.faction;
+    //let faction = actee.faction;
     actee.dead = true;
-    _.pull(state[faction].units,actee.hash);
+    //_.pull(state[faction].units,actee.hash);
     removeUnit(actee,state);
   }
 }
@@ -303,7 +303,7 @@ function doRound(state,options) {
         let a = _.cloneDeep(action);
         a.type = "death";
         a.dead = dead;
-        resolveStack.push(a);
+        resolveStack.unshift(a);
       }
 
       event.actor = actor.name;
@@ -347,10 +347,12 @@ function doRound(state,options) {
     if(unit.tags.fled) {
       // The unit has fled combat.  Remove the unit from the simulation.
       removeUnit(unit,state);
+      state.events.push({msg:`${unit.name} has fled the battle!`});
     }
     else if(unit.tags.flee) {
       // The unit has been fleeing.  Mark it as fled.
       doFled(unit,state);
+      state.events.push({msg:`${unit.name} is fleeing the battle!`});
     }
     else if(unitDamageCheck(unit)) {
       // The unit has recieved enough damage.  Mark it as fleeing.
@@ -492,12 +494,13 @@ function removeUnit(unit,state) {
     // The unit has been destroyed
     fleet.destroyed.push(unit);
   }
-  else if(unit.tags.flee) {
+  else if(unit.tags.fled) {
     // The unit has fled the battle space
     fleet.fled.push(unit);
   }
   else {
     // Not sure why we are removing the unit.  Should we generate an error?
+    console.warn(`Unit removed for unknown reason!`);
   }
   // Remove the unit from the hashlist and the unit dictionary
   _.pullAt(fleet.unitsHashList,_.findIndex(unit.hash));
