@@ -19,7 +19,7 @@ class berSimulationController {
     this.ui.sim = false;
     this.ui.turns = [false,false,false,false,false];
     this.ui.lastState = false;
-    this.ui.maxTurns = 10;
+    this.ui.maxTurns = 20;
     this.ui.currentPage = 1;
   }
 

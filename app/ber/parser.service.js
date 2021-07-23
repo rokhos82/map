@@ -23,7 +23,11 @@ export function parser() {
     // Parse Unit Description Lines (UDLs).
     let units = [];
     for(let i = 1;i < lines.length;i++) {
-      units.push(_service.parseUnit(lines[i]));
+      let unit = _service.parseUnit(lines[i]);
+      if(!unit.tags.break) {
+        unit.tags.break = fleet.break;
+      }
+      units.push(unit);
     }
     fleet.units = units;
 
@@ -77,7 +81,7 @@ export function parser() {
     // Get the unit's flicker value
     let unitFlicker = _(tagString).words(/FLICKER \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
     // Get the unit's break value if it exists.  Default value of 100 := fights to the last man
-    let unitBreak = _(tagString).words(/BREAK \d+/).words(/\d+/).map(x=>+x).value()[0] || 100;
+    let unitBreak = _(tagString).words(/BREAK \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
     // Get the unit's damage value if it exists.  Default value of 0 := fights to the death.
     let unitDamage = _(tagString).words(/DAMAGE \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
     // Get the unit's delay value if it exists.  Default value of 0 := arrive at start of fight.

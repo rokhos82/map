@@ -113,6 +113,9 @@ function targetList(fleet,simulation) {
     if(unit.tags.reserve > 0) {
       include = false;
     }
+    else if(unit.tags.delay > 0) {
+      include = false;
+    }
     else if(unit.dead) {
       include = false;
     }
@@ -176,6 +179,7 @@ function doDeath(action,state,actor,actee) {
 }
 
 function doHitRoll(action,actor,actee) {
+  console.log(`Calculating hit from ${actor.hash} against ${actee.hash}`);
   let t = action.target;
   let d = actee.tags.defense;
 
@@ -209,19 +213,22 @@ function doRound(state,options) {
   // let unitStack = _.flatten([state.attackers.unitHashList,state.defenders.unitHashList]);
 
   // TODO: Put unit objects in the unitStack.  Need to rewrite getAttacks to need a unit object rather than hash and state objects
-  let unitStack = [];
+  //let unitStack = [];
+  //let movementStack = [];
+
+  let unitStack = getParticipants(state);
   let movementStack = [];
 
   _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
     if(!unit.dead && !unit.tags.fled) {
-      unitStack.push(unit);
+      //unitStack.push(unit);
       movementStack.push(unit);
     }
   });
   _.forEach(state.defenders.units,(unit) => {
     if(!unit.dead && !unit.tags.fled) {
-      unitStack.push(unit);
+      //unitStack.push(unit);
       movementStack.push(unit);
     }
   });
@@ -259,21 +266,23 @@ function doRound(state,options) {
       let actor = action.actor;
       console.info(`Processing attack for ${actor.name}`);
       let target = getTarget(action.actor,state);
-      action.actee = target;
-      let actee = getUnit(target,state);
-      let hitRoll = doHitRoll(action,actor,actee);
-      action.hitRoll = hitRoll;
-      // TODO: Add options that will determine what the baseToHit is
-      if(hitRoll > options.baseToHit) {
-        let a = _.cloneDeep(action);
-        a.type = "hit";
-        resolveStack.push(a);
-        console.log(_.cloneDeep(resolveStack));
-      }
+      if(!!target) {
+        action.actee = target;
+        let actee = getUnit(target,state);
+        let hitRoll = doHitRoll(action,actor,actee);
+        action.hitRoll = hitRoll;
+        // TODO: Add options that will determine what the baseToHit is
+        if(hitRoll > options.baseToHit) {
+          let a = _.cloneDeep(action);
+          a.type = "hit";
+          resolveStack.push(a);
+          console.log(_.cloneDeep(resolveStack));
+        }
 
-      event.actor = actor.name;
-      event.target = actee.name;
-      event.msg = `${event.actor} targets ${event.target}.`;
+        event.actor = actor.name;
+        event.target = actee.name;
+        event.msg = `${event.actor} targets ${event.target}.`;
+      }
     }
     else if(action.type === "hit") {
       //let actor = getUnit(action.actor,state);
@@ -357,18 +366,21 @@ function doRound(state,options) {
     else if(unitDamageCheck(unit)) {
       // The unit has recieved enough damage.  Mark it as fleeing.
       doFlee(unit);
+      state.events.push({msg:`${unit.name} is fleeing due to unit damage!`});
     }
     else if(unitBreakCheck(unit,state)) {
       // The unit has reached its breakoff level.  Mark it as fleeing.
       doFlee(unit);
-    }
-    else if(unitReserveCheck(unit,state)) {
-      // The unit has reached its reserve level.  Remove the unit from reserve.
-      unitRemoveTag(unit,"reserve");
+      state.event.push({msg:`${unit.name} is fleeing due to fleet break off!`});
     }
     else if(unitDelayCheck(unit)) {
       // The unit has reached its delay counter.  Move the unit into combat.
       unitRemoveTag(unit,"delay");
+      state.events.push({msg:`${unit.name} has arrived to the fight!`});
+    }
+    else if(unitReserveCheck(unit,state)) {
+      // The unit has reached its reserve level.  Remove the unit from reserve.
+      unitRemoveTag(unit,"reserve");
     }
     else if(unitTimeCheck(unit)) {
       // The unit has been in combat for its limit.  Mark it as fleeing.
@@ -391,7 +403,7 @@ function doFled(unit,state) {
   // Then, set the fled tag to true
   unit.tags.fled = true;
   // Remove the unit from the battle
-  removeUnit(unit,state);
+  //removeUnit(unit,state);
 }
 
 function unitDamageCheck(unit) {
@@ -435,10 +447,15 @@ function unitBreakCheck(unit,state) {
   let flee = false;
 
   // Get the breakoff level from the unit or the unit's fleet.
-  // TODO: Add a step to setup that adds a fleet's break value to units that do not have one specified.
-  let breakPercentage = unit.tags.break/100;
-  let breakThreshold = state[unit.faction].hullTotal * breakPercentage;
+  let breakPercentage = (100 - unit.tags.break)/100;
+  let breakThreshold = state[unit.faction].hullMax * breakPercentage;
+
+  console.info(`BREAK ${unit.tags.break}`,`THRESHOLD: ${breakThreshold}`,`CURRENT: ${state[unit.faction].hullCur}`);
+
   // How am I going to track current hull level for a fleet/faction?
+  if(breakThreshold >= state[unit.faction].hullCur) {
+    flee = true;
+  }
 
   return flee;
 }
@@ -451,10 +468,12 @@ function unitReserveCheck(unit,state) {
   // Check if the unit has a reserve tag
   if(unit.tags.reserve && unit.tags.reserve > 0) {
     // Determine if the faction has lost enough HULL points to move the unit out of reserve.
-    let reservePercentage = (unit.tags.reserve-100)/100;
+    let reservePercentage = (100-unit.tags.reserve)/100;
     let reserveThreshold = state[unit.faction].hullMax * reservePercentage;
 
-    if(reserveThreshold <= state[unit.faction].hullCur) {
+    console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state[unit.faction].hullCur}`);
+
+    if(reserveThreshold >= state[unit.faction].hullCur) {
       // The unit is leaving the reserve
       console.info(`Unit ${unit.hash} is leaving reserve!`);
       move = true;
@@ -467,12 +486,23 @@ function unitReserveCheck(unit,state) {
 function unitRemoveTag(unit,tag) {
   console.info(`Entering unitRemoveTag(${unit.hash},${tag})`);
   // Remove a specific tag from the unit
+  delete unit.tags[tag];
 }
 
 function unitDelayCheck(unit) {
   console.info(`Entering unitDelayCheck()`);
   // Check for a delay tag.  If present update the value.  If the value <= 0 then return true.
   let arrive = false;
+
+  if(unitHasTag(unit,"delay")) {
+    console.info(`Unit ${unit.hash} has delay ${unit.tags.delay}`);
+    unit.tags.delay--;
+
+    if(unit.tags.delay <= 0) {
+      arrive = true;
+    }
+  }
+
   return arrive;
 }
 
@@ -576,4 +606,52 @@ function fleetDestroyedCheck(fleet) {
   });
 
   return dead;
+}
+
+function getParticipants(state) {
+  // Get the units that are participating in this round of combat.
+  // Exclude the following:
+  // - Units with RESERVE tag
+  // - Units with DELAY tag
+  // - Units with FLEE tag???
+  // Exceptions:
+  // - Units with RESERVE & ARTILLERY tags
+
+
+  let parts = [];
+  let reserve = [];
+
+  // Get the first list of units.  Those without RESERVE & DELAY
+  let factions = ["attackers","defenders"];
+
+  _.forEach(factions,(faction) => {
+    let fleet = state[faction];
+    _.forEach(fleet.units,(unit) => {
+      if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
+        parts.push(unit);
+      }
+      else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
+        reserve.push(unit);
+      }
+    });
+  });
+
+  return parts;
+}
+
+function unitHasTag(unit,tag) {
+  // Check in the unit tags, then in the brackets.
+  let hasTag = false;
+
+  if(!!unit.tags[tag]) {
+    hasTag = true;
+  }
+
+  _.forEach(unit.tags.brackets,(bracket) => {
+    if(!!bracket[tag]) {
+      hasTag = true;
+    }
+  });
+
+  return hasTag;
 }
