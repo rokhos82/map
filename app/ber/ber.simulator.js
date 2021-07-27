@@ -246,7 +246,14 @@ function doRound(state,options) {
     console.info(`Processing attacks for unit: ${unit.hash}`);
     let attacks = getAttacks(unit,state);
     _.forEach(attacks,(action) => {
-      action.type = "attack";
+      if(_.isObject(action.missile)) {
+        // Process this as a missile bracket
+        action.type = "missile";
+      }
+      else {
+        // Process as a regular attack bracket
+        action.type = "attack";
+      }
       action.actor = unit;
       resolveStack.push(action);
     });
@@ -259,12 +266,30 @@ function doRound(state,options) {
   while(!!action) {
     console.info("Current Action",_.cloneDeep(action));
     console.info("Working Stack",_.cloneDeep(resolveStack));
+    // TODO: Move event loggin code to each individual action.  See 2 lines below.
     let event = {};
     event.type = action.type;
-    if(action.type === "attack") {
-      //let actor = getUnit(action.actor,state);
+    if(action.type === "missile") {
+      let actor = action.actor;
+      console.info(`Processing missile attack for ${actor.name}`);
+
+      // For each missile in the volley create a separate attack
+      for(let i = 0;i < action.volley;i++) {
+        let atk = _.cloneDeep(action);
+        atk.actor = atk.missile;
+        atk.actor.name = `${actor.name} Missile ${i+1}`;
+        atk.actor.faction = actor.faction;
+        atk.volley = atk.missile.tp;
+        atk.type = "attack";
+        resolveStack.push(atk);
+        state.events.push({msg:`${actor.name} launches a missile.`});
+      }
+    }
+    else if(action.type === "attack") {
+
       let actor = action.actor;
       console.info(`Processing attack for ${actor.name}`);
+
       let target = getTarget(action.actor,state);
       if(!!target) {
         action.actee = target;
