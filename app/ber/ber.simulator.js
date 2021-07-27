@@ -221,13 +221,13 @@ function doRound(state,options) {
 
   _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
-    if(!unit.dead && !unit.tags.fled) {
+    if(!unit.dead) {
       //unitStack.push(unit);
       movementStack.push(unit);
     }
   });
   _.forEach(state.defenders.units,(unit) => {
-    if(!unit.dead && !unit.tags.fled) {
+    if(!unit.dead) {
       //unitStack.push(unit);
       movementStack.push(unit);
     }
@@ -371,7 +371,7 @@ function doRound(state,options) {
     else if(unitBreakCheck(unit,state)) {
       // The unit has reached its breakoff level.  Mark it as fleeing.
       doFlee(unit);
-      state.event.push({msg:`${unit.name} is fleeing due to fleet break off!`});
+      state.events.push({msg:`${unit.name} is fleeing due to fleet break off!`});
     }
     else if(unitDelayCheck(unit)) {
       // The unit has reached its delay counter.  Move the unit into combat.
