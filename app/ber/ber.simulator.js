@@ -715,4 +715,27 @@ function unitCriticalHit(unit) {
   let threshold3 = _.round(unit.hlMax * 0.4);
   let threshold4 = _.round(unit.hlMax * 0.2);
   let threshold5 = 0;
+
+  // Check for the first crit
+  if(unit.hlCur <= threshold1 && !_.isObject(unit.criticalHits.1)) {}
+  // Check for the second crit
+  if(unit.hlCur <= threshold2 && !_.isObject(unit.criticalHits.2)) {}
+  // Check for the third crit
+  if(unit.hlCur <= threshold3 && !_.isObject(unit.criticalHits.3)) {}
+  // Check for the fourth crit
+  if(unit.hlCur <= threshold4 && !_.isObject(unit.criticalHits.4)) {}
+  // Check for the fifth crit
+  if(unit.hlCur <= threshold5 && !_.isObject(unit.criticalHits.5)) {}
+}
+
+function rollCriticalHit(unit) {
+  let generalTable = new Array(100);
+  generalTable[0] = {msg:"Reactor Core Breach (Ship Explodes)"};
+  _.fill(generalTable,{msg:"Structural Collapse (+3 Damage)"},1,2);
+  _.fill(generalTable,{msg:"Explosion Amidships (+2 damage)"},3,4);
+  console.log(generalTable);
+
+  let critEntry = {
+    msg: "Reactor Core Breach (Ship Explodes)"
+  };
 }
