@@ -218,18 +218,21 @@ function doRound(state,options) {
 
   let unitStack = getParticipants(state);
   let movementStack = [];
+  let critStack = [];
 
   _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
     if(!unit.dead) {
       //unitStack.push(unit);
       movementStack.push(unit);
+      //critStack.push(unit);
     }
   });
   _.forEach(state.defenders.units,(unit) => {
     if(!unit.dead) {
       //unitStack.push(unit);
       movementStack.push(unit);
+      //critStack.push(unit);
     }
   });
 
@@ -332,6 +335,7 @@ function doRound(state,options) {
       console.info(`Processing damage for ${actor.name}`);
 
       let dead = applyDamage(action,actor,actee);
+      critStack.push(actee);
 
       if(dead && !actee.dead) {
         let a = _.cloneDeep(action);
@@ -412,6 +416,9 @@ function doRound(state,options) {
       doFlee(unit);
     }
   }
+
+  // Process any critical hits
+  doCriticalHits(critStack);
 }
 
 function doFlee(unit) {
@@ -603,6 +610,7 @@ function setupFleet(fleet,faction) {
   _.forEach(fleet.units,(unit) => {
     unit.faction = faction;
     unit.hash = _.camelCase(f.info.name + unit.name);
+    unit.crticialHits = {};
     f.units[unit.hash] = unit;
     hullTotal += unit.hlMax;
     unitTotal++;
@@ -679,4 +687,32 @@ function unitHasTag(unit,tag) {
   });
 
   return hasTag;
+}
+
+function doCriticalHits(unitStack) {
+  console.info(`Entering doCriticalHits()`);
+  // Critical hits are applied at:
+  // - 20%
+  // - 40%
+  // - 60%
+  // - 80%
+  // - 100% - to finish with a bang!
+  console.info(unitStack);
+
+  while(unitStack.length > 0) {
+    let unit = unitStack.pop();
+    if(unit.shCur <= 0) {
+      console.log('Checking for critical hits');
+      unitCriticalHit(unit);
+    }
+  }
+}
+
+function unitCriticalHit(unit) {
+  // Build out the thresholds.
+  let threshold1 = _.round(unit.hlMax * 0.8);
+  let threshold2 = _.round(unit.hlMax * 0.6);
+  let threshold3 = _.round(unit.hlMax * 0.4);
+  let threshold4 = _.round(unit.hlMax * 0.2);
+  let threshold5 = 0;
 }
