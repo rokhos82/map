@@ -1,4 +1,5 @@
 import {Simulation,Turn,Faction,Fleet,Unit} from "./ber.classes.js";
+import {generalTable} from "./ber.crits.js";
 
 export function simulator() {
   let _service = {};
@@ -132,6 +133,7 @@ function targetList(fleet,simulation) {
 function applyDamage(action,actor,actee) {
   // Apply damage from the action to the target
   // Account for SR/AR and select health pool
+  // TODO: Move damage event generation here
   let damage = action.damage;
 
   if(actee.shCur > 0) {
@@ -170,6 +172,7 @@ function doDamage(action,actor,actee) {
 }
 
 function doDeath(action,state,actor,actee) {
+  // TODO: Move death event generation here
   if(!actee.dead) {
     //let faction = actee.faction;
     actee.dead = true;
@@ -418,7 +421,7 @@ function doRound(state,options) {
   }
 
   // Process any critical hits
-  doCriticalHits(critStack);
+  doCriticalHits(critStack,state);
 }
 
 function doFlee(unit) {
@@ -610,7 +613,7 @@ function setupFleet(fleet,faction) {
   _.forEach(fleet.units,(unit) => {
     unit.faction = faction;
     unit.hash = _.camelCase(f.info.name + unit.name);
-    unit.crticialHits = {};
+    unit.criticalHits = {};
     f.units[unit.hash] = unit;
     hullTotal += unit.hlMax;
     unitTotal++;
@@ -689,7 +692,7 @@ function unitHasTag(unit,tag) {
   return hasTag;
 }
 
-function doCriticalHits(unitStack) {
+function doCriticalHits(unitStack,state) {
   console.info(`Entering doCriticalHits()`);
   // Critical hits are applied at:
   // - 20%
@@ -703,12 +706,12 @@ function doCriticalHits(unitStack) {
     let unit = unitStack.pop();
     if(unit.shCur <= 0) {
       console.log('Checking for critical hits');
-      unitCriticalHit(unit);
+      unitCriticalHit(unit,state);
     }
   }
 }
 
-function unitCriticalHit(unit) {
+function unitCriticalHit(unit,state) {
   // Build out the thresholds.
   let threshold1 = _.round(unit.hlMax * 0.8);
   let threshold2 = _.round(unit.hlMax * 0.6);
@@ -717,25 +720,62 @@ function unitCriticalHit(unit) {
   let threshold5 = 0;
 
   // Check for the first crit
-  if(unit.hlCur <= threshold1 && !_.isObject(unit.criticalHits.1)) {}
+  if(unit.hlCur <= threshold1 && !_.isObject(unit.criticalHits["1"])) {
+    unit.criticalHits["1"] = rollCriticalHit(unit);
+    applyCritialHit(unit,"1",state);
+    state.events.push({msg:`${unit.name} crit: ${unit.criticalHits["1"].msg}`});
+  }
   // Check for the second crit
-  if(unit.hlCur <= threshold2 && !_.isObject(unit.criticalHits.2)) {}
+  if(unit.hlCur <= threshold2 && !_.isObject(unit.criticalHits["2"])) {
+    unit.criticalHits["2"] = rollCriticalHit(unit);
+    applyCritialHit(unit,"2",state);
+    state.events.push({msg:`${unit.name} crit: ${unit.criticalHits["2"].msg}`});
+  }
   // Check for the third crit
-  if(unit.hlCur <= threshold3 && !_.isObject(unit.criticalHits.3)) {}
+  if(unit.hlCur <= threshold3 && !_.isObject(unit.criticalHits["3"])) {
+    unit.criticalHits["3"] = rollCriticalHit(unit);
+    applyCritialHit(unit,"3",state);
+    state.events.push({msg:`${unit.name} crit: ${unit.criticalHits["3"].msg}`});
+  }
   // Check for the fourth crit
-  if(unit.hlCur <= threshold4 && !_.isObject(unit.criticalHits.4)) {}
+  if(unit.hlCur <= threshold4 && !_.isObject(unit.criticalHits["4"])) {
+    unit.criticalHits["4"] = rollCriticalHit(unit);
+    applyCritialHit(unit,"4",state);
+    state.events.push({msg:`${unit.name} crit: ${unit.criticalHits["4"].msg}`});
+  }
   // Check for the fifth crit
-  if(unit.hlCur <= threshold5 && !_.isObject(unit.criticalHits.5)) {}
+  if(unit.hlCur <= threshold5 && !_.isObject(unit.criticalHits["5"])) {
+    unit.criticalHits["5"] = rollCriticalHit(unit);
+    applyCritialHit(unit,"5",state);
+    state.events.push({msg:`${unit.name} crit: ${unit.criticalHits["5"].msg}`});
+  }
 }
 
 function rollCriticalHit(unit) {
-  let generalTable = new Array(100);
-  generalTable[0] = {msg:"Reactor Core Breach (Ship Explodes)"};
-  _.fill(generalTable,{msg:"Structural Collapse (+3 Damage)"},1,2);
-  _.fill(generalTable,{msg:"Explosion Amidships (+2 damage)"},3,4);
-  console.log(generalTable);
+  // TODO: Add lookup code for crit table tags
+  return _.sample(generalTable);
+}
 
-  let critEntry = {
-    msg: "Reactor Core Breach (Ship Explodes)"
-  };
+function applyCritialHit(unit,key,state) {
+  let crit = unit.criticalHits[key];
+
+  _.forEach(crit.effects,(effectKey) => {
+    if(effectKey === "death") {
+      // Kill the unit.
+      doDeath(null,state,null,unit);
+    }
+    else if(effectKey === "damage") {
+      // Damage the unit
+      let damage = crit["damage"];
+      if(_.isNumber(damage)) {
+        doDamage({damage:damage},null,unit);
+      }
+      else {
+        // Convert to a number...
+      }
+    }
+    else {
+      // Do nothing as the effect is pointless.
+    }
+  });
 }
