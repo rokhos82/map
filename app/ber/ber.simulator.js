@@ -279,6 +279,11 @@ function doRound(state,options) {
       let actor = action.actor;
       console.info(`Processing missile attack for ${actor.name}`);
 
+      // Adjust the ammo for the missile bracket
+      if(_.isNumber(action.ammo)) {
+        action.ammo--;
+      }
+
       // For each missile in the volley create a separate attack
       for(let i = 0;i < action.volley;i++) {
         let atk = _.cloneDeep(action);
@@ -292,9 +297,13 @@ function doRound(state,options) {
       }
     }
     else if(action.type === "attack") {
-
       let actor = action.actor;
       console.info(`Processing attack for ${actor.name}`);
+
+      // Adjust ammo if it is present
+      if(_.isNumber(action.ammo)) {
+        action.ammo--;
+      }
 
       let target = getTarget(action.actor,state);
       if(!!target) {
@@ -579,9 +588,12 @@ function removeUnit(unit,state) {
 function getAttacks(unit,state) {
   // Clone the brackets array from the unit.
   // TODO: filter out offline/out of ammo brackets.
-  // TODO: handle non-bracket attacks
-  console.log(unit.tags.brackets);
-  return _.cloneDeep(unit.tags.brackets);
+  // TODO: handle non-bracket attacks <== MOVE to parse unit
+  let brackets = _.filter(unit.tags.brackets,(bracket) => {
+    return ((_.isNumber(bracket.ammo) && bracket.ammo > 0) || (_.isNumber(bracket.offline) && bracket.offline > 0))
+  });
+  console.log(brackets);
+  return _.cloneDeep(brackets);
 }
 
 function getTarget(unit,state) {
