@@ -281,7 +281,7 @@ function doRound(state,options) {
 
       // Adjust the ammo for the missile bracket
       if(_.isNumber(action.ammo)) {
-        action.ammo--;
+        actor.brackets[action.hash].ammo--;
       }
 
       // For each missile in the volley create a separate attack
@@ -302,7 +302,8 @@ function doRound(state,options) {
 
       // Adjust ammo if it is present
       if(_.isNumber(action.ammo)) {
-        action.ammo--;
+        // TODO: Update the original attack in the unit object!  How though?  Maybe by converting the array to a hash?
+        actor.brackets[action.hash].ammo--;
       }
 
       let target = getTarget(action.actor,state);
@@ -590,7 +591,16 @@ function getAttacks(unit,state) {
   // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks <== MOVE to parse unit
   let brackets = _.filter(unit.tags.brackets,(bracket) => {
-    return ((_.isNumber(bracket.ammo) && bracket.ammo > 0) || (_.isNumber(bracket.offline) && bracket.offline > 0))
+    let fltr = true;
+
+    if((_.isNumber(bracket.ammo) && bracket.ammo <= 0)) {
+      fltr = false;
+    }
+    if((_.isNumber(bracket.offline) && bracket.offline <= 0)) {
+      fltr = false;
+    }
+
+    return fltr;
   });
   console.log(brackets);
   return _.cloneDeep(brackets);
@@ -629,6 +639,14 @@ function setupFleet(fleet,faction) {
     f.units[unit.hash] = unit;
     hullTotal += unit.hlMax;
     unitTotal++;
+    let bracketCount = 0;
+    unit.brackets = {};
+    _.forEach(unit.tags.brackets,(bracket) => {
+      let bracketHash = "weap"+bracketCount;
+      unit.brackets[bracketHash] = bracket;
+      bracket.hash = bracketHash;
+      bracketCount++;
+    });
   });
 
   f.hullMax = hullTotal;
@@ -791,3 +809,5 @@ function applyCritialHit(unit,key,state) {
     }
   });
 }
+
+function unitUpdateAmmo(unit,state) {}

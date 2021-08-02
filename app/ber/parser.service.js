@@ -131,6 +131,8 @@ export function parser() {
     // Now look for the other tags
     let target = _(bracketString).words(/target \d+/).words(/\d+/).map(x=>+x).value()[0];
     let yld = _(bracketString).words(/yield \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
+    // Get the ammo/shots tag
+    let ammo = _(bracketString).words(/(ammo|shots) \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
     // Get the boolean flags
     let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
@@ -146,6 +148,7 @@ export function parser() {
     bracket.long = long;
     bracket.artillery = artillery;
     bracket.global = glbl;
+    bracket.ammo = ammo;
 
     //console.log(bracket);
     return bracket;
