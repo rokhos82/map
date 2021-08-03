@@ -295,7 +295,7 @@ function doRound(state,options) {
         atk.actor.faction = actor.faction;
         atk.volley = atk.missile.tp;
         atk.type = "attack";
-        delete atk.ammo;
+        atk.actor.tags = {"MSL":true};
         resolveStack.push(atk);
         state.events.push({msg:`${actor.name} launches a missile.`});
       }
@@ -305,7 +305,7 @@ function doRound(state,options) {
       console.info(`Processing attack for ${actor.name}`);
 
       // Adjust ammo if it is present
-      if(_.isNumber(action.ammo)) {
+      if(_.isNumber(action.ammo)  && !unitHasTag(action.actor,"MSL")) {
         actor.brackets[action.hash].ammo--;
       }
 
@@ -316,7 +316,10 @@ function doRound(state,options) {
         let hitRoll = doHitRoll(action,actor,actee);
         action.hitRoll = hitRoll;
         // TODO: Add options that will determine what the baseToHit is
-        if(hitRoll > options.baseToHit) {
+
+        let success = hitRoll > options.baseToHit
+
+        if(success) {
           let a = _.cloneDeep(action);
           a.type = "hit";
           resolveStack.push(a);
@@ -333,16 +336,37 @@ function doRound(state,options) {
       let actor = action.actor;
       let actee = getUnit(action.actee,state);
       console.info(`Processing hit for ${actor.name}`);
-      let damage = doDamage(action,actor,actee);
-      let a = _.cloneDeep(action);
-      a.type = "damage";
-      a.damage = damage;
-      resolveStack.push(a);
+
+      let success = true;
+
+      if(unitHasTag(actee,"flicker")) {
+        // Flicker is present.  Roll to see if the hit was really a hit.
+        let flickerRoll = _.random(1,100);
+        success = (flickerRoll > actee.tags.flicker);
+        console.info(`${actee.name} flicker roll: ${flickerRoll}`,success);
+      }
 
       event.actor = actor.name;
       event.target = actee.name;
-      event.payload = a.hitRoll;
-      event.msg = `${event.actor} hit ${event.target} (${event.payload}) for ${damage} damage.`;
+
+      if(success) {
+        // The hit landed successfully!
+        let damage = doDamage(action,actor,actee);
+        let a = _.cloneDeep(action);
+        a.type = "damage";
+        a.damage = damage;
+        resolveStack.push(a);
+
+        event.payload = a.hitRoll;
+        event.msg = `${event.actor} hit ${event.target} (${event.payload}) for ${damage} damage.`;
+      }
+      else {
+        // The hit was actually a miss due to FLICKER!
+        let msg = `${event.target} dodges the attack!`;
+        console.log(msg);
+        event.payload = false;
+        event.msg = msg;
+      }
     }
     else if(action.type === "damage") {
       //let actor = getUnit(action.actor,state);
