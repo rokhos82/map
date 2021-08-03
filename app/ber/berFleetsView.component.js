@@ -13,6 +13,18 @@ class berFleetsViewController {
     this.attackers = this.fleets.getAttackers();
     this.defenders = this.fleets.getDefenders();
   }
+
+  getTagString(unit) {
+    let tagString = "";
+
+    _.forEach(unit.tags,(value,tag) => {
+      if(tag !== "brackets" && tag !== "flags" && !!value) {
+        tagString += `${tag} ${value} `;
+      }
+    });
+
+    return tagString;
+  }
 }
 
 berFleetsViewController.$inject = ["$scope","berFleets"];

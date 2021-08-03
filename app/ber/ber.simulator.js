@@ -306,7 +306,6 @@ function doRound(state,options) {
 
       // Adjust ammo if it is present
       if(_.isNumber(action.ammo)) {
-        // TODO: Update the original attack in the unit object!  How though?  Maybe by converting the array to a hash?
         actor.brackets[action.hash].ammo--;
       }
 
