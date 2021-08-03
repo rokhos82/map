@@ -98,7 +98,8 @@ function newState(simulation) {
     attackers: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.attackers) : _.cloneDeep(simulation.attackers),
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
     units: {},
-    turn: _.isObject(simulation.state) && _.isNumber(simulation.state.turn) ? simulation.turns.length + 1 : 1
+    turn: _.isObject(simulation.state) && _.isNumber(simulation.state.turn) ? simulation.turns.length + 1 : 1,
+    datalink: {}
   };
   _.forEach(state.attackers.units,(attacker) => { state.units[attacker.hash] = attacker; });
   _.forEach(state.defenders.units,(defender) => { state.units[defender.hash] = defender; });
@@ -652,8 +653,18 @@ function getAttacks(unit,state) {
 }
 
 function getTarget(unit,state) {
-  //let unit = state.units[unitHash];
-  return _.sample(state[unit.faction].targets);
+  // Check for targeting tags: DL, FLAK, AF, HULL, SCAN
+  // Then normally generate a target
+  let target = undefined;
+
+  if(unitHasTag(unit,"dl")) {
+    target = stateDatalinkGetTarget(state,unit);
+  }
+  else {
+    target = _.sample(state[unit.faction].targets)
+  }
+
+  return target;
 }
 
 function getUnit(hash,state) {
@@ -858,3 +869,21 @@ function applyCritialHit(unit,key,state) {
 }
 
 function unitUpdateAmmo(unit,state) {}
+
+function stateDatalinkGetTarget(state,unit) {
+  let target = undefined;
+  let dlGroup = unit.tags.dl;
+  console.info(`Entering stateDatalinkGetTarget(${dlGroup})`);
+
+  // Check if the datalink group already has a target
+  if(state.datalink[dlGroup]) {
+    target = state.datalink[dlGroup];
+  }
+  else {
+    // Get a target since non exists
+    state.datalink[dlGroup] = _.sample(state[unit.faction].targets);
+    target = state.datalink[dlGroup];
+  }
+
+  return target;
+}
