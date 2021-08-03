@@ -247,9 +247,10 @@ function doRound(state,options) {
   console.log(state);
 
   let unit = unitStack.pop();
-  while(unit) {
+  while(_.isObject(unit)) {
     // Get attacks from the unit object.
     console.info(`Processing attacks for unit: ${unit.hash}`);
+    console.info(unit);
     let attacks = getAttacks(unit,state);
     _.forEach(attacks,(action) => {
       if(_.isObject(action.missile)) {
@@ -263,15 +264,17 @@ function doRound(state,options) {
       action.actor = unit;
       resolveStack.push(action);
     });
+
     unit = unitStack.pop();
   }
   console.info("Initial Stack",_.cloneDeep(resolveStack));
 
   let action = resolveStack.pop();
 
-  while(!!action) {
+  while(_.isObject(action)) {
     console.info("Current Action",_.cloneDeep(action));
     console.info("Working Stack",_.cloneDeep(resolveStack));
+    console.info("Actor",_.cloneDeep(action.actor));
     // TODO: Move event loggin code to each individual action.  See 2 lines below.
     let event = {};
     event.type = action.type;
@@ -292,6 +295,7 @@ function doRound(state,options) {
         atk.actor.faction = actor.faction;
         atk.volley = atk.missile.tp;
         atk.type = "attack";
+        delete atk.ammo;
         resolveStack.push(atk);
         state.events.push({msg:`${actor.name} launches a missile.`});
       }
@@ -588,7 +592,6 @@ function removeUnit(unit,state) {
 
 function getAttacks(unit,state) {
   // Clone the brackets array from the unit.
-  // TODO: filter out offline/out of ammo brackets.
   // TODO: handle non-bracket attacks <== MOVE to parse unit
   let brackets = _.filter(unit.tags.brackets,(bracket) => {
     let fltr = true;
@@ -596,7 +599,7 @@ function getAttacks(unit,state) {
     if((_.isNumber(bracket.ammo) && bracket.ammo <= 0)) {
       fltr = false;
     }
-    if((_.isNumber(bracket.offline) && bracket.offline <= 0)) {
+    if((_.isNumber(bracket.offline) && bracket.offline > 0)) {
       fltr = false;
     }
 
@@ -620,6 +623,7 @@ function setupFleet(fleet,faction) {
   let f = {};
 
   f.hash = _.camelCase(fleet.race + fleet.name);
+
   f.info = {
     name: fleet.name,
     race: fleet.race
@@ -629,6 +633,7 @@ function setupFleet(fleet,faction) {
   f.unitHashList = [];
   f.destroyed = [];
   f.fled = [];
+
   let hullTotal = 0;
   let unitTotal = 0;
 

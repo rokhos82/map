@@ -19,7 +19,7 @@ Cheap Screen Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90
 Cheap Screen Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 DELAY 2
 Cheap Screen Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90
 Cheap Screen Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90
-Cheap Missile Corvette 1,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15] DEFENSE 25 DAMAGE 90
+Cheap Missile Corvette 1,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFENSE 25 DAMAGE 90
 Artillery Frigate 1,8,8,1,1,0,0,9,9,0,0,0,[8 target 90 artillery] RESERVE 50 DAMAGE 90 DELAY 2
 Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
   }
