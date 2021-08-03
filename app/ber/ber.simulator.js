@@ -295,7 +295,7 @@ function doRound(state,options) {
         atk.actor.faction = actor.faction;
         atk.volley = atk.missile.tp;
         atk.type = "attack";
-        atk.actor.tags = {"MSL":true};
+        atk.actor.tags = {"msl":true};
         resolveStack.push(atk);
         state.events.push({msg:`${actor.name} launches a missile.`});
       }
@@ -305,7 +305,7 @@ function doRound(state,options) {
       console.info(`Processing attack for ${actor.name}`);
 
       // Adjust ammo if it is present
-      if(_.isNumber(action.ammo)  && !unitHasTag(action.actor,"MSL")) {
+      if(_.isNumber(action.ammo)  && !unitHasTag(action.actor,"msl")) {
         actor.brackets[action.hash].ammo--;
       }
 
@@ -338,12 +338,25 @@ function doRound(state,options) {
       console.info(`Processing hit for ${actor.name}`);
 
       let success = true;
+      let reason = "";
 
+      // TAG: FLICKER
       if(unitHasTag(actee,"flicker")) {
         // Flicker is present.  Roll to see if the hit was really a hit.
         let flickerRoll = _.random(1,100);
         success = (flickerRoll > actee.tags.flicker);
+        reason = "FLICKER";
         console.info(`${actee.name} flicker roll: ${flickerRoll}`,success);
+      }
+
+      // TAG: PD
+      if(unitHasTag(actor,"msl") && unitHasTag(actee,"pd")) {
+        console.info(`Rolling for PD`);
+        // The attacker is a missile and the defender has point defense.
+        let pdRoll = _.random(1,100);
+        success = (pdRoll > actee.tags.pd);
+        reason = "PD";
+        console.info(`${actee.name} PD roll: ${pdRoll}`,success);
       }
 
       event.actor = actor.name;
@@ -362,7 +375,13 @@ function doRound(state,options) {
       }
       else {
         // The hit was actually a miss due to FLICKER!
-        let msg = `${event.target} dodges the attack!`;
+        // TODO: Make this more generic?  To cover both FLICKER & PD
+        let msg = "";
+        if(reason === "FLICKER")
+          msg = `${event.target} dodges the attack!`;
+        if(reason === "PD")
+          msg = `${event.target} intercepts the attack!`;
+
         console.log(msg);
         event.payload = false;
         event.msg = msg;

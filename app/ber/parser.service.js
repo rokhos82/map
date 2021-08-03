@@ -96,6 +96,8 @@ export function parser() {
     let unitReserve = _(tagString).words(/RESERVE \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
     // Get the NOMOVE status flag if it exists.
     let unitNoMove = _(tagString).words(/NOMOVE/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the PD value if it exists.
+    let unitPD = _(tagString).words(/PD \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
 
     let tags = {};
 
@@ -109,6 +111,7 @@ export function parser() {
     tags.dl = unitDL;
     tags.reserve = unitReserve;
     tags.nomove = unitNoMove;
+    tags.pd = unitPD;
 
     tags.flags = {};
     tags.flags.carrier = unitCarrier;
