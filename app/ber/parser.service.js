@@ -98,6 +98,10 @@ export function parser() {
     let unitNoMove = _(tagString).words(/NOMOVE/).map(x=>_.isString(x)).value()[0] || false;
     // Get the PD value if it exists.
     let unitPD = _(tagString).words(/PD \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
+    // Get the HULL values if they exist.
+    let unitHULLvalues = _(tagString).words(/HULL \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
+    // Get the SCAN values if they exist.
+    let unitSCANvalues = _(tagString).words(/SCAN \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
 
     let tags = {};
 
@@ -112,6 +116,14 @@ export function parser() {
     tags.reserve = unitReserve;
     tags.nomove = unitNoMove;
     tags.pd = unitPD;
+    tags.hull = {
+      base: unitHULLvalues[0] || false,
+      range: unitHULLvalues[1] || false
+    };
+    tags.scan = {
+      base: unitSCANvalues[0] || false,
+      range: unitSCANvalues[1] || false
+    };
 
     tags.flags = {};
     tags.flags.carrier = unitCarrier;
