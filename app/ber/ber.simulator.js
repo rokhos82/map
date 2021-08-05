@@ -660,6 +660,14 @@ function getTarget(unit,state) {
   if(unitHasTag(unit,"dl")) {
     target = stateDatalinkGetTarget(state,unit);
   }
+  else if(unitHasTag(unit,"hull")) {
+    // Need to filter list to the HULL range (base - range to base + range).
+    // If no unit is found.  Then select target as normal.
+  }
+  else if(unitHasTag(unit,"scan")) {
+    // Need to filter list to the HULL range (base - range to base + range).
+    // If no unit is found; weapon does not fire
+  }
   else {
     target = _.sample(state[unit.faction].targets)
   }
@@ -769,6 +777,15 @@ function unitHasTag(unit,tag) {
 
   if(!!unit.tags[tag]) {
     hasTag = true;
+  }
+
+  // Compound tags
+  if(_.isObject(unit.tags[tag])) {
+    let temp = true;
+    _.forEach(unit.tags[tag],(comp) => {
+      temp = (temp && comp);
+    });
+    hasTag = temp;
   }
 
   _.forEach(unit.tags.brackets,(bracket) => {
