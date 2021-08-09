@@ -18,7 +18,7 @@ class berFleetsViewController {
     let tagString = "";
 
     _.forEach(unit.tags,(value,tag) => {
-      if(tag !== "brackets" && tag !== "flags" && !!value) {
+      if(tag !== "brackets" && tag !== "flags" && tag !== "scan" && tag !== "hull" && !!value) {
         tagString += `${tag} ${value} `;
       }
     });

@@ -661,8 +661,29 @@ function getTarget(unit,state) {
     target = stateDatalinkGetTarget(state,unit);
   }
   else if(unitHasTag(unit,"hull")) {
-    // Need to filter list to the HULL range (base - range to base + range).
-    // If no unit is found.  Then select target as normal.
+    // Select a target at random
+    // If the target's hull matches the HULL values done.
+    // Else Try again.  Try up to 5
+    // TODO: Add a value to options that controls this.
+    target = false;
+    let count = 0;
+    let maxCount = 5;
+    while(!target) {
+      let t = _.sample(state[unit.faction].targets);
+      if(count > maxCount) {
+        target = t;
+      }
+      else {
+        let u = state.units[t];
+        let lower = unit.tags.hull.base - unit.tags.hull.range;
+        let upper = unit.tags.hull.base + unit.tags.hull.range;
+        if(u.hlMax >= lower && u.hlMax <= upper) {
+          target = t;
+          console.info(`Hull targeting selected a target`);
+        }
+      }
+      count++;
+    }
   }
   else if(unitHasTag(unit,"scan")) {
     // Need to filter list to the HULL range (base - range to base + range).
@@ -780,13 +801,13 @@ function unitHasTag(unit,tag) {
   }
 
   // Compound tags
-  if(_.isObject(unit.tags[tag])) {
+  /*if(_.isObject(unit.tags[tag])) {
     let temp = true;
     _.forEach(unit.tags[tag],(comp) => {
-      temp = (temp && comp);
+      temp = (temp && !!comp);
     });
     hasTag = temp;
-  }
+  }//*/
 
   _.forEach(unit.tags.brackets,(bracket) => {
     if(!!bracket[tag]) {
