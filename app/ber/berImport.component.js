@@ -10,10 +10,10 @@ class berImportController {
     this.parser = parser;
 
     this.attackers = `TEST,It Was Like That When We Go Here,50,2,36,0,0,0,,,,,
-Ultimate Frigate 1,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 DL A HULL 4 2
-Ultimate Frigate 2,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 DL A HULL 4 2
-Ultimate Frigate 3,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 DL B HULL 4 2
-Ultimate Frigate 4,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 DL B HULL 4 2`;
+Ultimate Frigate 1,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
+Ultimate Frigate 2,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
+Ultimate Frigate 3,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
+Ultimate Frigate 4,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2`;
     this.defenders = `TEST,Test Fleet Please Ignore,50,15,95,15,0,0,0,,,,
 Cheap Screen Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10
 Cheap Screen Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10
@@ -23,7 +23,6 @@ Cheap Missile Corvette 1,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFE
 Cheap Missile Corvette 2,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFENSE 25 DAMAGE 90
 Cheap Missile Corvette 3,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFENSE 25 DAMAGE 90
 Cheap Missile Corvette 4,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFENSE 25 DAMAGE 90
-KSE Planetary Defense Cruiser Mark I,0,0,20,20,32,32,24,24,0,0,0,[32 mis0041 target 20 ammo 12] DEFENSE 20 RESIST 5 CLOAK
 Artillery Frigate 1,8,8,1,1,0,0,9,9,0,0,0,[8 target 90 artillery] RESERVE 50 DAMAGE 90
 Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
   }

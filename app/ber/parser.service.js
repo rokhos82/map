@@ -116,14 +116,24 @@ export function parser() {
     tags.reserve = unitReserve;
     tags.nomove = unitNoMove;
     tags.pd = unitPD;
+
     tags.hull = {
       base: unitHULLvalues[0] || false,
       range: unitHULLvalues[1] || false
     };
+    if(_.isNumber(tags.hull.base) && _.isNumber(tags.hull.range)) {
+      tags.hull.lower = tags.hull.base - tags.hull.range;
+      tags.hull.upper = tags.hull.base + tags.hull.range;
+    }
+
     tags.scan = {
       base: unitSCANvalues[0] || false,
       range: unitSCANvalues[1] || false
     };
+    if(_.isNumber(tags.scan.base) && _.isNumber(tags.scan.range)) {
+      tags.scan.lower = tags.scan.base - tags.scan.range;
+      tags.scan.upper = tags.scan.base + tags.scan.range;
+    }
 
     tags.flags = {};
     tags.flags.carrier = unitCarrier;

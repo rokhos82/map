@@ -276,7 +276,7 @@ function doRound(state,options) {
     console.info("Current Action",_.cloneDeep(action));
     console.info("Working Stack",_.cloneDeep(resolveStack));
     console.info("Actor",_.cloneDeep(action.actor));
-    // TODO: Move event loggin code to each individual action.  See 2 lines below.
+    // TODO: Move event logging code to each individual action.  See 2 lines below.
     let event = {};
     event.type = action.type;
     if(action.type === "missile") {
@@ -655,31 +655,40 @@ function getAttacks(unit,state) {
 function getTarget(unit,state) {
   // Check for targeting tags: DL, FLAK, AF, HULL, SCAN
   // Then normally generate a target
+  // TODO: Break out into: getTargetDL, getTargetHull, getTargetScan, getTargetBasic
   let target = undefined;
 
   if(unitHasTag(unit,"dl")) {
     target = stateDatalinkGetTarget(state,unit);
   }
   else if(unitHasTag(unit,"hull")) {
+    console.info(`${unit.hash} has HULL tag!`);
     // Select a target at random
     // If the target's hull matches the HULL values done.
     // Else Try again.  Try up to 5
     // TODO: Add a value to options that controls this.
+    // TODO: How to handle DL & SCAN or DL & HULL
     target = false;
     let count = 0;
     let maxCount = 5;
+
+    // While target is not selected keep searching
     while(!target) {
+      // Get a random target
       let t = _.sample(state[unit.faction].targets);
       if(count > maxCount) {
+        // We have tried enough times, just take the random target
         target = t;
+        console.info(`Hull tageting failed to find a target!`);
       }
       else {
+        // Get the target unit & check if it matches the desired HULL range
         let u = state.units[t];
-        let lower = unit.tags.hull.base - unit.tags.hull.range;
-        let upper = unit.tags.hull.base + unit.tags.hull.range;
-        if(u.hlMax >= lower && u.hlMax <= upper) {
+        console.log(t,u);
+        if(u.hlMax >= unit.tags.hull.lower && u.hlMax <= unit.tags.hull.upper) {
           target = t;
           console.info(`Hull targeting selected a target`);
+          // TODO: Add event generation for the target selection using HULL
         }
       }
       count++;
@@ -688,8 +697,20 @@ function getTarget(unit,state) {
   else if(unitHasTag(unit,"scan")) {
     // Need to filter list to the HULL range (base - range to base + range).
     // If no unit is found; weapon does not fire
+    target = false;
+    let targets = _.shuffle(state[unit.faction].targets);
+    _.forEach(targets,(tar) => {
+      // Check to see if the target matches the desired SCAN range
+      let t = state.units[tar];
+      if(!target && t.hlMax >= unit.tags.scan.lower && t.hlMax <= unit.tags.scan.upper) {
+        target = tar;
+        console.info(`Scan targeting selected a target`);
+        // TODO: Add event for the target selection using SCAN
+      }
+    });
   }
   else {
+    // Just generate a random target
     target = _.sample(state[unit.faction].targets)
   }
 
@@ -795,19 +816,19 @@ function getParticipants(state) {
 function unitHasTag(unit,tag) {
   // Check in the unit tags, then in the brackets.
   let hasTag = false;
+  console.log(unit.hash || unit.name,tag,unit.tags[tag]);
 
   if(!!unit.tags[tag]) {
     hasTag = true;
   }
 
-  // Compound tags
-  /*if(_.isObject(unit.tags[tag])) {
-    let temp = true;
-    _.forEach(unit.tags[tag],(comp) => {
-      temp = (temp && !!comp);
-    });
-    hasTag = temp;
-  }//*/
+  // Check for specific tags
+  if(tag == "hull" && _.isObject(unit.tags[tag])) {
+    hasTag = (_.isNumber(unit.tags[tag].upper) && _.isNumber(unit.tags[tag].lower));
+  }
+  else if(tag == "scan" && _.isObject(unit.tags[tag])) {
+    hasTag = (_.isNumber(unit.tags[tag].upper) && _.isNumber(unit.tags[tag].lower));
+  }
 
   _.forEach(unit.tags.brackets,(bracket) => {
     if(!!bracket[tag]) {
