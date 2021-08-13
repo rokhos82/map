@@ -10,7 +10,7 @@ class berImportController {
     this.parser = parser;
 
     this.attackers = `TEST,It Was Like That When We Go Here,50,2,36,0,0,0,,,,,
-Ultimate Frigate 1,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
+Ultimate Frigate 1,8,8,1,1,0,0,18,18,0,0,0,[8 multi 4 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
 Ultimate Frigate 2,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
 Ultimate Frigate 3,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2
 Ultimate Frigate 4,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50 HULL 4 2`;

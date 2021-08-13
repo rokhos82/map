@@ -258,6 +258,10 @@ function doRound(state,options) {
         // Process this as a missile bracket
         action.type = "missile";
       }
+      else if(action.multi) {
+        // The action has a multi tag.  Handle it differently
+        action.type = "multi";
+      }
       else {
         // Process as a regular attack bracket
         action.type = "attack";
@@ -299,6 +303,42 @@ function doRound(state,options) {
         atk.actor.tags = {"msl":true};
         resolveStack.push(atk);
         state.events.push({msg:`${actor.name} launches a missile.`});
+      }
+    }
+    else if(action.type === "multi") {
+      let actor = action.actor;
+      console.info(`Processing multi attack for ${actor.name}`);
+
+      // Multi works thusly:
+      // Generate a number of attacks according to VOLLEY/MULTI (rounding down)
+      // The new attack uses MULTI for the volley size
+      // Any left overs are made into a smaller attack of volley size equal to VOLLEY mod MULTI
+      // TODO: Add events for this step
+      let totalVolley = action.volley;
+      let volleySize = action.multi;
+      let remainder = totalVolley % volleySize;
+      while(totalVolley > remainder) {
+        // Build a new action for this volley
+        let nextAction = _.cloneDeep(action);
+        nextAction.volley = volleySize;
+        delete nextAction.multi;
+
+        // Push the action on the stack
+        resolveStack.push(nextAction);
+
+        // Decrease totalVolley by volleySize
+        totalVolley -= volleySize;
+      }
+
+      // Build the last volley from the remainder.
+      if(remainder > 0) {
+        // The remainder is greater than 0.  Build the last action
+        let lastAction = _.cloneDeep(action);
+        lastAction.volley = remainder;
+        delete lastAction.multi;
+
+        // Push the last action on the resolve stack
+        resolveStack.push(lastAction);
       }
     }
     else if(action.type === "attack") {
