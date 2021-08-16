@@ -258,7 +258,7 @@ function doRound(state,options) {
         // Process this as a missile bracket
         action.type = "missile";
       }
-      else if(action.multi) {
+      else if(_.isNumber(action.multi)) {
         // The action has a multi tag.  Handle it differently
         action.type = "multi";
       }
@@ -320,6 +320,7 @@ function doRound(state,options) {
       while(totalVolley > remainder) {
         // Build a new action for this volley
         let nextAction = _.cloneDeep(action);
+        nextAction.type = "attack";
         nextAction.volley = volleySize;
         delete nextAction.multi;
 
@@ -334,6 +335,7 @@ function doRound(state,options) {
       if(remainder > 0) {
         // The remainder is greater than 0.  Build the last action
         let lastAction = _.cloneDeep(action);
+        lastAction.type = "attack";
         lastAction.volley = remainder;
         delete lastAction.multi;
 
