@@ -102,6 +102,10 @@ export function parser() {
     let unitHULLvalues = _(tagString).words(/HULL \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
     // Get the SCAN values if they exist.
     let unitSCANvalues = _(tagString).words(/SCAN \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
+    // Get the AR values if they exist.
+    let unitAR = _(tagString).words(/AR \d+/).words(/\d+/).map(x=>+x).value()[0] || false;
+    // Get the SR values if they exist.
+    let unitSR = _(tagString).words(/SR \d+/).words(/\d+/).map(x=>+x).value()[0] || false;
 
     let tags = {};
 
@@ -116,6 +120,8 @@ export function parser() {
     tags.reserve = unitReserve;
     tags.nomove = unitNoMove;
     tags.pd = unitPD;
+    tags.ar = unitAR;
+    tags.sr = unitSR;
 
     tags.hull = {
       base: unitHULLvalues[0] || false,
