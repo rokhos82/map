@@ -139,12 +139,24 @@ function applyDamage(action,actor,actee) {
 
   if(actee.shCur > 0) {
     // Damage the shields
+    // Check for SR first
+    if(_.isNumber(actee.tags.sr)) {
+      damage = Math.max(0,damage - actee.tags.sr);
+    }
+
     actee.shCur = (actee.shCur <= damage) ? 0 : actee.shCur - damage;
   }
   else {
     // Damage the hull
+    // Check for AR first
+    if(_.isNumber(actee.tags.ar)) {
+      damage = Math.max(0,damage - actee.tags.ar);
+    }
+    
     actee.hlCur = (actee.hlCur <= damage) ? 0 : actee.hlCur - damage;
   }
+
+  // TODO: Add an event about the AR/SR absorbing the damage
 
   console.log(actee);
 
@@ -961,6 +973,8 @@ function applyCritialHit(unit,key,state) {
       }
       else {
         // Convert to a number...
+        damage = +damage;
+        doDamage({damage:damage},null,unit);
       }
     }
     else {
@@ -974,6 +988,7 @@ function unitUpdateAmmo(unit,state) {}
 function stateDatalinkGetTarget(state,unit) {
   let target = undefined;
   let dlGroup = unit.tags.dl;
+  // TODO: Make a better hash for the DL groups to allow for name collisions
   console.info(`Entering stateDatalinkGetTarget(${dlGroup})`);
 
   // Check if the datalink group already has a target
