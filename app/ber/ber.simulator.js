@@ -152,7 +152,7 @@ function applyDamage(action,actor,actee) {
     if(_.isNumber(actee.tags.ar)) {
       damage = Math.max(0,damage - actee.tags.ar);
     }
-    
+
     actee.hlCur = (actee.hlCur <= damage) ? 0 : actee.hlCur - damage;
   }
 
@@ -699,6 +699,8 @@ function getAttacks(unit,state) {
     if((_.isNumber(bracket.offline) && bracket.offline > 0)) {
       fltr = false;
     }
+
+    // TODO: Add an event for offline/out-of-ammo weapons
 
     return fltr;
   });

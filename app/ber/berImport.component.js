@@ -15,7 +15,7 @@ Ultimate Frigate 2,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREA
 Ultimate Frigate 3,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50
 Ultimate Frigate 4,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50`;
     this.defenders = `TEST,Test Fleet Please Ignore,50,15,95,15,0,0,0,,,,
-Cheap Screen Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10 DL hamtaro SR 2
+Cheap Screen Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 offline offline] DEFENSE 25 DAMAGE 90 FLICKER 10 DL hamtaro SR 2
 Cheap Screen Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10 DL hamtaro SR 2
 Cheap Screen Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10 DL hamtaro SR 2
 Cheap Screen Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90] DEFENSE 25 DAMAGE 90 FLICKER 10 DL hamtaro SR 2
