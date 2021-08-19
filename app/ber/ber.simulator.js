@@ -136,11 +136,12 @@ function applyDamage(action,actor,actee) {
   // Account for SR/AR and select health pool
   // TODO: Move damage event generation here
   let damage = action.damage;
+  let crit = (actor.hash === actee.hash); // The unit is damaging itself; assume this is a critical hit effect
 
   if(actee.shCur > 0) {
     // Damage the shields
-    // Check for SR first
-    if(_.isNumber(actee.tags.sr)) {
+    // Check for SR first, unless it is a crit
+    if(_.isNumber(actee.tags.sr) && !crit) {
       damage = Math.max(0,damage - actee.tags.sr);
     }
 
@@ -148,8 +149,8 @@ function applyDamage(action,actor,actee) {
   }
   else {
     // Damage the hull
-    // Check for AR first
-    if(_.isNumber(actee.tags.ar)) {
+    // Check for AR first, unless it is a crit
+    if(_.isNumber(actee.tags.ar) && !crit) {
       damage = Math.max(0,damage - actee.tags.ar);
     }
 
@@ -965,18 +966,35 @@ function applyCritialHit(unit,key,state) {
   _.forEach(crit.effects,(effectKey) => {
     if(effectKey === "death") {
       // Kill the unit.
+      console.info(`applyCritialHit(death)`);
       doDeath(null,state,null,unit);
     }
     else if(effectKey === "damage") {
       // Damage the unit
       let damage = crit["damage"];
+      let dead = false;
+
+      console.info(`applyCritialHit(damage:${damage})`);
+
       if(_.isNumber(damage)) {
-        doDamage({damage:damage},null,unit);
+        dead = applyDamage({damage:damage},unit,unit);
       }
       else {
         // Convert to a number...
         damage = +damage;
-        doDamage({damage:damage},null,unit);
+        dead = applyDamage({damage:damage},unit,unit);
+      }
+      if(dead) {
+        doDeath(null,state,unit,unit);
+      }
+    }
+    else if(effectKey === "offline") {
+      let scope = crit["offline"];
+
+      console.info(`applyCritialHit(offline:${scope})`);
+
+      if(scope === "all") {
+        // Disable on weapons on the unit
       }
     }
     else {
