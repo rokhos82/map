@@ -534,6 +534,9 @@ function doRound(state,options) {
 
   // Process any critical hits
   doCriticalHits(critStack,state);
+
+  // Update any dynamic tags
+  doDynamicTags(state);
 }
 
 function doFlee(unit) {
@@ -994,7 +997,30 @@ function applyCritialHit(unit,key,state) {
       console.info(`applyCritialHit(offline:${scope})`);
 
       if(scope === "all") {
-        // Disable on weapons on the unit
+        // Disable all on weapons on the unit
+        let brackets = unit.brackets;
+        _.forEach(brackets,(weapon) => {
+          weapon.offline = 1; // = _.isNumber(weapon.offline) ? weapon.offline++ : 1;
+          console.info(weapon);
+        });
+      }
+      else if(scope === "some") {
+        // Disable some of the weapons on the unit
+        // Random and random total
+        let brackets = _.shuffle(unit.tags.brackets);
+        let total = unit.tags.brackets.length;
+        let number = _.random(1,total);
+        for(let i = 0;i < number;i++) {
+          let weapon = brackets[i];
+          weapon.offline = 1; // = _.isNumber(weapon.offline) ? weapon.offline++ : 1;
+          console.info(weapon);
+        }
+      }
+      else if(scope === "one") {
+        // Disable one of the weapons on the unit
+        let weapon = _.sample(unit.tags.brackets);
+        weapon.offline = 1; // = _.isNumber(weapon.offline) ? weapon.offline++ : 1;
+        console.info(weapon);
       }
     }
     else {
@@ -1022,4 +1048,37 @@ function stateDatalinkGetTarget(state,unit) {
   }
 
   return target;
+}
+
+function doDynamicTags(state) {
+  let factions = ["attackers","defenders"];
+  let tags = ["offline"];
+
+  _.forEach(factions,(faction) => {
+    let units = state[faction].units;
+    _.forEach(units,(unit) => {
+      _.forEach(tags,(tag) => {
+        if(unitHasTag(unit,tag)) {
+          unitUpdateTag(unit,tag);
+        }
+      });
+    });
+  });
+}
+
+function unitUpdateTag(unit,key) {
+  console.info(`unitUpdateTag(${unit.hash}:${key})`);
+
+  if(_.isNumber(unit.tags[key])) {
+    // This tag is numeric.  Decrement it.
+    unit.tags[key]--;
+  }
+
+  // Search for the tag in brackets
+  _.forEach(unit.brackets,(bracket) => {
+    if(_.isNumber(bracket[key])) {
+      // This tag is numeric.  Decrement it.
+      bracket[key]--;
+    }
+  });
 }
