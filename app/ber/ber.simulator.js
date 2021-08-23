@@ -137,6 +137,7 @@ function applyDamage(action,actor,actee) {
   // TODO: Move damage event generation here
   let damage = action.damage;
   let crit = (actor.hash === actee.hash); // The unit is damaging itself; assume this is a critical hit effect
+  let hullHit = false;
 
   if(actee.shCur > 0) {
     // Damage the shields
@@ -155,13 +156,16 @@ function applyDamage(action,actor,actee) {
     }
 
     actee.hlCur = (actee.hlCur <= damage) ? 0 : actee.hlCur - damage;
+    hullHit = true;
   }
 
   // TODO: Add an event about the AR/SR absorbing the damage
 
   console.log(actee);
 
-  return !(actee.hlCur > 0);
+  // Returns true if the targets hull is reduced to 0.
+  // Also returns true if the target is a fighter and the hull was hit.
+  return (actee.hlCur <= 0 || (actee.tags.fighter && hullHit));
 }
 
 function doDamage(action,actor,actee) {

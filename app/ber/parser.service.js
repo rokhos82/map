@@ -106,6 +106,10 @@ export function parser() {
     let unitAR = _(tagString).words(/AR \d+/).words(/\d+/).map(x=>+x).value()[0] || false;
     // Get the SR values if they exist.
     let unitSR = _(tagString).words(/SR \d+/).words(/\d+/).map(x=>+x).value()[0] || false;
+    // Get the FIGHTER status tag if it exists.
+    let unitFighter = _(tagString).words(/FIGHTER/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the FLEE status tag if it exists.
+    let unitFlee = _(tagString).words(/FLEE/).map(x=>_.isString(x)).value()[0] || false;
 
     let tags = {};
 
@@ -122,6 +126,8 @@ export function parser() {
     tags.pd = unitPD;
     tags.ar = unitAR;
     tags.sr = unitSR;
+    tags.fighter = unitFighter;
+    tags.flee = unitFlee;
 
     tags.hull = {
       base: unitHULLvalues[0] || false,
