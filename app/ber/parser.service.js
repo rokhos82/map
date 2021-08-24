@@ -110,6 +110,8 @@ export function parser() {
     let unitFighter = _(tagString).words(/FIGHTER/).map(x=>_.isString(x)).value()[0] || false;
     // Get the FLEE status tag if it exists.
     let unitFlee = _(tagString).words(/FLEE/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the CLOAK status tag if it exists.
+    let unitCloak = _(tagString).words(/\s+CLOAK\s+/).map(x=>_.isString(x)).value()[0] || false;
 
     let tags = {};
 
@@ -128,6 +130,7 @@ export function parser() {
     tags.sr = unitSR;
     tags.fighter = unitFighter;
     tags.flee = unitFlee;
+    tags.cloak = unitCloak;
 
     tags.hull = {
       base: unitHULLvalues[0] || false,
@@ -170,11 +173,17 @@ export function parser() {
     let yld = _(bracketString).words(/yield \d+/).words(/\d+/).map(x=>+x).value()[0] || 0;
     // Get the ammo/shots tag
     let ammo = _(bracketString).words(/(ammo|shots) \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
+    // Get bp tag
+    let bp = _(bracketString).words(/bp \d+ \d+/).words(/\d+/g).map(x=>+x).value() || false;
     // Get the boolean flags
     let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
     let glbl = _(bracketString).words(/global/).map(x=>_.isString(x)).value()[0] || false;
     let offline = _(bracketString).words(/offline/g).map(x=>_.isString(x)).value().length || 0;
+    let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
+    let af = _(bracketString).words(/af/).map(x=>_.isString(x)).value()[0] || false;
+    let flak = _(bracketString).words(/flak/).map(x=>_.isString(x)).value()[0] || false;
+    let crack = _(bracketString).words(/\s+crack\s+/).map(x=>_.isString(x)).value()[0] || false;
 
     let bracket = {};
     bracket.volley = volley;
@@ -187,6 +196,22 @@ export function parser() {
     bracket.global = glbl;
     bracket.ammo = ammo;
     bracket.offline = offline;
+    bracket.long = long;
+    bracket.af = af;
+    bracket.flak = flak;
+    bracket.crack = crack;
+
+    // Build the bp object
+    if(bp.length > 1) {
+      bracket.bp = {
+        offense: bp[0],
+        defense: bp[1]
+      };
+    }
+    else {
+      // Something is wrong with the BP tag.
+      bracket.bp = false;
+    }
 
     //console.log(bracket);
     return bracket;
