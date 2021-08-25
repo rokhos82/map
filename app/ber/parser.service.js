@@ -112,6 +112,10 @@ export function parser() {
     let unitFlee = _(tagString).words(/FLEE/).map(x=>_.isString(x)).value()[0] || false;
     // Get the CLOAK status tag if it exists.
     let unitCloak = _(tagString).words(/\s+CLOAK\s+/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the SOLID status tag if it exists.
+    let unitSolid = _(tagString).words(/\s+SOLID\s+/).map(x=>_.isString(x)).value()[0] || false;
+    // Get the BIO status tag if it exists.
+    let unitBio = _(tagString).words(/\s+BIO\s+/).map(x=>_.isString(x)).value()[0] || false;
 
     let tags = {};
 
@@ -131,6 +135,8 @@ export function parser() {
     tags.fighter = unitFighter;
     tags.flee = unitFlee;
     tags.cloak = unitCloak;
+    tags.sold = unitSolid;
+    tags.bio = unitBio;
 
     tags.hull = {
       base: unitHULLvalues[0] || false,

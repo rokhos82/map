@@ -9,7 +9,7 @@ class berImportController {
     this.fleets = fleets;
     this.parser = parser;
 
-    this.attackers = `TEST,It Was Like That When We Go Here,50,2,36,0,0,0,,,,,
+    this.attackers = `TEST,It Was Like That When We Got Here,50,2,36,0,0,0,,,,,
 Ultimate Frigate 1,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50
 Ultimate Frigate 2,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50
 Ultimate Frigate 3,8,8,1,1,0,0,18,18,0,0,0,[8 target 85 long dis] DAMAGE 75 BREAK 50

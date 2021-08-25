@@ -1086,3 +1086,52 @@ function unitUpdateTag(unit,key) {
     }
   });
 }
+
+function unitGetBoardingTarget(unit,state) {
+  // Get the list of possible targets
+  // Shuffle list
+  // Try to board 5 times
+  // Then fail if no target presents itself
+
+  // Invalid targets are:
+  //  - Shielded
+  //  - Tags: SOLID, BIO, GROUND
+
+  let targets = _shuffle(state[unit.faction].targets);
+  let target = false;
+  let i = 0;
+
+  while(!target) {
+    let t = targets[i];
+
+    let u = getUnit(t);
+
+    // Check if the unit has shields
+    if(unitHasShields(u) &&)
+
+    i++;
+  }
+}
+
+function unitHasShields(unit) {
+  // Return TRUE if the unit has shields
+  let shielded = false;
+
+  if(unit.shCur > 0) {
+    shielded = true;
+  }
+
+  return shielded;
+}
+
+function unitIsBoardable(unit) {
+  // Return TRUE if the unit is boardable.
+  // Check tags: SOLID, BIO, GROUND
+  let boardable = true;
+
+  if(unit.tags.solid || unit.tags.bio || unit.tags.ground) {
+    boardable = false;
+  }
+
+  return boardable;
+}
