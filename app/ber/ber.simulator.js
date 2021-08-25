@@ -1101,13 +1101,16 @@ function unitGetBoardingTarget(unit,state) {
   let target = false;
   let i = 0;
 
-  while(!target) {
+  // TODO: Add config option for boarding attempts before failure
+  while(!target && i < 5) {
     let t = targets[i];
 
     let u = getUnit(t);
 
     // Check if the unit has shields
-    if(unitHasShields(u) &&)
+    if(unitIsBoardable(u)) {
+      target = u;
+    }
 
     i++;
   }

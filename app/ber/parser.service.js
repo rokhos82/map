@@ -186,7 +186,6 @@ export function parser() {
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
     let glbl = _(bracketString).words(/global/).map(x=>_.isString(x)).value()[0] || false;
     let offline = _(bracketString).words(/offline/g).map(x=>_.isString(x)).value().length || 0;
-    let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
     let af = _(bracketString).words(/af/).map(x=>_.isString(x)).value()[0] || false;
     let flak = _(bracketString).words(/flak/).map(x=>_.isString(x)).value()[0] || false;
     let crack = _(bracketString).words(/\s+crack\s+/).map(x=>_.isString(x)).value()[0] || false;
@@ -202,7 +201,6 @@ export function parser() {
     bracket.global = glbl;
     bracket.ammo = ammo;
     bracket.offline = offline;
-    bracket.long = long;
     bracket.af = af;
     bracket.flak = flak;
     bracket.crack = crack;
