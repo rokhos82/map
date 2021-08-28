@@ -10,7 +10,8 @@ export function simulator() {
   let _simulation = {
     units: {},
     turns: [],
-    initialized: false
+    initialized: false,
+    longRange: false
   };
 
   _service.setup = (attackers,defenders,options) => {
@@ -36,6 +37,9 @@ export function simulator() {
     _simulation.defenders.targets = targetList(_simulation.attackers,_simulation);
 
     _simulation.initialized = true;
+
+    // Check for long range units
+    _simulation.longRange = checkLongRange([_simulation.attackers,_simulation.defenders]);
 
     console.info(_simulation);
   };
