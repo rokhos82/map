@@ -103,7 +103,8 @@ function newState(simulation) {
     defenders: _.isObject(simulation.state) ? _.cloneDeep(simulation.state.defenders) : _.cloneDeep(simulation.defenders),
     units: {},
     turn: _.isObject(simulation.state) && _.isNumber(simulation.state.turn) ? simulation.turns.length + 1 : 1,
-    datalink: {}
+    datalink: {},
+    longRange: (_.isObject(simulation.state) && _.isBoolean(simulation.state.longRange)) ? simulation.state.longRange : simulation.longRange
   };
   _.forEach(state.attackers.units,(attacker) => { state.units[attacker.hash] = attacker; });
   _.forEach(state.defenders.units,(defender) => { state.units[defender.hash] = defender; });
@@ -244,6 +245,9 @@ function doRound(state,options) {
   let unitStack = getParticipants(state);
   let movementStack = [];
   let critStack = [];
+
+  // Turn off the long range flag
+  state.longRange = false;
 
   _.forEach(state.attackers.units,(unit) => {
     //let unit = state.unit[hash];
@@ -862,6 +866,7 @@ function getParticipants(state) {
 
   let parts = [];
   let reserve = [];
+  let longRange = state.longRange;
 
   // Get the first list of units.  Those without RESERVE & DELAY
   let factions = ["attackers","defenders"];
@@ -869,11 +874,20 @@ function getParticipants(state) {
   _.forEach(factions,(faction) => {
     let fleet = state[faction];
     _.forEach(fleet.units,(unit) => {
-      if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
-        parts.push(unit);
+      if(!longRange) {
+        // This is a normal round.
+        if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
+          parts.push(unit);
+        }
+        else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
+          reserve.push(unit);
+        }
       }
-      else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
-        reserve.push(unit);
+      else {
+        // This is the long range round.  Filter out units that don't have a long tag.
+        if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
+          parts.push(unit);
+        }
       }
     });
   });
@@ -1141,4 +1155,19 @@ function unitIsBoardable(unit) {
   }
 
   return boardable;
+}
+
+function checkLongRange(fleets) {
+  let lr = false;
+
+  _.forEach(fleets,(fleet) => {
+    _.forEach(fleet.units,(unit) => {
+      if(unitHasTag(unit,"long")) {
+        lr = true;
+        console.info(unit.hash,"long range capable");
+      }
+    });
+  });
+
+  return lr;
 }
