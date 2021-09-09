@@ -287,6 +287,10 @@ function doRound(state,options) {
         // The action has a multi tag.  Handle it differently
         action.type = "multi";
       }
+      else if(_.isObject(action.bp)) {
+        // The action is a boarding party.
+        action.type = "boarding"
+      }
       else {
         // Process as a regular attack bracket
         action.type = "attack";
@@ -366,6 +370,26 @@ function doRound(state,options) {
 
         // Push the last action on the resolve stack
         resolveStack.push(lastAction);
+      }
+    }
+    else if(action.type === "boarding") {
+      let actor = action.actor;
+      console.info(`Processing boarding action for ${actor.name}`);
+
+      // Boarding parties:
+      // - Check for isBoardable
+      // - If true, launch boarding action
+      // Action Sequence:  Boarding => Action => Critical
+
+      // Create a new event for this action
+      let event = {};
+
+      let target = unitGetBoardingTarget(actor,state);
+      if(target) {
+        console.info(`Boarding action against ${target.hash}`);
+      }
+      else {
+        console.info(`${actor.hash} could not find a target to board!`);
       }
     }
     else if(action.type === "attack") {
@@ -1115,12 +1139,13 @@ function unitGetBoardingTarget(unit,state) {
   //  - Shielded
   //  - Tags: SOLID, BIO, GROUND
 
-  let targets = _shuffle(state[unit.faction].targets);
+  let targets = _.shuffle(state[unit.faction].targets);
   let target = false;
   let i = 0;
+  let maxTries = 5;
 
   // TODO: Add config option for boarding attempts before failure
-  while(!target && i < 5) {
+  while(!target && i < maxTries) {
     let t = targets[i];
 
     let u = getUnit(t);
@@ -1132,6 +1157,8 @@ function unitGetBoardingTarget(unit,state) {
 
     i++;
   }
+
+  return target;
 }
 
 function unitHasShields(unit) {
