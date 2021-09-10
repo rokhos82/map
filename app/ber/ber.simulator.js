@@ -382,14 +382,18 @@ function doRound(state,options) {
       // Action Sequence:  Boarding => Action => Critical
 
       // Create a new event for this action
-      let event = {};
+      event.actor = actor.name;
 
       let target = unitGetBoardingTarget(actor,state);
       if(target) {
         console.info(`Boarding action against ${target.hash}`);
+
+        event.target = target.name;
+        event.msg = `Boarding action against ${target.hash}`;
       }
       else {
         console.info(`${actor.hash} could not find a target to board!`);
+        event.msg = `${actor.hash} could not find a target to board!`;
       }
     }
     else if(action.type === "attack") {
@@ -1148,7 +1152,7 @@ function unitGetBoardingTarget(unit,state) {
   while(!target && i < maxTries) {
     let t = targets[i];
 
-    let u = getUnit(t);
+    let u = getUnit(t,state);
 
     // Check if the unit has shields
     if(unitIsBoardable(u)) {
@@ -1177,7 +1181,7 @@ function unitIsBoardable(unit) {
   // Check tags: SOLID, BIO, GROUND
   let boardable = true;
 
-  if(unit.tags.solid || unit.tags.bio || unit.tags.ground) {
+  if(unit.tags.solid || unit.tags.bio || unit.tags.ground || unitHasShields(unit)) {
     boardable = false;
   }
 
