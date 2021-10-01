@@ -390,11 +390,23 @@ function doRound(state,options) {
 
         event.target = target.name;
         event.msg = `Boarding action against ${target.hash}`;
+
+        // Setup a new boarded action and push in on the stack
+        let boardedAction = _.cloneDeep(action);
+        boardedAction.type = "boarded";
+        boardedAction.actee = target;
+
+        resolveStack.push(boardedAction);
       }
       else {
         console.info(`${actor.hash} could not find a target to board!`);
         event.msg = `${actor.hash} could not find a target to board!`;
       }
+    }
+    else if(action.type === "boarded") {
+      // The target has been boarded.
+      // Check if the boarding is successful
+      // If successful, roll on the BP crit table
     }
     else if(action.type === "attack") {
       let actor = action.actor;
