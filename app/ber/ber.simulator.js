@@ -1166,6 +1166,8 @@ function unitGetBoardingTarget(unit,state) {
 
     let u = getUnit(t,state);
 
+    console.log(t,u);
+
     // Check if the unit has shields
     if(unitIsBoardable(u)) {
       target = u;
