@@ -88,6 +88,14 @@ export function simulator() {
     }
   };
 
+  _service.saveState = () => {
+    return _simulation;
+  };
+
+  _service.loadState = (state) => {
+    _simulation = state;
+  };
+
   return _service;
 }
 
@@ -390,6 +398,17 @@ function doRound(state,options) {
 
         event.target = target.name;
         event.msg = `Boarding action against ${target.hash}`;
+
+        // Check if the boarding was successful.
+        // Roll a random number between 1 and targetBoardingDefense + actorBoardingOffense
+        // If the roll is <= targetBoardingDefense then the boarding action is not successful.
+        //    No further action is needed.  Note the boarding failure in the log
+        // Else the roll is > targetBoardingDefense then the boarding action is successful!
+        //    Create a boarded action and put it on the stack
+
+        // Roll the random number.
+        let upperLimit = unitGetBoardingDefense(target);
+        _.random(1,upperLimit);
 
         // Setup a new boarded action and push in on the stack
         let boardedAction = _.cloneDeep(action);
@@ -1215,4 +1234,14 @@ function checkLongRange(fleets) {
   });
 
   return lr;
+}
+
+function unitGetBoardingDefense(unit) {
+  let def = 0;
+
+  def += unit.hlCur;
+
+  // TODO: Need to look for defensive boarding parties
+
+  return def;
 }

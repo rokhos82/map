@@ -5,6 +5,9 @@ export function state() {
   };
 
   _service.setState = (realm,key,value) => {
+    if(!_.isObject(_state[realm])) {
+      _state[realm] = {};
+    }
     _state[realm][key] = _.cloneDeep(value);
   };
 
@@ -14,6 +17,10 @@ export function state() {
 
   _service.clearState = (realm) => {
     delete _state[realm];
+  };
+
+  _service.hasState = (realm,key) => {
+    return (_.isObject(_state[realm]) && _.has(_state[realm],key));
   };
 
   return _service;
