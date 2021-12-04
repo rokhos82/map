@@ -76,7 +76,7 @@ class berSimulationController {
     this.simulation = this.simulator.fight();
     this.lastState = this.simulation.state;
     this.ui.currentTurn = _.last(this.simulation.turns);
-    this.ui.currentPage = this.ui.maxTurns;
+    this.ui.currentPage = this.ui.currentTurn.turn;
     this.saveState();
   }
 
