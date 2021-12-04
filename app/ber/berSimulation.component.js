@@ -26,8 +26,9 @@ class berSimulationController {
       this.attackers = savedState.attackers;
       this.defenders = savedState.defenders;
       this.events = savedState.events;
-      this.ui = savedState.ui;
+      _.merge(this.ui,savedState.ui);
       this.simulation = this.simulator.saveState();
+      this.$scope.currentPage = this.ui.currentPage;
     }
     else {
       // No existing state, initialize to a new simulation.
@@ -39,8 +40,12 @@ class berSimulationController {
       this.ui.turns = [false,false,false,false,false];
       this.ui.lastState = false;
       this.ui.maxTurns = 20;
-      this.ui.currentPage = 1;
+      this.ui.currentPage = 0;
     }
+  }
+
+  $onDestroy() {
+    saveState();
   }
 
   saveState() {
@@ -62,6 +67,7 @@ class berSimulationController {
     this.simulation = this.simulator.singleRound();
     this.lastState = _.last(this.simulation.turns);
     this.ui.currentTurn = _.last(this.simulation.turns);
+    this.ui.currentPage++;
     console.log(this.simulation);
     this.saveState();
   }
