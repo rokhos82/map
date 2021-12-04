@@ -26,9 +26,9 @@ class berSimulationController {
       this.attackers = savedState.attackers;
       this.defenders = savedState.defenders;
       this.events = savedState.events;
+      console.log(this.ui,savedState.ui);
       _.merge(this.ui,savedState.ui);
       this.simulation = this.simulator.saveState();
-      this.$scope.currentPage = this.ui.currentPage;
     }
     else {
       // No existing state, initialize to a new simulation.
@@ -45,7 +45,7 @@ class berSimulationController {
   }
 
   $onDestroy() {
-    saveState();
+    this.saveState();
   }
 
   saveState() {
