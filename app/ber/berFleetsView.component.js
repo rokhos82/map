@@ -25,6 +25,16 @@ class berFleetsViewController {
 
     return tagString;
   }
+
+  getAttackString(unit) {
+    let attackString = "";
+
+    _.forEach(unit.tags.brackets,(value) => {
+      attackString += `${value.tag}`;
+    });
+
+    return attackString;
+  }
 }
 
 berFleetsViewController.$inject = ["$scope","berFleets"];

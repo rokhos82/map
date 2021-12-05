@@ -191,6 +191,7 @@ export function parser() {
     let crack = _(bracketString).words(/\s+crack\s+/).map(x=>_.isString(x)).value()[0] || false;
 
     let bracket = {};
+    bracket.tag = bracketString;
     bracket.volley = volley;
     bracket.multi = multi;
     bracket.missile = missile;

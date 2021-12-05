@@ -9,29 +9,23 @@
         <thead>
           <tr>
             <th>Unit</th>
-            <th>Max BM</th>
-            <th>Cur BM</th>
             <th>Max SH</th>
             <th>Cur SH</th>
-            <th>Max TP</th>
-            <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
+            <th>Attacks</th>
             <th>Tags</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="attacker in $ctrl.attackers.units track by $index">
-            <td>{{attacker.name}}</td>
-            <td>{{attacker.bmMax}}</td>
-            <td>{{attacker.bmCur}}</td>
-            <td>{{attacker.shMax}}</td>
-            <td>{{attacker.shCur}}</td>
-            <td>{{attacker.tpMax}}</td>
-            <td>{{attacker.tpCur}}</td>
-            <td>{{attacker.hlMax}}</td>
-            <td>{{attacker.hlCur}}</td>
-            <td>{{$ctrl.getTagString(attacker)}}</td>
+            <td class="col-md-2">{{attacker.name}}</td>
+            <td class="col-md-1">{{attacker.shMax}}</td>
+            <td class="col-md-1">{{attacker.shCur}}</td>
+            <td class="col-md-1">{{attacker.hlMax}}</td>
+            <td class="col-md-1">{{attacker.hlCur}}</td>
+            <td class="col-md-3">{{$ctrl.getAttackString(attacker)}}</td>
+            <td class="col-md-3">{{$ctrl.getTagString(attacker)}}</td>
           </tr>
         </tbody>
       </table>
@@ -49,29 +43,23 @@
         <thead>
           <tr>
             <th>Unit</th>
-            <th>Max BM</th>
-            <th>Cur BM</th>
             <th>Max SH</th>
             <th>Cur SH</th>
-            <th>Max TP</th>
-            <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
+            <th>Attacks</th>
             <th>Tags</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="defender in $ctrl.defenders.units track by $index">
-            <td>{{defender.name}}</td>
-            <td>{{defender.bmMax}}</td>
-            <td>{{defender.bmCur}}</td>
-            <td>{{defender.shMax}}</td>
-            <td>{{defender.shCur}}</td>
-            <td>{{defender.tpMax}}</td>
-            <td>{{defender.tpCur}}</td>
-            <td>{{defender.hlMax}}</td>
-            <td>{{defender.hlCur}}</td>
-            <td>{{$ctrl.getTagString(defender)}}</td>
+            <td class="col-md-2">{{defender.name}}</td>
+            <td class="col-md-1">{{defender.shMax}}</td>
+            <td class="col-md-1">{{defender.shCur}}</td>
+            <td class="col-md-1">{{defender.hlMax}}</td>
+            <td class="col-md-1">{{defender.hlCur}}</td>
+            <td class="col-md-3">{{$ctrl.getAttackString(defender)}}</td>
+            <td class="col-md-3">{{$ctrl.getTagString(defender)}}</td>
           </tr>
         </tbody>
       </table>
