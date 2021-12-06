@@ -1,0 +1,34 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>
+      Fleet Name: {{$ctrl.fleet.name}} ({{$ctrl.fleet.race}})
+    </h4>
+  </div>
+  <div class="panel-body">
+    <b><i><u>Fleet description, notes go here.</u></i></b>
+  </div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Unit</th>
+        <th>Max SH</th>
+        <th>Cur SH</th>
+        <th>Max HL</th>
+        <th>Cur HL</th>
+        <th>Attacks</th>
+        <th>Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="defender in $ctrl.fleet.units track by $index">
+        <td class="col-md-2">{{defender.name}}</td>
+        <td class="col-md-1">{{defender.shMax}}</td>
+        <td class="col-md-1">{{defender.shCur}}</td>
+        <td class="col-md-1">{{defender.hlMax}}</td>
+        <td class="col-md-1">{{defender.hlCur}}</td>
+        <td class="col-md-3">{{$ctrl.unit.attackString(defender)}}</td>
+        <td class="col-md-3">{{$ctrl.unit.tagString(defender)}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

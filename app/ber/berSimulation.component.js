@@ -4,11 +4,12 @@
  * @desc Does the combat!
  */
 class berSimulationController {
-  constructor($scope,fleets,simulator,stateService) {
+  constructor($scope,fleets,simulator,stateService,unit) {
     this.$scope = $scope;
     this.fleets = fleets;
     this.simulator = simulator;
     this.stateService = stateService;
+    this.unit = unit;
     this.ui = {};
 
     this.state = {};
@@ -94,7 +95,7 @@ class berSimulationController {
   }
 }
 
-berSimulationController.$inject = ["$scope","berFleets","berSimulator","berState"];
+berSimulationController.$inject = ["$scope","berFleets","berSimulator","berState","berUnit"];
 
 export const berSimulation = {
   bindings: {},

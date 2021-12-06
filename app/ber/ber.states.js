@@ -33,3 +33,10 @@ export const berSimulationState = {
   url: '/simulation',
   component: 'berSimulation'
 };
+
+export const berResultsState = {
+  parent: 'berRoot',
+  name: 'berResults',
+  url: '/results',
+  component: 'berResultView'
+};

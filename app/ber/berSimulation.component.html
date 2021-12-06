@@ -30,6 +30,8 @@
             <th>Cur SH</th>
             <th>Max HL</th>
             <th>Cur HL</th>
+            <th>Brackets</th>
+            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
@@ -39,6 +41,8 @@
             <td>{{attacker.shCur}}</td>
             <td>{{attacker.hlMax}}</td>
             <td>{{attacker.hlCur}}</td>
+            <td>{{$ctrl.unit.attackString(attacker)}}</td>
+            <td>{{$ctrl.unit.tagString(attacker)}}</td>
           </tr>
         </tbody>
       </table>
@@ -49,27 +53,23 @@
         <thead>
           <tr>
             <th>Unit</th>
-            <th>Max BM</th>
-            <th>Cur BM</th>
             <th>Max SH</th>
             <th>Cur SH</th>
-            <th>Max TP</th>
-            <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
+            <th>Brackets</th>
+            <th>Tags</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="defender in $ctrl.ui.currentTurn.defenders.units track by $index" ng-class="{danger: defender.hlCur == 0, warning: defender.hlCur < defender.hlMax && defender.hlCur > 0, info: defender.shCur < defender.shMax, success: defender.shCur == defender.shMax}">
             <td>{{defender.name}}</td>
-            <td>{{defender.bmMax}}</td>
-            <td>{{defender.bmCur}}</td>
             <td>{{defender.shMax}}</td>
             <td>{{defender.shCur}}</td>
-            <td>{{defender.tpMax}}</td>
-            <td>{{defender.tpCur}}</td>
             <td>{{defender.hlMax}}</td>
             <td>{{defender.hlCur}}</td>
+            <th>{{$ctrl.unit.attackString(defender)}}</th>
+            <th>{{$ctrl.unit.tagString(defender)}}</th>
           </tr>
         </tbody>
       </table>
