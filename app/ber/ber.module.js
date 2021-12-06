@@ -51,4 +51,4 @@ BER.factory('berFleets',fleets);
 BER.factory('berParser',parser);
 BER.factory('berSimulator',simulator);
 BER.factory('berState',state);
-BER.factoor('berArchive',archive);
+BER.factory('berArchive',archive);

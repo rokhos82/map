@@ -5,7 +5,7 @@
     </h4>
   </div>
   <div class="panel-body">
-    <b><i><u>Fleet description, notes go here.</u></i></b>
+    <b><i><u>Fleet description &amp; notes go here.</u></i></b>
   </div>
   <table class="table table-striped table-hover">
     <thead>
@@ -19,15 +19,26 @@
         <th>Tags</th>
       </tr>
     </thead>
-    <tbody>
-      <tr ng-repeat="defender in $ctrl.fleet.units track by $index">
-        <td class="col-md-2">{{defender.name}}</td>
-        <td class="col-md-1">{{defender.shMax}}</td>
-        <td class="col-md-1">{{defender.shCur}}</td>
-        <td class="col-md-1">{{defender.hlMax}}</td>
-        <td class="col-md-1">{{defender.hlCur}}</td>
-        <td class="col-md-3">{{$ctrl.unit.attackString(defender)}}</td>
-        <td class="col-md-3">{{$ctrl.unit.tagString(defender)}}</td>
+    <tbody ng-if="$ctrl.markup == 'false'">
+      <tr ng-repeat="unit in $ctrl.fleet.units track by $index">
+        <td class="col-md-2">{{unit.name}}</td>
+        <td class="col-md-1">{{unit.shMax}}</td>
+        <td class="col-md-1">{{unit.shCur}}</td>
+        <td class="col-md-1">{{unit.hlMax}}</td>
+        <td class="col-md-1">{{unit.hlCur}}</td>
+        <td class="col-md-3">{{$ctrl.unit.attackString(unit)}}</td>
+        <td class="col-md-3">{{$ctrl.unit.tagString(unit)}}</td>
+      </tr>
+    </tbody>
+    <tbody ng-if="$ctrl.markup == 'true'">
+      <tr ng-repeat="unit in $ctrl.fleet.units track by $index" ng-class="{danger: unit.hlCur == 0, warning: unit.hlCur < unit.hlMax && unit.hlCur > 0, info: unit.shCur < unit.shMax, success: unit.shCur == unit.shMax}">
+        <td class="col-md-2">{{unit.name}}</td>
+        <td class="col-md-1">{{unit.shMax}}</td>
+        <td class="col-md-1">{{unit.shCur}}</td>
+        <td class="col-md-1">{{unit.hlMax}}</td>
+        <td class="col-md-1">{{unit.hlCur}}</td>
+        <td class="col-md-3">{{$ctrl.unit.attackString(unit)}}</td>
+        <td class="col-md-3">{{$ctrl.unit.tagString(unit)}}</td>
       </tr>
     </tbody>
   </table>

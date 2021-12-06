@@ -8,13 +8,18 @@ class berFleetInfoController {
     this.$scope = $scope;
     this.unit = unit;
   }
+
+  $onInit() {
+    console.info(this);
+  }
 }
 
 berFleetInfoController.$inject = ["$scope","berUnit"];
 
 export const berFleetInfo = {
   bindings: {
-    fleet: "<"
+    fleet: "<",
+    markup: "@"
   },
   controller: berFleetInfoController,
   template: require('./berFleetInfo.component.html')
