@@ -26,12 +26,8 @@
         <thead>
           <tr>
             <th>Unit</th>
-            <th>Max BM</th>
-            <th>Cur BM</th>
             <th>Max SH</th>
             <th>Cur SH</th>
-            <th>Max TP</th>
-            <th>Cur TP</th>
             <th>Max HL</th>
             <th>Cur HL</th>
           </tr>
@@ -39,12 +35,8 @@
         <tbody>
           <tr ng-repeat="attacker in $ctrl.ui.currentTurn.attackers.units track by $index" ng-class="{danger: attacker.hlCur == 0, warning: attacker.hlCur < attacker.hlMax && attacker.hlCur > 0, info: attacker.shCur < attacker.shMax, success: attacker.shCur == attacker.shMax}">
             <td>{{attacker.name}}</td>
-            <td>{{attacker.bmMax}}</td>
-            <td>{{attacker.bmCur}}</td>
             <td>{{attacker.shMax}}</td>
             <td>{{attacker.shCur}}</td>
-            <td>{{attacker.tpMax}}</td>
-            <td>{{attacker.tpCur}}</td>
             <td>{{attacker.hlMax}}</td>
             <td>{{attacker.hlCur}}</td>
           </tr>
