@@ -27,6 +27,14 @@ export const berFleetsViewState = {
   component: 'berFleetsView'
 };
 
+export const berFleetsViewDetailState = {
+  parent: 'berFleetsView',
+  name: 'berFleetsViewDetail',
+  url: '/{uuid}',
+  resolve: {},
+  component: 'berFleetDetail'
+};
+
 export const berSimulationState = {
   parent: 'berRoot',
   name: 'berSimulation',

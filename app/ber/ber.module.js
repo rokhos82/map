@@ -10,7 +10,10 @@ import {berFleetsView} from "./berFleetsView.component.js";
 import {berSimulation} from "./berSimulation.component.js";
 import {berSimulationControl} from "./berSimulationControl.component.js";
 import {berResultView} from "./berResultView.component.js";
+
 import {berFleetInfo} from "./berFleetInfo.component.js";
+import {berFleetCard} from "./fleets/berFleetCard.component.js";
+import {berFleetDetail} from "./fleets/berFleetDetail.component.js";
 
 import {unit} from "./unit.service.js";
 import {fleets} from "./fleet.service.js";
@@ -47,7 +50,10 @@ BER.component('berFleetsView',berFleetsView);
 BER.component('berSimulation',berSimulation);
 BER.component('berSimulationControl',berSimulationControl);
 BER.component('berResultView',berResultView)
+
 BER.component('berFleetInfo',berFleetInfo);
+BER.component('berFleetCard',berFleetCard);
+BER.component('berFleetDetail',berFleetDetail);
 
 BER.factory('berUnit',unit);
 BER.factory('berFleets',fleets);
