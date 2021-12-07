@@ -74,9 +74,6 @@ class berSimulationController {
     this.simulations[sim.uuid] = sim;
 
     console.info(this.simulations);
-
-    //this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:this.ui.maxTurns});
-    //this.saveState();
   }
 
   round() {
