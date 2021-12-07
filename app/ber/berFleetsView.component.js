@@ -4,14 +4,15 @@
  * @desc Fleets overview
  */
 class berFleetsViewController {
-  constructor($scope,fleets) {
+  constructor($scope,fleetService) {
     this.$scope = $scope;
-    this.fleets = fleets;
+    this.fleetService = fleetService;
+    this.fleets = fleetService.listFleets();
   }
 
   $onInit() {
-    this.attackers = this.fleets.getAttackers();
-    this.defenders = this.fleets.getDefenders();
+    this.attackers = this.fleetService.getAttackers();
+    this.defenders = this.fleetService.getDefenders();
   }
 
   getTagString(unit) {

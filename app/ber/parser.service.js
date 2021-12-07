@@ -1,4 +1,4 @@
-export function parser() {
+export function parser(uuid) {
   let _service = {};
 
   _service.parseFleet = (fleetString) => {
@@ -17,6 +17,7 @@ export function parser() {
     console.log(fleetInfo);
     fleet.race = fleetInfo[0];
     fleet.name = fleetInfo[1];
+    fleet.label = `${fleet.race} - ${fleet.name}`;
     fleet.break = fleetInfo[2];
     fleet.target = fleetInfo[5];
 
@@ -30,6 +31,7 @@ export function parser() {
       units.push(unit);
     }
     fleet.units = units;
+    fleet.uuid = uuid.v4();
 
     console.log(fleet);
     return fleet;
@@ -225,6 +227,6 @@ export function parser() {
   return _service;
 }
 
-parser.$inject = [];
+parser.$inject = ["mobius-core-uuid"];
 
 // Service Function Definitions Below

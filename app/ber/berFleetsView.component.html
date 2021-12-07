@@ -1,10 +1,5 @@
 <div class="row">
   <div class="col-lg-12">
-    <ber-fleet-info fleet="$ctrl.attackers" markup="false"></ber-fleet-info>
-  </div>
-</div>
-<div class="row">
-  <div class="col-lg-12">
-    <ber-fleet-info fleet="$ctrl.defenders" markup="false"></ber-fleet-info>
+    <ber-fleet-info ng-repeat="fleet in $ctrl.fleets" fleet="fleet" markup="false"></ber-fleet-info>
   </div>
 </div>

@@ -1,1 +1,23 @@
-<b>PLACEHOLDER</b>
+<div class="panel panel-default">
+  <div class="panel-heading">Results</div>
+  <div class="panel-body">
+    <ul uib-pagination total-items="$ctrl.simulation.turns.length" items-per-page="1" ng-model="$ctrl.ui.currentPage" ng-change="$ctrl.changeTurn()"></ul>
+  </div>
+  <div class="panel-body">
+    <ber-fleet-info fleet="$ctrl.ui.currentTurn.attackers" markup="true"></ber-fleet-info>
+    <ber-fleet-info fleet="$ctrl.ui.currentTurn.defenders" markup="true"></ber-fleet-info>
+    <div class="form-group">
+      <label for="eventSearch" class="control-label">Event Filter</label>
+      <input type="text" name="eventSearch" class="form-control" ng-model="search.$" />
+    </div>
+    <ul class="list-group">
+      <li class="list-group-item" ng-repeat="event in $ctrl.ui.currentTurn.events | filter:search track by $index">{{event.msg}}</li>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-default" ng-click="$ctrl.toggleView('sim')">
+  <div class="panel-heading">Simulation Object</div>
+  <div class="panel-body" ng-show="$ctrl.ui.sim">
+    <pre>{{$ctrl.simulation | json}}</pre>
+  </div>
+</div>

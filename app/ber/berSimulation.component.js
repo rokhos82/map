@@ -4,13 +4,16 @@
  * @desc Does the combat!
  */
 class berSimulationController {
-  constructor($scope,fleets,simulator,stateService,unit) {
+  constructor($scope,fleetService,simulator,stateService,unit,uuid) {
     this.$scope = $scope;
-    this.fleets = fleets;
+    this.fleetService = fleetService;
     this.simulator = simulator;
     this.stateService = stateService;
     this.unit = unit;
+    this.uuid = uuid;
+
     this.ui = {};
+    this.simulations = {};
 
     this.state = {};
     this.state.realm = "ber";
@@ -18,14 +21,15 @@ class berSimulationController {
   }
 
   $onInit() {
+    // Get the loaded fleets
+    this.fleets = this.fleetService.listFleets();
+
     // Check the stateService to see if there is information stored.
     if(this.stateService.hasState(this.state.realm,this.state.key)) {
       // Yes, import the existing state data
       console.info(`Something should have imported here!`)
       let savedState = this.stateService.getState(this.state.realm,this.state.key);
       this.simulator.loadState(savedState.simulator);
-      this.attackers = savedState.attackers;
-      this.defenders = savedState.defenders;
       this.events = savedState.events;
       console.log(this.ui,savedState.ui);
       _.merge(this.ui,savedState.ui);
@@ -33,8 +37,6 @@ class berSimulationController {
     }
     else {
       // No existing state, initialize to a new simulation.
-      this.attackers = this.fleets.getAttackers();
-      this.defenders = this.fleets.getDefenders();
       this.events = [];
       this.ui.output = false;
       this.ui.sim = false;
@@ -60,8 +62,21 @@ class berSimulationController {
   }
 
   setup() {
-    this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:this.ui.maxTurns});
-    this.saveState();
+    // This adds the simulation to an hash of simulations so that the user can setup multiple simulations.
+    let sim = {};
+    sim.name = this.ui.simulationName;
+    sim.uuid = this.uuid.v4();
+    sim.maxTurns = this.ui.maxTurns;
+    sim.attacker = this.ui.attacker;
+    sim.defender = this.ui.defender;
+    sim.status = "Pending";
+
+    this.simulations[sim.uuid] = sim;
+
+    console.info(this.simulations);
+
+    //this.simulator.setup(this.attackers,this.defenders,{baseToHit:50,turns:this.ui.maxTurns});
+    //this.saveState();
   }
 
   round() {
@@ -93,9 +108,13 @@ class berSimulationController {
   changeTurn() {
     this.ui.currentTurn = this.simulation.turns[this.ui.currentPage - 1];
   }
+
+  getFleet(uuid) {
+    return this.fleetService.getFleet(uuid);
+  }
 }
 
-berSimulationController.$inject = ["$scope","berFleets","berSimulator","berState","berUnit"];
+berSimulationController.$inject = ["$scope","berFleets","berSimulator","berState","berUnit","mobius-core-uuid"];
 
 export const berSimulation = {
   bindings: {},

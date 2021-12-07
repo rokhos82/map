@@ -4,37 +4,30 @@
       <div class="panel-heading">Simulation Engine</div>
       <div class="panel-body">
         <div class="form-group">
+          <label class="control-label" for="simName">Simulation Name</label>
+          <input class="form-control" name="simName" type="text" ng-model="$ctrl.ui.simulationName" />
+        </div>
+        <div class="form-group">
           <label class="control-label" for="maxTurns">Max Turns</label>
           <input class="form-control" name="maxTurns" type="number" ng-model="$ctrl.ui.maxTurns" />
         </div>
+        <div class="form-group">
+          <label class="control-label" for="fleetsAttacker">Attacker</label>
+          <select class="form-control" name="fleetsAttacker" ng-model="$ctrl.ui.attacker" ng-options="fleet.uuid as fleet.label for fleet in $ctrl.fleets track by fleet.uuid"></select>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="fleetsDefender">Defender</label>
+          <select class="form-control" name="fleetsDefender" ng-model="$ctrl.ui.defender" ng-options="fleet.uuid as fleet.label for fleet in $ctrl.fleets track by fleet.uuid"></select>
+        </div>
         <div class="btn-group btn-group-justified">
           <a class="btn btn-default" ng-click="$ctrl.setup()">Setup</a>
-          <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>
-          <a class="btn btn-default" ng-click="$ctrl.run()">Fight</a>
         </div>
       </div>
     </div>
     <div class="panel panel-default">
-      <div class="panel-heading">Results</div>
+      <div class="panel-heading">Simulations</div>
       <div class="panel-body">
-        <ul uib-pagination total-items="$ctrl.simulation.turns.length" items-per-page="1" ng-model="$ctrl.ui.currentPage" ng-change="$ctrl.changeTurn()"></ul>
-      </div>
-      <div class="panel-body">
-        <ber-fleet-info fleet="$ctrl.ui.currentTurn.attackers" markup="true"></ber-fleet-info>
-        <ber-fleet-info fleet="$ctrl.ui.currentTurn.defenders" markup="true"></ber-fleet-info>
-        <div class="form-group">
-          <label for="eventSearch" class="control-label">Event Filter</label>
-          <input type="text" name="eventSearch" class="form-control" ng-model="search.$" />
-        </div>
-        <ul class="list-group">
-          <li class="list-group-item" ng-repeat="event in $ctrl.ui.currentTurn.events | filter:search track by $index">{{event.msg}}</li>
-        </ul>
-      </div>
-    </div>
-    <div class="panel panel-default" ng-click="$ctrl.toggleView('sim')">
-      <div class="panel-heading">Simulation Object</div>
-      <div class="panel-body" ng-show="$ctrl.ui.sim">
-        <pre>{{$ctrl.simulation | json}}</pre>
+        <ber-simulation-control ng-repeat="simulation in $ctrl.simulations" simulation="simulation"></ber-simulation-control>
       </div>
     </div>
   </div>

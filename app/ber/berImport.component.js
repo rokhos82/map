@@ -32,8 +32,8 @@ Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
 
   importFleets() {
     // Parse the attacking fleet
-    this.fleets.setAttackers(this.parser.parseFleet(this.attackers));
-    this.fleets.setDefenders(this.parser.parseFleet(this.defenders));
+    this.fleets.setFleet(this.parser.parseFleet(this.attackers));
+    this.fleets.setFleet(this.parser.parseFleet(this.defenders));
     this.$state.go("berFleetsView");
   }
 }
