@@ -4,13 +4,11 @@
  * @desc Does the combat!
  */
 class berSimulationController {
-  constructor($scope,fleetService,simulator,stateService,unit,uuid) {
+  constructor($scope,archive,uuid,fleetService) {
     this.$scope = $scope;
-    this.fleetService = fleetService;
-    this.simulator = simulator;
-    this.stateService = stateService;
-    this.unit = unit;
+    this.archive = archive;
     this.uuid = uuid;
+    this.fleetService = fleetService;
 
     this.ui = {};
     this.simulations = {};
@@ -23,9 +21,11 @@ class berSimulationController {
   $onInit() {
     // Get the loaded fleets
     this.fleets = this.fleetService.listFleets();
+    this.simulations = this.archive.listSimulations() || {};
+    this.ui.maxTurns = 100;
 
     // Check the stateService to see if there is information stored.
-    if(this.stateService.hasState(this.state.realm,this.state.key)) {
+    /*if(this.stateService.hasState(this.state.realm,this.state.key)) {
       // Yes, import the existing state data
       console.info(`Something should have imported here!`)
       let savedState = this.stateService.getState(this.state.realm,this.state.key);
@@ -44,21 +44,21 @@ class berSimulationController {
       this.ui.lastState = false;
       this.ui.maxTurns = 20;
       this.ui.currentPage = 0;
-    }
+    }//*/
   }
 
   $onDestroy() {
-    this.saveState();
+    //this.saveState();
   }
 
   saveState() {
-    let savedState = {};
+    /*let savedState = {};
     savedState.simulator = this.simulator.saveState();
     savedState.ui = this.ui;
     savedState.attackers = this.attackers;
     savedState.defenders = this.defenders;
     savedState.events = this.events;
-    this.stateService.setState(this.state.realm,this.state.key,savedState);
+    this.stateService.setState(this.state.realm,this.state.key,savedState);//*/
   }
 
   setup() {
@@ -72,6 +72,8 @@ class berSimulationController {
     sim.status = "Pending";
 
     this.simulations[sim.uuid] = sim;
+
+    this.archive.setSimulation(sim.uuid,sim);
 
     console.info(this.simulations);
   }
@@ -105,13 +107,9 @@ class berSimulationController {
   changeTurn() {
     this.ui.currentTurn = this.simulation.turns[this.ui.currentPage - 1];
   }
-
-  getFleet(uuid) {
-    return this.fleetService.getFleet(uuid);
-  }
 }
 
-berSimulationController.$inject = ["$scope","berFleets","berSimulator","berState","berUnit","mobius-core-uuid"];
+berSimulationController.$inject = ["$scope","berArchive","mobius-core-uuid","berFleets"];
 
 export const berSimulation = {
   bindings: {},

@@ -4,12 +4,17 @@
  * @desc This is a component to control a specific simulation instance.
  */
 class berSimulationControlController {
-  constructor($scope) {
+  constructor($scope,fleetService) {
     this.$scope = $scope;
+    this.fleetService = fleetService;
+  }
+
+  getFleet(uuid) {
+    return this.fleetService.getFleet(uuid);
   }
 }
 
-berSimulationControlController.$inject = ["$scope"];
+berSimulationControlController.$inject = ["$scope","berFleets"];
 
 export const berSimulationControl = {
   bindings: {

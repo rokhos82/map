@@ -44,6 +44,10 @@ export function state($window) {
     return (_.isObject(_state[realm]) && _.has(_state[realm],key));
   };
 
+  _service.listState = (realm) => {
+    return _state[realm];
+  }
+
   return _service;
 }
 

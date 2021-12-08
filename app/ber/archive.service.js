@@ -33,6 +33,11 @@ export function archive(stateService) {
     }
   };
 
+  _service.listSimulations = () => {
+    // This function returns the simulations hash object
+    return stateService.listState(simRealm);
+  };
+
   return _service;
 }
 

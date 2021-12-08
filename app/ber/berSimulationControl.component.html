@@ -1,11 +1,14 @@
 <div class="panel panel-default">
   <div class="panel-heading">{{$ctrl.simulation.name}}</div>
   <div class="panel-body">
-    <ber-fleet-info fleet="$ctrl.getFleet($ctrl.simulation.attacker)" markup="false"></ber-fleet-info>
-    <ber-fleet-info fleet="$ctrl.getFleet($ctrl.simulation.defender)" markup="false"></ber-fleet-info>
+    <div class="row">
+      <ber-fleet-card fleet="$ctrl.getFleet($ctrl.simulation.attacker)"></ber-fleet-card>
+      <ber-fleet-card fleet="$ctrl.getFleet($ctrl.simulation.defender)"></ber-fleet-card>
+    </div>
     <div class="btn-group btn-group-justified">
-      <a class="btn btn-default" ng-click="$ctrl.round('{{$ctrl.simulation.uuid}}')">One Round</a>
-      <a class="btn btn-default" ng-click="$ctrl.run('{{$ctrl.simulation.uuid}}')">Fight</a>
+      <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>
+      <a class="btn btn-default" ng-click="$ctrl.run()">Fight</a>
+      <a class="btn btn-default" ng-click="$ctrl.results()">Results</a>
     </div>
   </div>
   <div class="panel-footer">Status: <span class="label" ng-class="{'label-danger': $ctrl.simulation.status=='Error','label-warning': ($ctrl.simulation.status == 'Running' || $ctrl.simulation.status== 'Waiting'),'label-info': $ctrl.simulation.status == 'Pending','label-success': $ctrl.simulation.status == 'Finished'}">{{$ctrl.simulation.status}}</span></div>
