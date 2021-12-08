@@ -16,7 +16,9 @@ class berFleetDetailController {
     console.info(this.fleet);
   }
 
-  goDetails() {}
+  goBack() {
+    this.$state.go('^');
+  }
 }
 
 berFleetDetailController.$inject = ["$scope","berUnit","$state","berFleets"];
