@@ -25,7 +25,13 @@ export function fleets() {
   };
 
   _service.getFleet = (uuid) => {
-    return _fleets[uuid];
+    if(_.has(_fleets,uuid)) {
+      return _fleets[uuid];
+    }
+    else {
+      console.warn("Fleet unknown");
+      return false;
+    }
   };
 
   _service.listFleets = () => {

@@ -12,6 +12,8 @@ class berFleetDetailController {
   }
 
   $onInit() {
+    console.info(`In detail view`);
+    console.info(this.fleet);
   }
 
   goDetails() {}

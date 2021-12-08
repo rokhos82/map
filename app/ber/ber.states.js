@@ -31,8 +31,15 @@ export const berFleetsViewDetailState = {
   parent: 'berFleetsView',
   name: 'berFleetsViewDetail',
   url: '/{uuid}',
-  resolve: {},
-  component: 'berFleetDetail'
+  resolve: {
+    fleet: ["berFleets","$stateParams",(fleetService,$stateParams) => {
+      let fleet = fleetService.getFleet($stateParams.uuid);
+      return fleet;
+    }]
+  },
+  views: {
+    '@^.^': "berFleetDetail"
+  }
 };
 
 export const berSimulationState = {
