@@ -4,17 +4,28 @@
  * @desc This is a component to control a specific simulation instance.
  */
 class berSimulationControlController {
-  constructor($scope,fleetService) {
+  constructor($scope,$state,archive) {
     this.$scope = $scope;
-    this.fleetService = fleetService;
+    this.$state = $state;
+    this.archive = archive;
   }
 
-  getFleet(uuid) {
-    return this.fleetService.getFleet(uuid);
+  $onInit() {
+    this.attacker = this.archive.getFleet(this.simulation.attacker);
+    this.defender = this.archive.getFleet(this.simulation.defender);
+  }
+
+  delete() {
+    // Remove the simulation from the list.
+    this.archive.deleteSimulation(this.simulation.uuid);
+    this.archive.serializeSimulations();
+
+    // Refresh the current state.
+    this.$state.reload();
   }
 }
 
-berSimulationControlController.$inject = ["$scope","berFleets"];
+berSimulationControlController.$inject = ["$scope","$state","berArchive"];
 
 export const berSimulationControl = {
   bindings: {

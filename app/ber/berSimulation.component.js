@@ -4,14 +4,14 @@
  * @desc Does the combat!
  */
 class berSimulationController {
-  constructor($scope,archive,uuid,fleetService) {
+  constructor($scope,archive,uuid) {
     this.$scope = $scope;
     this.archive = archive;
     this.uuid = uuid;
-    this.fleetService = fleetService;
 
     this.ui = {};
     this.simulations = {};
+    this.fleets = {};
 
     this.state = {};
     this.state.realm = "ber";
@@ -20,31 +20,9 @@ class berSimulationController {
 
   $onInit() {
     // Get the loaded fleets
-    this.fleets = this.fleetService.listFleets();
-    this.simulations = this.archive.listSimulations() || {};
+    this.fleets = this.archive.listFleets();
+    this.simulations = this.archive.listSimulations();
     this.ui.maxTurns = 100;
-
-    // Check the stateService to see if there is information stored.
-    /*if(this.stateService.hasState(this.state.realm,this.state.key)) {
-      // Yes, import the existing state data
-      console.info(`Something should have imported here!`)
-      let savedState = this.stateService.getState(this.state.realm,this.state.key);
-      this.simulator.loadState(savedState.simulator);
-      this.events = savedState.events;
-      console.log(this.ui,savedState.ui);
-      _.merge(this.ui,savedState.ui);
-      this.simulation = this.simulator.saveState();
-    }
-    else {
-      // No existing state, initialize to a new simulation.
-      this.events = [];
-      this.ui.output = false;
-      this.ui.sim = false;
-      this.ui.turns = [false,false,false,false,false];
-      this.ui.lastState = false;
-      this.ui.maxTurns = 20;
-      this.ui.currentPage = 0;
-    }//*/
   }
 
   $onDestroy() {
@@ -74,8 +52,7 @@ class berSimulationController {
     this.simulations[sim.uuid] = sim;
 
     this.archive.setSimulation(sim.uuid,sim);
-
-    console.info(this.simulations);
+    this.archive.serializeSimulations();
   }
 
   round() {
@@ -109,7 +86,7 @@ class berSimulationController {
   }
 }
 
-berSimulationController.$inject = ["$scope","berArchive","mobius-core-uuid","berFleets"];
+berSimulationController.$inject = ["$scope","berArchive","mobius-core-uuid"];
 
 export const berSimulation = {
   bindings: {},

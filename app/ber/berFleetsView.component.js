@@ -4,15 +4,13 @@
  * @desc Fleets overview
  */
 class berFleetsViewController {
-  constructor($scope,fleetService) {
+  constructor($scope,archive) {
     this.$scope = $scope;
-    this.fleetService = fleetService;
-    this.fleets = fleetService.listFleets();
+    this.archive = archive;
+    this.fleets = archive.listFleets();
   }
 
   $onInit() {
-    this.attackers = this.fleetService.getAttackers();
-    this.defenders = this.fleetService.getDefenders();
   }
 
   getTagString(unit) {
@@ -38,7 +36,7 @@ class berFleetsViewController {
   }
 }
 
-berFleetsViewController.$inject = ["$scope","berFleets"];
+berFleetsViewController.$inject = ["$scope","berArchive"];
 
 export const berFleetsView = {
   bindings: {},

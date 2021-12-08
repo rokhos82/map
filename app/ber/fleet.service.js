@@ -1,8 +1,12 @@
-export function fleets() {
+export function fleets(stateService) {
   let _service = {};
   let _attackers = {};
   let _defenders = {};
   let _fleets = {};
+
+  let fleetRealm = "fleet";
+
+  // Load anything from localStorage via the stateService
 
   _service.setAttackers = (atk) => {
     _attackers = _.cloneDeep(atk);
@@ -21,7 +25,11 @@ export function fleets() {
   };
 
   _service.setFleet = (fleet) => {
+    // Add the fleet to the _fleets object
     _fleets[fleet.uuid] = fleet;
+
+    // Send the fleet to the stateService for serialization
+    stateService.setState(fleetRealm,fleet.uuid,fleet);
   };
 
   _service.getFleet = (uuid) => {
@@ -41,6 +49,6 @@ export function fleets() {
   return _service;
 }
 
-fleets.$inject = [];
+fleets.$inject = ["berState"];
 
 // Service Function Definitions Below

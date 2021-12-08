@@ -32,8 +32,8 @@ export const berFleetsViewDetailState = {
   name: 'berFleetsViewDetail',
   url: '/{uuid}',
   resolve: {
-    fleet: ["berFleets","$stateParams",(fleetService,$stateParams) => {
-      let fleet = fleetService.getFleet($stateParams.uuid);
+    fleet: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let fleet = archive.getFleet($stateParams.uuid);
       return fleet;
     }]
   },

@@ -4,12 +4,25 @@
  * @desc Root of the BattleEngine Reborn module
  */
 class berRootController {
-  constructor($scope) {
+  constructor($scope,archive) {
     this.$scope = $scope;
+    this.archive = archive;
+  }
+
+  $onInit() {
+    console.info(`Entering BER`);
+    this.archive.deserializeFleets();
+    this.archive.deserializeSimulations();
+  }
+
+  $onDestroy() {
+    console.info(`Leaving BER`);
+    this.archive.serializeFleets();
+    this.archive.serializeSimulations();
   }
 }
 
-berRootController.$inject = ["$scope"];
+berRootController.$inject = ["$scope","berArchive"];
 
 export const berRoot = {
   bindings: {},

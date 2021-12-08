@@ -4,9 +4,9 @@
  * @desc Import fleets for the BER.
  */
 class berImportController {
-  constructor($scope,fleets,parser,$state) {
+  constructor($scope,archive,parser,$state) {
     this.$scope = $scope;
-    this.fleets = fleets;
+    this.archive = archive;
     this.parser = parser;
     this.$state = $state;
 
@@ -32,13 +32,16 @@ Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
 
   importFleets() {
     // Parse the attacking fleet
-    this.fleets.setFleet(this.parser.parseFleet(this.attackers));
-    this.fleets.setFleet(this.parser.parseFleet(this.defenders));
+    let attacker = this.parser.parseFleet(this.attackers);
+    let defender = this.parser.parseFleet(this.defenders);
+    this.archive.setFleet(attacker.uuid,attacker);
+    this.archive.setFleet(defender.uuid,defender);
+    this.archive.serializeFleets();
     this.$state.go("berFleetsView");
   }
 }
 
-berImportController.$inject = ["$scope","berFleets","berParser","$state"];
+berImportController.$inject = ["$scope","berArchive","berParser","$state"];
 
 export const berImport = {
   bindings: {},
