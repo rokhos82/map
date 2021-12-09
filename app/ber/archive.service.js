@@ -89,7 +89,7 @@ export function archive($localStorage) {
   _service.deserializeFleets = () => {
     // Retrieve the fleets object from $localStorage.
     // If the key doesn't exist, initialize to an empty object.
-    _fleets = $localStorage.get(fleetsRealm);// || {};
+    _fleets = $localStorage.get(fleetsRealm) || {};
     console.info(_fleets);
   };
 
