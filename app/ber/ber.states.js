@@ -55,3 +55,31 @@ export const berResultsState = {
   url: '/results',
   component: 'berResultView'
 };
+
+// New State Definitions -------------------------------------------------------
+export const berFleetsRoot = {
+  name: 'berRoot.fleets',
+  url: '/fleets',
+  component: 'berFleetsRoot',
+  redirectTo: 'berRoot.berFleets.berFleetsView'
+};
+
+export const berFleetsView = {
+  name: 'berRoot.fleets.view',
+  url: '/view',
+  component: 'berFleetsView',
+};
+
+export const berFleetsDetail = {
+  name: 'berRoot.fleets.view.detail',
+  url: '/{uuid}',
+  resolve: {
+    fleet: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let fleet = archive.getFleet($stateParams.uuid);
+      return fleet;
+    }]
+  },
+  views: {
+    '@^.^': 'berFleetDetail'
+  }
+};
