@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h4>Fleets Import</h4>
+    <p>Here is where you import your attacking fleet and defending fleet.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="well">
+      <div class="form">
+        <div class="form-group">
+          <button class="btn btn-primary" type="button" ng-click="$ctrl.importFleets()">Import</button>
+          <div class="btn-group" uib-dropdown>
+            <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabed">
+              Test Fleets <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+              <li class="menuitem"><a ng-click="$ctrl.loadAttackFleet()" href="">Populate Attack Fleet</a></li>
+              <li class="menuitem"><a ng-click="$ctrl.loadDefenseFleet()" href="">Populate Defense Fleet</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label" for="fleetFile">Fleet File</label>
+          <textarea class="form-control" rows="20" name="fleetFile" ng-model="$ctrl.fleetFile"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

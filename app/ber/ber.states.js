@@ -20,12 +20,12 @@ export const berImportState = {
   component: 'berImport'
 };
 
-export const berFleetsViewState = {
+/*export const berFleetsViewState = {
   parent: 'berRoot',
   name: 'berFleetsView',
   url: '/fleets',
   component: 'berFleetsView'
-};
+};//*/
 
 export const berFleetsViewDetailState = {
   parent: 'berFleetsView',
@@ -57,20 +57,20 @@ export const berResultsState = {
 };
 
 // New State Definitions -------------------------------------------------------
-export const berFleetsRoot = {
+export const berFleetsRootState = {
   name: 'berRoot.fleets',
   url: '/fleets',
   component: 'berFleetsRoot',
-  redirectTo: 'berRoot.berFleets.berFleetsView'
+  redirectTo: 'berRoot.fleets.view'
 };
 
-export const berFleetsView = {
+export const berFleetsViewState = {
   name: 'berRoot.fleets.view',
   url: '/view',
   component: 'berFleetsView',
 };
 
-export const berFleetsDetail = {
+export const berFleetsDetailState = {
   name: 'berRoot.fleets.view.detail',
   url: '/{uuid}',
   resolve: {
@@ -80,6 +80,12 @@ export const berFleetsDetail = {
     }]
   },
   views: {
-    '@^.^': 'berFleetDetail'
+    '@^': 'berFleetDetail'
   }
+};
+
+export const berFleetsImportState = {
+  name: 'berRoot.fleets.import',
+  url: '/import',
+  component: 'berFleetsImport'
 };
