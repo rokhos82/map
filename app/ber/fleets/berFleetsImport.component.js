@@ -30,11 +30,16 @@ Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
 
   $onInit() {}
 
-  importFleets() {
+  importFleet() {
     // Parse the fleet file
     let fleetFile = this.parser.parseFleet(this.fleetFile);
     this.archive.setFleet(fleetFile.uuid,fleetFile);
     this.archive.serializeFleets();
+    this.fleetFile = "";
+  }
+
+  importFleetAndGo() {
+    this.importFleet();
     this.$state.go("^.view");
   }
 

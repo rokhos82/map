@@ -9,14 +9,22 @@
     <div class="well">
       <div class="form">
         <div class="form-group">
-          <button class="btn btn-primary" type="button" ng-click="$ctrl.importFleets()">Import</button>
+          <div class="btn-group" uib-dropdown>
+            <button class="btn btn-primary" type="button" ng-click="$ctrl.importFleetAndGo()"">Import</button>
+            <button class="btn btn-primary" type="button" uib-dropdown-toggle>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+              <li role="menuitem"><a ng-click="$ctrl.importFleet()" href="">Create &amp; Import Another</a></li>
+            </ul>
+          </div>
           <div class="btn-group" uib-dropdown>
             <button type="button" class="btn btn-default" uib-dropdown-toggle ng-disabled="disabed">
               Test Fleets <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-              <li class="menuitem"><a ng-click="$ctrl.loadAttackFleet()" href="">Populate Attack Fleet</a></li>
-              <li class="menuitem"><a ng-click="$ctrl.loadDefenseFleet()" href="">Populate Defense Fleet</a></li>
+              <li role="menuitem"><a ng-click="$ctrl.loadAttackFleet()" href="">Populate Attack Fleet</a></li>
+              <li role="menuitem"><a ng-click="$ctrl.loadDefenseFleet()" href="">Populate Defense Fleet</a></li>
             </ul>
           </div>
         </div>
