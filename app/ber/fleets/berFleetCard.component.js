@@ -15,7 +15,7 @@ class berFleetCardController {
 
   goDetails() {
     console.info(`Going to detail view`);
-    this.$state.go('berFleetsViewDetail',{uuid:this.fleet.uuid});
+    this.$state.go('.detail',{uuid:this.fleet.uuid});
   }
 }
 

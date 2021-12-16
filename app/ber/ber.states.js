@@ -80,7 +80,7 @@ export const berFleetsDetailState = {
     }]
   },
   views: {
-    '@^': 'berFleetDetail'
+    '@^.^': 'berFleetDetail'
   }
 };
 
