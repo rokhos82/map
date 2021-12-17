@@ -18,6 +18,8 @@ import {berFleetCard} from "./fleets/berFleetCard.component.js";
 import {berFleetDetail} from "./fleets/berFleetDetail.component.js";
 
 import {berSimulatorRoot} from "./simulator/berSimulatorRoot.component.js";
+import {berSimulatorView} from "./simulator/berSimulatorView.component.js";
+import {berSimulatorCreate} from "./simulator/berSimulatorCreate.component.js";
 
 import {unit} from "./unit.service.js";
 import {fleets} from "./fleet.service.js";
@@ -28,7 +30,12 @@ import {state} from "./state.service.js";
 import {archive} from "./archive.service.js";
 
 //import {berRootState,berWelcomeState,berImportState,berFleetsViewState,berFleetsViewDetailState,berSimulationState,berResultsState} from "./ber.states.js";
-import {berRootState,berWelcomeState,berFleetsRootState,berFleetsViewState,berFleetsImportState,berFleetsDetailState} from "./ber.states.js";
+import {
+  berRootState,
+  berWelcomeState,
+  berFleetsRootState,berFleetsViewState,berFleetsImportState,berFleetsDetailState,
+  berSimulatorRootState,berSimulatorViewState,berSimulatorCreateState
+} from "./ber.states.js";
 
 export const BER = angular.module("mobius-ber",["ui.router"]);
 
@@ -54,6 +61,10 @@ function berModuleController($uiRouter) {
   $stateRegistry.register(berFleetsViewState);
   $stateRegistry.register(berFleetsImportState);
   $stateRegistry.register(berFleetsDetailState);
+
+  $stateRegistry.register(berSimulatorRootState);
+  $stateRegistry.register(berSimulatorViewState);
+  $stateRegistry.register(berSimulatorCreateState);
 }
 
 BER.component('berRoot',berRoot);
@@ -71,6 +82,8 @@ BER.component('berFleetCard',berFleetCard);
 BER.component('berFleetDetail',berFleetDetail);
 
 BER.component('berSimulatorRoot',berSimulatorRoot);
+BER.component('berSimulatorView',berSimulatorView);
+BER.component('berSimulatorCreate',berSimulatorCreate);
 
 BER.factory('berUnit',unit);
 BER.factory('berFleets',fleets);

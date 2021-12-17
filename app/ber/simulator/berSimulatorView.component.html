@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="well">
+      This is a list of simulations that have been setup and their statuses.  If there is no information below, create a simulation by clicking on the 'Setup' button above this box.
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <ber-simulation-control ng-repeat="simulation in $ctrl.simulations" simulation="simulation"></ber-simulation-control>
+  </div>
+</div>
