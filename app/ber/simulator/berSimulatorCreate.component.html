@@ -27,7 +27,8 @@
           <select class="form-control" name="fleetsDefender" ng-model="$ctrl.ui.defender" ng-options="fleet.uuid as fleet.label for fleet in $ctrl.fleets track by fleet.uuid"></select>
         </div>
         <div class="btn-group btn-group-justified">
-          <a class="btn btn-default" ng-click="$ctrl.setup()">Setup</a>
+          <a class="btn btn-primary" ng-click="$ctrl.setupAndGo()">Create</a>
+          <a class="btn btn-default" ng-click="$ctrl.setup()">Create & Setup Another</a>
         </div>
       </div>
     </div>

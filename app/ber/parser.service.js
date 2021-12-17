@@ -22,15 +22,18 @@ export function parser(uuid) {
     fleet.target = fleetInfo[5];
 
     // Parse Unit Description Lines (UDLs).
-    let units = [];
+    let units = {};
+    let unitCount = 0;
     for(let i = 1;i < lines.length;i++) {
       let unit = _service.parseUnit(lines[i]);
       if(!unit.tags.break) {
         unit.tags.break = fleet.break;
       }
-      units.push(unit);
+      units[unit.uuid] = unit;
+      unitCount++;
     }
     fleet.units = units;
+    fleet.unitCount = unitCount;
     fleet.uuid = uuid.v4();
 
     console.log(fleet);
@@ -51,6 +54,7 @@ export function parser(uuid) {
     //console.log(unitInfo);
 
     unit.name = unitInfo[0];
+    unit.uuid = uuid.v4();
     unit.bmMax = +unitInfo[1];
     unit.bmCur = +unitInfo[2];
     unit.shMax = +unitInfo[3];
