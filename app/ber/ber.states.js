@@ -57,6 +57,8 @@ export const berResultsState = {
 };
 
 // New State Definitions -------------------------------------------------------
+
+// Fleet States ----------------------------------------------------------------
 export const berFleetsRootState = {
   name: 'berRoot.fleets',
   url: '/fleets',
@@ -88,4 +90,36 @@ export const berFleetsImportState = {
   name: 'berRoot.fleets.import',
   url: '/import',
   component: 'berFleetsImport'
+};
+
+// Simulator States ------------------------------------------------------------
+export const berSimulatorRootState = {
+  name: 'berRoot.simulator',
+  url: '/combat',
+  component: 'berSimulatorRoot',
+  redirectTo: '.view'
+};
+
+export const berSimulatorViewState = {
+  name: 'berRoot.simulator.view',
+  url: '/view',
+  component: 'berSimulatorView'
+};
+
+export const berSimulatorCreateState = {
+  name: 'berRoot.simulator.create',
+  url: '/setup',
+  component: 'berSimulatorCreate'
+};
+
+export const berSimulatorImportState = {
+  name: 'berRoot.simulator.import',
+  url: '/import',
+  component: 'berSimulatorImport'
+};
+
+export const berSimulatorExportState = {
+  name: 'berRoot.simulator.export',
+  url: '/export',
+  component: 'berSimulatorExport'
 };
