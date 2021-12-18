@@ -37,6 +37,8 @@ export function simulator2() {
   }
 
   function targetList(simulation,factionUuid) {
+    console.info(factionUuid,simulation);
+    let fleets = simulation.factions[factionUuid].fleets;
     _.forEach(simulation.factions[factionUuid].fleets,(fleetUuid) => {
       console.info(fleetUuid);
     });

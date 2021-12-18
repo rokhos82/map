@@ -52,7 +52,8 @@ class berSimulatorCreateController {
     let attacker = this.archive.getFleet(this.ui.attacker);
     sim.factions.attackers = {
       name: "Attackers",
-      uuid: this.uuid.v4(),
+      //uuid: this.uuid.v4(),
+      uuid: "attackers",
       fleets: [this.ui.attacker],
       enemy: []
     };
@@ -62,7 +63,8 @@ class berSimulatorCreateController {
     let defender = this.archive.getFleet(this.ui.defender);
     sim.factions.defenders = {
       name: "Defenders",
-      uuid: this.uuid.v4(),
+      //uuid: this.uuid.v4(),
+      uuid: "defenders",
       fleets: [this.ui.defender],
       enemy: []
     };
