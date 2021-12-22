@@ -7,6 +7,7 @@ class berRootController {
   constructor($scope,archive) {
     this.$scope = $scope;
     this.archive = archive;
+    this.appVersion = BER_VERSION;
   }
 
   $onInit() {

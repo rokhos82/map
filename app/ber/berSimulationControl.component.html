@@ -1,5 +1,5 @@
 <div class="panel panel-default">
-  <div class="panel-heading">{{$ctrl.simulation.name}}</div>
+  <div class="panel-heading">{{$ctrl.simulation.name}} <span class="label pull-right" ng-class="{'label-danger': $ctrl.simulation.status=='Error','label-warning': ($ctrl.simulation.status == 'Running' || $ctrl.simulation.status== 'Waiting'),'label-info': $ctrl.simulation.status == 'Pending','label-success': $ctrl.simulation.status == 'Finished'}">{{$ctrl.simulation.status}}</span></div>
   <table class="table table-striped table-hover">
     <thead>
       <tr>
@@ -31,5 +31,5 @@
       <a class="btn btn-danger" ng-click="$ctrl.delete()">Remove</a>
     </div>
   </div>
-  <div class="panel-footer">Status: <span class="label" ng-class="{'label-danger': $ctrl.simulation.status=='Error','label-warning': ($ctrl.simulation.status == 'Running' || $ctrl.simulation.status== 'Waiting'),'label-info': $ctrl.simulation.status == 'Pending','label-success': $ctrl.simulation.status == 'Finished'}">{{$ctrl.simulation.status}}</span></div>
+  <div class="panel-footer"></div>
 </div>

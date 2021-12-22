@@ -1,6 +1,11 @@
 {
   "name": "map",
   "version": "0.1.2",
+  "mobius_app_project": {
+    "BER": {
+      "version": "0.4.5"
+    }
+  },
   "description": "",
   "main": "node-app/index.js",
   "scripts": {

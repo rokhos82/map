@@ -16,9 +16,8 @@ module.exports = {
       template: './app/layout/index.html'
     }),
     new webpack.DefinePlugin({
-      'SERVER_IP': `'ubuntu2004.wsl'`,
-      'SERVER_PORT': `'8001'`,
-      'APP_VERSION': `${package.version}`
+      'APP_VERSION': `${package.version}`,
+      'BER_VERSION': `"${package.mobius_app_project.BER.version}"`
     })
   ],
   devtool: 'inline-source-map',
