@@ -16,6 +16,8 @@ import {berFleetsImport} from "./fleets/berFleetsImport.component.js";
 import {berFleetInfo} from "./berFleetInfo.component.js";
 import {berFleetCard} from "./fleets/berFleetCard.component.js";
 import {berFleetDetail} from "./fleets/berFleetDetail.component.js";
+import {berFleetInfoList} from "./fleets/berFleetInfoList.component.js";
+import {berFleetInfoLine} from "./fleets/berFleetInfoLine.component.js";
 
 import {berSimulatorRoot} from "./simulator/berSimulatorRoot.component.js";
 import {berSimulatorView} from "./simulator/berSimulatorView.component.js";
@@ -80,6 +82,8 @@ BER.component('berFleetsImport',berFleetsImport);
 BER.component('berFleetInfo',berFleetInfo);
 BER.component('berFleetCard',berFleetCard);
 BER.component('berFleetDetail',berFleetDetail);
+BER.component('berFleetInfoLine',berFleetInfoLine);
+BER.component('berFleetInfoList',berFleetInfoList);
 
 BER.component('berSimulatorRoot',berSimulatorRoot);
 BER.component('berSimulatorView',berSimulatorView);

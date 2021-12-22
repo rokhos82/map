@@ -1,0 +1,18 @@
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Faction</th>
+      <th>Race</th>
+      <th>Fleet</th>
+      <th>Unit Count</th>
+      <th>Current Hull</th>
+      <th>Max Hull</th>
+      <th>Break %</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="fleet in $ctrl.fleets">
+      <ber-fleet-info-line fleet="fleet"></ber-fleet-info-line>
+    </tr>
+  </tbody>
+</table>

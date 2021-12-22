@@ -10,22 +10,25 @@ export function simulator2() {
     });
 
     // Check for long range units
-    //simulation.longRange = checkLongRange([simulation.attackers,simulation.defenders]);
+    simulation.longRange = checkLongRange(simulation.fleets);
 
     console.info(simulation);
   };
 
-  _service.oneRound = (simulation) => {};
+  _service.oneRound = (simulation) => {
+    // Is the simulation initialized?
+    if(simulation.initialized) {}
+  };
 
   _service.fight = (simulation) => {};
 
+  // Simulation Functions ------------------------------------------------------
   function setupFaction(simulation,faction) {
     console.info(`Faction:`,faction);
     // Setup fleets in the faction
     _.forEach(faction.fleets,(fleetUuid) => {
       let fleet = simulation.fleets[fleetUuid];
       fleet.faction = faction.uuid;
-      setupFleet(simulation,fleet);
     });
   }
 
@@ -34,9 +37,10 @@ export function simulator2() {
     // Get the target list for this fleet.
     // TODO: Generalize this for multiple factions in the enemy array
     let factionUuid = fleet.enemy[0];
-    factionTargetList(simulation,factionUuid);
+    fleet.targetList = factionTargetList(simulation,factionUuid);
   }
 
+  // Faction Functions ---------------------------------------------------------
   function factionTargetList(simulation,factionUuid) {
     // Builds the list of valid targets for the provided faction.
     console.info(factionUuid,simulation);
@@ -54,6 +58,7 @@ export function simulator2() {
     return targets;
   }
 
+  // Fleet Functions -----------------------------------------------------------
   function fleetTagetList(fleet) {
     let targets = [];
 
@@ -85,7 +90,53 @@ export function simulator2() {
     return targets;
   }
 
-  function checkLongRange() {}
+  // Unit Functions ------------------------------------------------------------
+  function checkLongRange(fleets) {
+    // Assume there are no long range weapons.
+    let lr = false;
+
+    // Check each fleet
+    _.forEach(fleets,(fleet) => {
+      // Check each unit
+      _.forEach(fleet.units,(unit) => {
+        // Does the unit have a long range weapon?
+        if(unitHasTag(unit,"long")) {
+          // Yes, lr needs to be set to true.
+          lr = true;
+        }
+      });
+    });
+
+    return lr;
+  }
+
+  function unitHasTag(unit,tag) {
+    let hasTag = false;
+
+    // Check general unit tags
+    if(_.has(unit.tag,tag)) {
+      hasTag = true;
+    }
+
+    // These tags require specifc processing
+    if(tag == "hull" && _.isObject(unit.tags[tag])) {
+      // The HULL tag is a compound tag and the upper and lower values must be numbers
+      hasTag = (_.isNumber(unit.tags[tag].upper) && _.isNumber(unit.tags[tag].lower));
+    }
+    else if(tag == "scan" && _.isObject(unit.tags[tag])) {
+      // The SCAN tag is a compound tag and the upper and lower values must be numbers;
+      hasTag = (_.isNumber(unit.tags[tag].upper) && _.isNumber(unit.tags[tag].lower));
+    }
+
+    // Check weapon tags
+    _.forEach(unit.brackets,(bracket) =>{
+      if(_.has(bracket,tag)) {
+        hasTag = true;
+      }
+    });
+
+    return hasTag;
+  }
 
   return _service;
 }

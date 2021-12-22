@@ -16,7 +16,7 @@ export function unit() {
   _service.attackString = (unit) => {
     let attackString = "";
 
-    _.forEach(unit.tags.brackets,(value) => {
+    _.forEach(unit.brackets,(value) => {
       attackString += `${value.tag}`;
     });
 

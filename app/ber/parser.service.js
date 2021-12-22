@@ -24,6 +24,8 @@ export function parser(uuid) {
     // Parse Unit Description Lines (UDLs).
     let units = {};
     let unitCount = 0;
+    let totalHull = 0;
+    let currentHull = 0;
     for(let i = 1;i < lines.length;i++) {
       let unit = _service.parseUnit(lines[i]);
       if(!unit.tags.break) {
@@ -31,9 +33,13 @@ export function parser(uuid) {
       }
       units[unit.uuid] = unit;
       unitCount++;
+      totalHull += unit.hlMax;
+      currentHull += unit.hlCur;
     }
     fleet.units = units;
     fleet.unitCount = unitCount;
+    fleet.totalHull = totalHull;
+    fleet.currentHull = currentHull;
     fleet.uuid = uuid.v4();
 
     console.log(fleet);
@@ -67,6 +73,10 @@ export function parser(uuid) {
     let tags = unitInfo[12];
 
     unit.tags = _service.parseTags(tags);
+
+    // Extract the brackets and store them separately.
+    unit.brackets = unit.tags.brackets;
+    delete unit.tags.brackets;
 
     //console.log(unit);
 
@@ -165,7 +175,16 @@ export function parser(uuid) {
     tags.flags = {};
     tags.flags.carrier = unitCarrier;
 
-    tags.brackets = _.map(brackets,_service.parseBrackets);
+    let parsedBrackets = _.map(brackets,_service.parseBrackets);
+    let weaponCount = 0;
+    tags.brackets = _.chain(parsedBrackets).keyBy((obj) => {
+      // Convert the array to a collection
+      weaponCount++;
+      return `weap${weaponCount}`;
+    }).forEach((obj,key) => {
+      // Set the hash value of each object to its key
+      obj.hash = key;
+    }).value();
 
     //console.log(tags);
 
