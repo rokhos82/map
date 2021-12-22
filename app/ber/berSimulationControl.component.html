@@ -1,10 +1,28 @@
 <div class="panel panel-default">
   <div class="panel-heading">{{$ctrl.simulation.name}}</div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Faction</th>
+        <th>Race</th>
+        <th>Fleet</th>
+        <th>Unit Count</th>
+        <th>Total Hull</th>
+        <th>Break %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="fleet in $ctrl.simulation.fleets">
+        <td>{{fleet.faction}}</td>
+        <td>{{fleet.race}}</td>
+        <td>{{fleet.name}}</td>
+        <td>{{fleet.unitCount}}</td>
+        <td>##</td>
+        <td>{{fleet.break}}</td>
+      </tr>
+    </tbody>
+  </table>
   <div class="panel-body">
-    <div class="row">
-      <ber-fleet-card fleet="$ctrl.attacker"></ber-fleet-card>
-      <ber-fleet-card fleet="$ctrl.defender"></ber-fleet-card>
-    </div>
     <div class="btn-group btn-group-justified">
       <a class="btn btn-primary" ng-click="$ctrl.initialize()">Initialize</a>
       <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>

@@ -58,6 +58,7 @@ class berSimulatorCreateController {
       enemy: []
     };
     sim.fleets[attacker.uuid] = attacker;
+    attacker.faction = "attackers";
 
     // Setup the defending faction
     let defender = this.archive.getFleet(this.ui.defender);
@@ -69,6 +70,7 @@ class berSimulatorCreateController {
       enemy: []
     };
     sim.fleets[defender.uuid] = defender;
+    defender.faction = "defenders";
 
     // Setup enemies
     sim.factions.attackers.enemy.push(defender.uuid);
