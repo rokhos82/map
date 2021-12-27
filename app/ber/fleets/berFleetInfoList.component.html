@@ -11,8 +11,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr ng-repeat="fleet in $ctrl.fleets">
-      <ber-fleet-info-line fleet="fleet"></ber-fleet-info-line>
+    <tr ng-repeat="fleet in $ctrl.fleets" ng-click="$ctrl.goFleetDetail(fleet.uuid)">
+      <td>{{fleet.faction}}</td>
+      <td>{{fleet.race}}</td>
+      <td>{{fleet.name}}</td>
+      <td>{{fleet.unitCount}}</td>
+      <td>{{fleet.currentHull}}</td>
+      <td>{{fleet.totalHull}}</td>
+      <td>{{fleet.break}}</td>
     </tr>
   </tbody>
 </table>

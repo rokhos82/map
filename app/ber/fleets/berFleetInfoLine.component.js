@@ -9,7 +9,7 @@ class berFleetInfoLineController {
   }
 
   $onInit() {
-    console.info(this.fleet.name);
+    console.info(this.fleet);
   }
 }
 

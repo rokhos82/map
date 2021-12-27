@@ -4,6 +4,8 @@ export function simulator2() {
   _service.setup = (simulation) => {
     simulation.status = "Waiting";
 
+    console.info(`Simulation:`,simulation);
+
     // Setup the factions
     _.forEach(simulation.factions,(faction,factionUuid) => {
       setupFaction(simulation,faction);
@@ -16,8 +18,20 @@ export function simulator2() {
   };
 
   _service.oneRound = (simulation) => {
+    console.info(`One Round Simulation`,simulation);
     // Is the simulation initialized?
-    if(simulation.initialized) {}
+    if(simulation.status === "Waiting") {
+      // Have we reached the turn limit?
+      if(simulation.maxTurns > simulation.turns.length) {
+        // We have NOT reached the turn limit.  Run another turn.
+        simulation.turns.push({});
+      }
+      else {
+        // We have reached the turn limit.  Log an error.
+        console.warn(`Maximum number of turns reached in simulation ${simulation.name} (${simulation.uuid}).`);
+        simulation.status = "Finished";
+      }
+    }
   };
 
   _service.fight = (simulation) => {};
@@ -29,15 +43,25 @@ export function simulator2() {
     _.forEach(faction.fleets,(fleetUuid) => {
       let fleet = simulation.fleets[fleetUuid];
       fleet.faction = faction.uuid;
+      setupFleet(simulation,fleet);
     });
   }
 
   function setupFleet(simulation,fleet) {
     console.info(`Fleet:`,fleet);
     // Get the target list for this fleet.
+
+    // Get the UUID of the fleet's own faction
+    let fleetFactionUuid = fleet.faction;
+
+    // Get the faction object from the simulation
+    let faction = simulation.factions[fleetFactionUuid];
+
+    // Get the list of enemy factions from the fleet's faction.
     // TODO: Generalize this for multiple factions in the enemy array
-    let factionUuid = fleet.enemy[0];
+    let factionUuid = faction.enemy[0];
     fleet.targetList = factionTargetList(simulation,factionUuid);
+    console.info(fleet);
   }
 
   // Faction Functions ---------------------------------------------------------
@@ -51,15 +75,16 @@ export function simulator2() {
     // add it to the target list that is returned.
     _.forEach(simulation.factions[factionUuid].fleets,(fleetUuid) => {
       let fleet = simulation.fleets[fleetUuid];
-      targets = fleetTargetList(fleet);
+      targets.push(fleetTargetList(fleet));
     });
 
     console.info(targets);
+    targets = _.flattenDeep(targets);
     return targets;
   }
 
   // Fleet Functions -----------------------------------------------------------
-  function fleetTagetList(fleet) {
+  function fleetTargetList(fleet) {
     let targets = [];
 
     // Loop through each unit and build the target list
@@ -90,7 +115,6 @@ export function simulator2() {
     return targets;
   }
 
-  // Unit Functions ------------------------------------------------------------
   function checkLongRange(fleets) {
     // Assume there are no long range weapons.
     let lr = false;
@@ -109,6 +133,8 @@ export function simulator2() {
 
     return lr;
   }
+
+  // Unit Functions ------------------------------------------------------------
 
   function unitHasTag(unit,tag) {
     let hasTag = false;

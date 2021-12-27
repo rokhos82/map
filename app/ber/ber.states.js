@@ -123,3 +123,17 @@ export const berSimulatorExportState = {
   url: '/export',
   component: 'berSimulatorExport'
 };
+
+export const berSimulatorFleetDetailState = {
+  name: 'berRoot.simulator.view.detail',
+  url: '/fleet/{uuid}',
+  resolve: {
+    fleet: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let fleet = archive.getFleet($stateParams.uuid);
+      return fleet;
+    }]
+  },
+  views: {
+    '@^.^': 'berFleetDetail'
+  }
+};

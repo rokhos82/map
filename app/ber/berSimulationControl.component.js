@@ -36,16 +36,19 @@ class berSimulationControlController {
     if(this.simulation.status === "Pending") {
       // Setup the simulator
       this.simulator.setup(this.simulation);
+
+      // Save the simulation to the archive
+      this.archive.setSimulation(this.simulation.uuid,this.simulation);
+      this.archive.serializeSimulations();
     }
   }
 
   round() {
-    this.simulation = this.simulator.singleRound();
-    this.lastState = _.last(this.simulation.turns);
-    this.ui.currentTurn = _.last(this.simulation.turns);
-    this.ui.currentPage++;
-    console.log(this.simulation);
-    this.saveState();
+    this.simulator.oneRound(this.simulation);
+    //this.lastState = _.last(this.simulation.turns);
+    //this.ui.currentTurn = _.last(this.simulation.turns);
+    //this.ui.currentPage++;
+    //this.saveState();
   }
 
   run() {
