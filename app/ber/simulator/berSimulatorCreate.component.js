@@ -41,6 +41,10 @@ class berSimulatorCreateController {
     // Capture the name and the maxTurn limiter
     sim.name = this.ui.simulationName;
     sim.maxTurns = this.ui.maxTurns;
+    sim.options = {
+      turns: this.ui.maxTurns,
+      baseToHit: 50
+    };
 
     // Setup other required fields for the simulation object
     sim.status = "Pending";

@@ -11,8 +11,27 @@ export function simulator2() {
       setupFaction(simulation,faction);
     });
 
+    // Create the initial state object for the simulation
+    let state = {
+      events: [],
+      factions: _.cloneDeep(simulation.factions),
+      fleets: _.cloneDeep(simulation.fleets),
+      units: {},
+      turn: 0,
+      datalink: {},
+      longRange: checkLongRange(simulation.fleets)
+    };
+
+    // Create the master units list
+    _.forEach(state.fleets,(fleet) => {
+      state.units = _.merge(state.units,fleet.units);
+    });
+
+    // Set turn 0 to be the initial state
+    simulation.turns.push(state);
+
     // Check for long range units
-    simulation.longRange = checkLongRange(simulation.fleets);
+    simulation.longRange = state.longRange;
 
     console.info(simulation);
   };
@@ -24,7 +43,23 @@ export function simulator2() {
       // Have we reached the turn limit?
       if(simulation.maxTurns > simulation.turns.length) {
         // We have NOT reached the turn limit.  Run another turn.
-        simulation.turns.push({});
+        // New turn tasks
+        // 1 Create a new state object from the last state (initail, turn 0 state should be done in setup)
+        // 2 Refresh faction information (target lists, datalink, etc.)
+        // 3 Do Round
+        // 4 Save the new state
+
+        // 1 Create a new state
+        let state = newState(simulation);
+
+        // 2 Refresh faction information
+        stateRefreshFactions(state,simulation.options);
+
+        // 3 Do Round
+        stateDoRound(state,simulation.options);
+
+        // 4 Save the new state
+        simulation.turns.push(state);
       }
       else {
         // We have reached the turn limit.  Log an error.
@@ -62,6 +97,31 @@ export function simulator2() {
     let factionUuid = faction.enemy[0];
     fleet.targetList = factionTargetList(simulation,factionUuid);
     console.info(fleet);
+  }
+
+  function newState(simulation) {
+    // Grab the old state object
+    let oldState = _.last(simulation.turns);
+
+    // Create the new state object
+    let state = {
+      events: [],
+      factions: _.cloneDeep(oldState.factions),
+      fleets: _.cloneDeep(oldState.fleets),
+      units: {},
+      turn: 0,
+      datalink: {},
+      longRange: false
+    };
+
+    state.longRange = checkLongRange(state.fleets);
+
+    // Create the master units list
+    _.forEach(state.fleets,(fleet) => {
+      state.units = _.merge(state.units,fleet.units);
+    });
+
+    return state;
   }
 
   // Faction Functions ---------------------------------------------------------
@@ -132,6 +192,80 @@ export function simulator2() {
     });
 
     return lr;
+  }
+
+  // State Functions -----------------------------------------------------------
+  function stateDoRound(state,options) {
+    // Setup the stacks used to process the turn;
+    let unitStack = [];
+    let movementStack = [];
+    let critStack = [];
+    let resolveStack = [];
+
+    // Get a list of units that are participating in the round
+    unitStack = stateGetParticipants(state);
+
+    // Turn off the long range flag
+    // TODO: Generalize this to an arbitrary number of long range turns
+    state.longRange = false;
+
+    // Populate the unit stack with every unit that is not dead
+    movementStack = stateGetNonDeadUnits(state);
+
+    //
+  }
+
+  function stateGetNonDeadUnits(state) {}
+
+  function stateGetParticipants(state) {
+    // Get the units that are participating in this round of combat.
+    // Exclude the following:
+    // - Units with RESERVE tag
+    // - Units with DELAY tag
+    // - Units with FLEE tag???
+    // Exceptions:
+    // - Units with RESERVE & ARTILLERY tags
+
+    let parts = [];
+    let reserve = [];
+    let longRange = state.longRange;
+
+    // Get the first list of units.  Those without RESERVE & DELAY
+
+    _.forEach(state.factions,(faction) => {
+      _.forEach(faction.fleets,(fleetUuid) => {
+        let fleet = state.fleets[fleetUuid];
+        _.forEach(fleet.units,(unit) => {
+          if(!longRange) {
+            // This is a normal round.
+            if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
+              parts.push(unit);
+            }
+            else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
+              reserve.push(unit);
+            }
+          }
+          else {
+            // This is the long range round.  Filter out units that don't have a long tag.
+            if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
+              parts.push(unit);
+            }
+          }
+        });
+      });
+    });
+
+    return parts;
+  }
+
+  function stateRefreshFactions(state) {
+    // 1 Rebuild target lists
+    _.forEach(state.factions,(faction) => {
+      _.forEach(faction.fleets,(fleetUuid) => {
+        let fleet = state.fleets[fleetUuid];
+        fleet.targetList = factionTargetList(state,faction.uuid);
+      });
+    });
   }
 
   // Unit Functions ------------------------------------------------------------
