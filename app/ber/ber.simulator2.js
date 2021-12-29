@@ -109,7 +109,7 @@ export function simulator2() {
       factions: _.cloneDeep(oldState.factions),
       fleets: _.cloneDeep(oldState.fleets),
       units: {},
-      turn: 0,
+      turn: oldState.turn+1,
       datalink: {},
       longRange: false
     };
@@ -207,15 +207,152 @@ export function simulator2() {
 
     // Turn off the long range flag
     // TODO: Generalize this to an arbitrary number of long range turns
-    state.longRange = false;
+    //state.longRange = false;
+    // NOTE: I don't think this is needed.  longRange gets refreshed with newState()
 
     // Populate the unit stack with every unit that is not dead
     movementStack = stateGetNonDeadUnits(state);
 
-    //
+    // Log the new turn event
+    let evt = {
+      msg: `Turn ${state.turn}`
+    };
+    state.events.push(evt);
+    console.info(evt.msg);
+    console.info(state);
+
+    // Process the units in the unitStack for attacks and other actions ////////
+    let unit = unitStack.pop();
+    // While there are units
+    while(_.isObject(unit)) {
+      // Log events for this unit
+      let evt = {
+        msg: `Processing actions for unit ${unit.name} (${unit.uuid})`
+      };
+      console.info(evt.msg);
+      console.info(unit);
+
+      // Get the attacks for the unit
+      let attacks = unitGetAttacks(unit);
+
+      // Loop through the attacks and setup the action objects
+      _.forEach(attacks,(action) => {
+        // Is the attack a missile attack?
+        if(_.isObject(action.missile)) {
+          // Yes, set the type to `missile`
+          action.type = "missile";
+        }
+        // Does the attack have a `multi` tag?
+        else if(_.isNumber(action.multi)) {
+          // Yes, set the type to `multi`
+          action.type = "multi";
+        }
+        // Does the attack have a `bp` object?
+        else if(_.isObject(action.bp)) {
+          // Yes, set the type to `boarding`
+          action.type = "boarding";
+        }
+        // Catch all for all other actions
+        else {
+          // Set the type to `attack`
+          action.type = "attack";
+        }
+
+        // Set the actions actor to the unit
+        action.actor = unit;
+
+        // Add the action to the resolveStack action stack.
+        resolveStack.push(action);
+      });
+
+      // Get the next unit to process
+      unit = unitStack.pop();
+    }
+
+    console.info(`Initial Stack`,_.cloneDeep(resolveStack));
+
+    // Process the actions for the round ///////////////////////////////////////
+    let action = resolveStack.pop();
+
+    while(_.isObject(action)) {
+      // Process the current action
+
+      // What is the type of the action?
+      // Check for a missile attack
+      if(action.type === "missile") {
+        // Process the missile attack
+        let actor = action.actor;
+
+        // Adjust the ammo for the missile action (if it uses ammo)
+        if(_.isNumber(action.ammo)) {
+          // The action does require ammo.  Decrement the ammo count by one
+          // TODO: Need to generalize to account for ROF on launchers
+          actor.brackets[action.hash].ammo--;
+        }
+
+        // Create a new action for each missile in the volley
+        for(let i = 0;i < action.volley;i++) {
+          // Start with this action
+          let atk = _.cloneDeep(action);
+
+          // Change the action to reflect that it is a missile
+          atk.actor = atk.missile;
+          atk.actor.name = `${actor.name} Missile ${i+1}`;
+          atk.actor.faction = actor.faction;
+          atk.volley = atk.missile.tp;
+          atk.type = "attack";
+          atk.actor.tags = {"msl":true};
+
+          // Push the new action onto the action stack (resolveStack)
+          resolveStack.push(atk);
+
+          // Push the event for this action into the event queue
+          let evt = {
+            msg: `${actor.name} launches a missile.`
+          };
+          state.events.push(evt);
+          console.info(`${evt.msg}`);
+        }
+      }
+      // Check for a multi attack
+      else if() {
+        // Process the multi attack
+        let actor = action.actor;
+
+        // Multi works thusly:
+        // Generate a number of attacks according to VOLLEY/MULTI (rounding down)
+        // The new attack uses MULTI for the volley size
+        // Any left overs are made into a smaller attack of volley size equal to VOLLEY mod MULTI
+        let totalVolley = action.volley;
+        let volleySize = action.multi;
+        let remainder = totalVolley % volleySize; // <== The remainder leftover after all full sized multi packets are used
+
+        // Loop until we have used all of the full multi packets
+        while(totalVolley > remainder) {
+          // Build a new action for this volley
+        }
+      }
+
+      // Get the next action to process
+      action = resolveStack.pop();
+    }
+    // End Main Action Processing Loop
   }
 
-  function stateGetNonDeadUnits(state) {}
+  function stateGetNonDeadUnits(state) {
+    let units = [];
+
+    // Loop through all of the units in the state object
+    _.forEach(state.units,(unit) => {
+      // Check if the unit is dead
+      if(!unit.dead) {
+        // The unit is not dead, add it to the stack
+        units.push(unit);
+      }
+    });
+
+    return units;
+  }
 
   function stateGetParticipants(state) {
     // Get the units that are participating in this round of combat.
@@ -269,6 +406,28 @@ export function simulator2() {
   }
 
   // Unit Functions ------------------------------------------------------------
+
+  function unitGetAttacks(unit) {
+    // Clone the brackets array from the unit.
+    let brackets = _.filter(unit.brackets,(bracket) => {
+      let fltr = true;
+
+      // Does the bracket need ammo and is there ammo left?
+      if(_.isNumber(bracket.ammo) && bracket.ammo <= 0) {
+        fltr = false;
+      }
+
+      // Does the bracket have an offline tag?
+      if(_.isNumber(bracket.offline) && bracket.offline > 0) {
+        fltr = false;
+      }
+
+      return fltr;
+    });
+
+    // Return a copy of the filter brackets array.
+    return _.cloneDeep(brackets);
+  }
 
   function unitHasTag(unit,tag) {
     let hasTag = false;
