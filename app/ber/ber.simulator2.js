@@ -195,6 +195,43 @@ export function simulator2() {
   }
 
   // State Functions -----------------------------------------------------------
+  function stateDoAttack(state,action) {
+    // Process the attack action
+    let actor = action.actor;
+
+    // Adjust ammo if it is present
+    // TODO: Generalize for ROF on weapons
+    if(_.isNumber(action.ammo) && !unitHasTag(actor,"msl")) {
+      actor.brackets[action.hash].ammo--;
+    }
+
+    // Get a target for the attack
+    let actee = unitGetTarget(actor,state);
+
+    // Check to see if we really got a target
+    if(_.isObject(actee)) {
+      // The target is truthy!
+      action.actee = actee;
+
+      // Calculate the toHit roll for the attack
+      let hitRoll = unitDoHitRoll(actor,actee,action);
+      action.hitRoll = hitRoll;
+
+      // TODO: Add options that will determine what the baseToHit is
+      // Calculate the success.  This is used in multiple places and calculated onece.
+      let success = hitRoll > state.options.baseToHit;
+
+      // Check if the attack was successful.
+      if(success) {
+        // The attack was a success!
+        // Create a hit action and add it to the processing stack
+        let hit = _.cloneDeep(action);
+        hit.type = "hit";
+        resolveStack.push(hit);
+      }
+    }
+  }
+
   function stateDoRound(state,options) {
     // Setup the stacks used to process the turn;
     let unitStack = [];
@@ -315,7 +352,7 @@ export function simulator2() {
         }
       }
       // Check for a multi attack
-      else if() {
+      else if(action.type === "multi") {
         // Process the multi attack
         let actor = action.actor;
 
@@ -330,8 +367,49 @@ export function simulator2() {
         // Loop until we have used all of the full multi packets
         while(totalVolley > remainder) {
           // Build a new action for this volley
+          let atk = _.cloneDeep(action);
+          atk.type = "attack";
+          atk.volley = volleySize;
+
+          // Delete the multi attribute so that we don't loop
+          delete atk.multi;
+
+          // Push the new attack on the action stack (resovleStack)
+          resolveStack.push(atk);
+
+          // Decrease the totalVolley by the volleySize
+          totalVolley -= volleySize;
+        }
+        // End multi-volley loop
+
+        // Check to see if remaineder is non-zero
+        if(remainder > 0) {
+          // The remaineder is non-zero.
+          // Create a new action using the remainder as the volley
+          let atk = _.cloneDeep(action);
+          atk.type = "attack";
+          atk.volley = remainder;
+
+          // Don't forget to delete multi.  Otherwise we loop.
+          delete atk.multi;
+
+          // Push the remaining volley on to the process stack
+          resolveStack.push(atk);
         }
       }
+      // Check for boading action
+      else if(action.type === "boarding") {
+      }
+      // Check for boarded action
+      else if(action.type === "boarded") {
+      }
+      // Check for the standard attack action
+      else if(action.type === "attack") {
+        stateDoAttack(action,state);
+      }
+      else if(action.type === "hit") {}
+      else if(action.type === "damage") {}
+      else if(action.type === "death") {}
 
       // Get the next action to process
       action = resolveStack.pop();
