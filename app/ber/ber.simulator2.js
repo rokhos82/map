@@ -96,7 +96,23 @@ export function simulator2() {
     // TODO: Generalize this for multiple factions in the enemy array
     let factionUuid = faction.enemy[0];
     fleet.targetList = factionTargetList(simulation,factionUuid);
+
+    // Setup each unit
+    _.forEach(fleet.units,(unit) => {
+      setupUnit(simulation,faction,fleet,unit);
+    });
+
     console.info(fleet);
+  }
+
+  function setupUnit(simulation,faction,fleet,unit) {
+    console.info(`Unit:`,unit);
+
+    // Setup the fleetId for use in the simulation
+    unit.fleetId = fleet.uuid;
+
+    // Setup the factionId for use in the simulation
+    unit.factionId = faction.uuid;
   }
 
   function newState(simulation) {
@@ -483,7 +499,36 @@ export function simulator2() {
     });
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // Unit Functions ------------------------------------------------------------
+  //////////////////////////////////////////////////////////////////////////////
+  function unitDoHitRoll(unit,target,action) {
+    // Calculate the to hit roll for the unit
+
+    let t = action.target;
+    let d = actee.tags.defense;
+
+    // Check for extremely disparate target and defense values.
+    let mod = 0;
+    if(t>d) {
+      // The target is greater than the defense
+      // Ensure that the total modified is less than or equal to 40
+      // Otherwise, it violates the 10% chance to hit at a minimum rule
+      mod = (t-d) > 40 ? 40 : (t-d);
+    }
+    else {
+      // The target is less than the defense
+      // Ensure that the total modifier is greater than or equal to -40
+      // Otherwise, it violates the 10% chance to miss at a minimum rule
+      mod = (t-d) < -40 ? -40 : (t-d);
+    }
+
+    // Calculate the actual toHit roll for the action
+    // This is a d100 + the modifier calculated above.
+    let toHit = _.random(1,100,false) + mod;
+
+    return toHit;
+  }
 
   function unitGetAttacks(unit) {
     // Clone the brackets array from the unit.
@@ -505,6 +550,40 @@ export function simulator2() {
 
     // Return a copy of the filter brackets array.
     return _.cloneDeep(brackets);
+  }
+
+  function unitGetTarget(unit,state) {
+    // Check for targeting tags: DL, FLAK, AF, HULL, SCAN
+    // Then generate a target for the action
+    // TODO: Split into multiple functions with this as the entry point
+
+    let target = undefined;
+
+    // Check if the unit has a datalink tag
+    if(unitHasTag(unit,"dl")) {
+      // Yes, then ask the state for the target for that datalink group
+      target = stateDatalinkGetTarget(state,unit);
+    }
+    else if(unitHasTag(unit,"hull")) {
+      // TODO: Need to check brackets as well...
+      // Get the target based on the hull tag
+      target = unitGetTargetHull(unit,state);
+    }
+    else if(unitHasTag(unit,"scan")) {
+      // The unit has a scan tag.  Select a target using that
+      // TODO: This also needs to check the action...for HULL and DL as well
+      target = unitGetTargetScan(unit,state);
+    }
+    else {
+      // Get a random target from the taget list
+      target = unitGetTagetRandom(unit,state);
+    }
+
+    return target;
+  }
+
+  function unitGetTagetRandom(unit,state) {
+    // Get a random target from the list of available targets for this unit
   }
 
   function unitHasTag(unit,tag) {
