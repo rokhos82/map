@@ -584,6 +584,69 @@ export function simulator2() {
 
   function unitGetTagetRandom(unit,state) {
     // Get a random target from the list of available targets for this unit
+    let targetList = state.fleets[unit.fleetId].targetList;
+
+    // Get a random UUID from the targetList for the unit's fleet
+    let targetId = _.sample(targetList);
+
+    // Get the actual unit object related to the target id.
+    let target = state.units[targetId];
+
+    // Return the target object
+    return target;
+  }
+
+  function unitGetTargetHull(unit,state) {
+    // Get a random target based on the hull parameters
+
+    // TODO: Add a value to options that controls max tries before a target is just used
+    // TODO: What to do about action hull tags vs unit hull tags
+    let target = false;
+    let tries = 0;
+    let maxTries = 5;
+    let hullMax = unit.tags.hull.upper;
+    let hullMin = unit.tags.hull.lower;
+
+    // Keep trying until we have a target
+    while(!target) {
+      let u = unitGetTagetRandom(unit,state);
+
+      // Have we tried too many times
+      if(tries > maxTries) {
+        // Just use this target regardless
+        target = u;
+      }
+      else {
+        // Does the target fall within the hull range?
+        let hull = u.hlMax;
+        if(hull >= hullMin && hull <= hullMax) {
+          target = u;
+        }
+      }
+
+      // Increment the try counter
+      tries++;
+    }
+
+    return target;
+  }
+
+  function unitGetTargetScan(unit,state) {
+    // Get a unit that matches the hull range from the SCAN tag.
+    // If no unit is found, then the weapon does not fire
+    let target = false;
+    let targets = _.shuffle(state.fleets[unit.fleedId].targetList);
+    let scanMin = unit.tags.scan.lower;
+    let scanMax = unit.tags.scan.upper;
+
+    // Look at each unit
+    _.forEach(targets,(id) => {
+      let t = state.units[id];
+      let hull = t.hlMax;
+
+      // Is the target in the hull range?
+      if(!target && hull >= scanMin && hull <= scanMax) {}
+    });
   }
 
   function unitHasTag(unit,tag) {
