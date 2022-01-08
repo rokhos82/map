@@ -19,7 +19,8 @@ export function simulator2() {
       units: {},
       turn: 0,
       datalink: {},
-      longRange: checkLongRange(simulation.fleets)
+      longRange: checkLongRange(simulation.fleets),
+      options: simulation.options
     };
 
     // Create the master units list
@@ -127,7 +128,8 @@ export function simulator2() {
       units: {},
       turn: oldState.turn+1,
       datalink: {},
-      longRange: false
+      longRange: false,
+      options: oldState.options
     };
 
     state.longRange = checkLongRange(state.fleets);
@@ -211,8 +213,9 @@ export function simulator2() {
   }
 
   // State Functions -----------------------------------------------------------
-  function stateDoAttack(state,action) {
+  function stateDoAttack(state,action,stack) {
     // Process the attack action
+    console.info(`Attack(${action.actor.name})`,action.actor);
     let actor = action.actor;
 
     // Adjust ammo if it is present
@@ -243,7 +246,7 @@ export function simulator2() {
         // Create a hit action and add it to the processing stack
         let hit = _.cloneDeep(action);
         hit.type = "hit";
-        resolveStack.push(hit);
+        stack.push(hit);
       }
     }
   }
@@ -273,6 +276,7 @@ export function simulator2() {
     state.events.push(evt);
     console.info(evt.msg);
     console.info(state);
+    console.info(`Participants`,unitStack);
 
     // Process the units in the unitStack for attacks and other actions ////////
     let unit = unitStack.pop();
@@ -287,6 +291,7 @@ export function simulator2() {
 
       // Get the attacks for the unit
       let attacks = unitGetAttacks(unit);
+      console.info(attacks);
 
       // Loop through the attacks and setup the action objects
       _.forEach(attacks,(action) => {
@@ -421,7 +426,7 @@ export function simulator2() {
       }
       // Check for the standard attack action
       else if(action.type === "attack") {
-        stateDoAttack(action,state);
+        stateDoAttack(state,action,resolveStack);
       }
       else if(action.type === "hit") {}
       else if(action.type === "damage") {}
@@ -464,10 +469,13 @@ export function simulator2() {
     // Get the first list of units.  Those without RESERVE & DELAY
 
     _.forEach(state.factions,(faction) => {
+      console.info(`stateGetParticipants:faction(${faction.name})`);
       _.forEach(faction.fleets,(fleetUuid) => {
         let fleet = state.fleets[fleetUuid];
+        console.info(`stateGetParticipants:fleet(${fleet.name})`);
         _.forEach(fleet.units,(unit) => {
           if(!longRange) {
+            console.info(`Standard Mode`);
             // This is a normal round.
             if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
               parts.push(unit);
@@ -477,6 +485,7 @@ export function simulator2() {
             }
           }
           else {
+            console.info(`Long Range Mode`);
             // This is the long range round.  Filter out units that don't have a long tag.
             if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
               parts.push(unit);
@@ -486,6 +495,8 @@ export function simulator2() {
       });
     });
 
+    console.log(parts);
+
     return parts;
   }
 
@@ -494,7 +505,8 @@ export function simulator2() {
     _.forEach(state.factions,(faction) => {
       _.forEach(faction.fleets,(fleetUuid) => {
         let fleet = state.fleets[fleetUuid];
-        fleet.targetList = factionTargetList(state,faction.uuid);
+        let factionUuid = faction.enemy[0];
+        fleet.targetList = factionTargetList(state,factionUuid);
       });
     });
   }
@@ -506,7 +518,7 @@ export function simulator2() {
     // Calculate the to hit roll for the unit
 
     let t = action.target;
-    let d = actee.tags.defense;
+    let d = target.tags.defense;
 
     // Check for extremely disparate target and defense values.
     let mod = 0;
@@ -532,6 +544,7 @@ export function simulator2() {
 
   function unitGetAttacks(unit) {
     // Clone the brackets array from the unit.
+    console.info(`unitGetAttacks`,unit.brackets);
     let brackets = _.filter(unit.brackets,(bracket) => {
       let fltr = true;
 
@@ -578,6 +591,8 @@ export function simulator2() {
       // Get a random target from the taget list
       target = unitGetTagetRandom(unit,state);
     }
+
+    console.info(`unitGetTarget(${unit.name}):${target.name}`);
 
     return target;
   }
@@ -653,7 +668,7 @@ export function simulator2() {
     let hasTag = false;
 
     // Check general unit tags
-    if(_.has(unit.tag,tag)) {
+    if(!!unit.tags[tag]) {
       hasTag = true;
     }
 
@@ -670,6 +685,7 @@ export function simulator2() {
     // Check weapon tags
     _.forEach(unit.brackets,(bracket) =>{
       if(_.has(bracket,tag)) {
+        console.info(`Checking for ${tag}`,bracket);
         hasTag = true;
       }
     });
