@@ -212,7 +212,32 @@ export function simulator2() {
     return lr;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
+  //////////////////////////////////////////////////////////////////////////////
+  function stateDatalinkGetTarget(state,unit) {
+    // This function determines that target for a datalink group given a unit.
+    // If the datalink group does not have a target then use the unit to get a target and save it for later.
+    // If the datalink group does have a target then simply return that target.
+    let dlGroupName = unit.tags.dl;
+    let target = false;
+    if(!!state.datalink[dlGroupName]) {
+      // The group already has a target.
+      target = stateGetUnitById(state,state.datalink[dlGroupName]);
+    }
+    else {
+      // TODO: How to handle units with different targetting tags.  I think an error in the fleet file might be best.
+      // TODO: Maybe I should push this part out to a preturn processing so that a group as a whole fails in a given turn.
+      // Get a random target
+      console.info(`Selecting target for datalink group: ${dlGroupName}`);
+      target = unitGetTagetRandom(unit,state);
+
+      // Save the UUID for later use by other group members.
+      state.datalink[dlGroupName] = target.uuid;
+    }
+    return target;
+  }
+
   function stateDoAttack(state,action,stack) {
     // Process the attack action
     console.info(`Attack(${action.actor.name})`,action.actor);
@@ -498,6 +523,11 @@ export function simulator2() {
     console.log(parts);
 
     return parts;
+  }
+
+  function stateGetUnitById(state,hash) {
+    // Get the unit object associated with the UUID.
+    return state.units[hash];
   }
 
   function stateRefreshFactions(state) {
