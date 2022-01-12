@@ -213,6 +213,31 @@ export function simulator2() {
   }
 
   //////////////////////////////////////////////////////////////////////////////
+  // Action Functions ----------------------------------------------------------
+  //////////////////////////////////////////////////////////////////////////////
+  function actionDoDamage(action,actor,actee) {
+    // Calculate the damage the action inflicts on the actee.
+    console.info(`actionDoDamage(${actor.name} > ${actee.name})`);
+
+    // Roll for damage
+    let damageRoll = _.random(1,100,false);
+
+    // Adjust for YIELD and RESIST
+    let yld = action.yield;
+    let resist = actee.tags.resist;
+    damageRoll = damageRoll + yld - resist;
+
+    // Bounds check the damangeRoll
+    // 0 <= damageRoll <= 100
+    damageRoll = _.max(0,damageRoll);
+    damageRoll = _.min(damageRoll,100);
+
+    // Calculate actual damage
+    let damage = _.round(action.volley * (damageRoll / 100),0);
+    return damage;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
   function stateDatalinkGetTarget(state,unit) {
@@ -273,6 +298,57 @@ export function simulator2() {
         hit.type = "hit";
         stack.push(hit);
       }
+    }
+  }
+
+  function stateDoDamage(state,action,stack) {
+    // Apply the damage to the target
+    let actor = action.actor;
+    let actee = action.actee;
+    console.info(`stateDoDamage(${actee.name}:${action.damage})`);
+
+    // Calculate if the unit is dead
+    let dead = unitApplyDamage(actee,action,actor);
+
+    // Flag the unit for a critical hit check
+    actee.critCheck = true;
+
+    // Now process the death if neccessary
+  }
+
+  function stateDoHit(state,action,stack) {
+    // The attack was a success.  Do the hit action now.
+    let actor = action.actor;
+    let actee = action.actee;
+    console.info(`Hit(${actor.name} > ${actee.name})`);
+
+    let success = true;
+
+    // Check to see if the target has FLICKER
+    if(unitHasTag(actee,"flicker")) {
+      // Flicker is present.  Roll to see if the hit was really a hit.
+      let flickerRoll = _.random(1,100);
+      success = (flickerRoll <= actee.tags.flicker);
+      // TODO: Log an event for the attack missing
+    }
+
+    // Check to see if the target has PD if the actor is a missile
+    // If the attack was already a miss due to flicker don't check for PD
+    if(success && unitHasTag(actor,"msl") && unitHasTag(actee,"pd")) {
+      let pdRoll = _.random(1,100);
+      success = (pdRoll <= actee.tags.pd);
+      // TODO: Log an event for the missile being destroyed
+    }
+
+    // Check to see if the attack was a success
+    if(success) {
+      // It really did hit.  Generate a new event for applying the damage.
+      let damage = actionDoDamage(action,actor,actee);
+      let act = _.cloneDeep(action);
+      act.type = "damage";
+      act.damage = damage;
+      stack.push(act);
+      // TODO: Log an event for the successful hit!
     }
   }
 
@@ -381,7 +457,8 @@ export function simulator2() {
           // Change the action to reflect that it is a missile
           atk.actor = atk.missile;
           atk.actor.name = `${actor.name} Missile ${i+1}`;
-          atk.actor.faction = actor.faction;
+          atk.actor.factionId = actor.factionId;
+          atk.actor.fleetId = actor.fleetId;
           atk.volley = atk.missile.tp;
           atk.type = "attack";
           atk.actor.tags = {"msl":true};
@@ -544,6 +621,53 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // Unit Functions ------------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+  function unitApplyDamage(unit,action) {
+    // Apply the damage from the action to the unit
+    let damage = action.damage;
+    let crit = action.crit;
+    let hullHit = false;
+
+    // TODO: Check to see if damage overflows to the HULL from the SHIELDS
+    // Check to see if the unit has shields
+    if(unit.shCur > 0) {
+      // Yep, damage the shields
+      // If the damage is from a crit then ignore SR & RESIST
+      // Check for SR
+      if(_.isNumber(unit.tags.sr) && !crit) {
+        damage = _.max(0,damage - unit.tags.sr);
+      }
+      // Check for RESIST
+      if(_.isNumber(unit.tags.resist) && !crit) {
+        damage = _.round(damage * (unit.tags.resist / 100));
+      }
+
+      // Decrease the unit's shields by damage amount
+      unit.shCur = _.max(0,unit.shCur - damage);
+    }
+    else {
+      // Damage the hull instead
+      // If the damage is from a crit then ignore AR & RESIST
+      // Check for AR
+      if(_.isNumber(unit.tags.ar) && !crit) {
+        damage = _.max(0,damage - unit.tags.ar);
+      }
+      // Check for RESIST
+      if(_.isNumber(unit.tags.resist) && !crit) {
+        damage = _.round(damage * (unit.tags.resist / 100));
+      }
+
+      // Decrease the unit's hull by the damage amount
+      unit.hlCur = _.max(0,unit.hlCur - damage);
+      hullHit = true; // This matters if the unit is a fighter
+    }
+
+    // Determine if the unit is dead
+    // Conditions for death
+    // 1 - the current hull value is 0
+    // 2 - the hull was hit and the unit has a FIGHTER tag
+    let dead = (unit.hlCur <= 0 || (unit.tags.fighter && hullHit));
+    return dead;
+  }
   function unitDoHitRoll(unit,target,action) {
     // Calculate the to hit roll for the unit
 
