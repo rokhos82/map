@@ -114,6 +114,9 @@ export function simulator2() {
 
     // Setup the factionId for use in the simulation
     unit.factionId = faction.uuid;
+
+    // Setup the blank check collection
+    unit.check = {};
   }
 
   function newState(simulation) {
@@ -309,11 +312,18 @@ export function simulator2() {
 
     // Calculate if the unit is dead
     let dead = unitApplyDamage(actee,action,actor);
-
     // Flag the unit for a critical hit check
-    actee.critCheck = true;
+    actee.check.crit = true;
 
     // Now process the death if neccessary
+    if(dead && !actee.dead) {
+      // Don't do this if the unit is already dead.
+      // This happens as multiple attacks can land on the same target in the same turn.
+      // Flag the unit to have a death check done after the main combat round.
+      actee.check.death = true;
+    }
+
+    // TODO: Add an event for this...
   }
 
   function stateDoHit(state,action,stack) {
@@ -530,14 +540,68 @@ export function simulator2() {
       else if(action.type === "attack") {
         stateDoAttack(state,action,resolveStack);
       }
-      else if(action.type === "hit") {}
-      else if(action.type === "damage") {}
-      else if(action.type === "death") {}
+      // Check for the hit action
+      else if(action.type === "hit") {
+        stateDoHit(state,action,resolveStack);
+      }
+      // Check for the damage action
+      else if(action.type === "damage") {
+        stateDoDamage(state,action,resolveStack);
+      }
+      // This is the end of the main processing loop.
 
       // Get the next action to process
       action = resolveStack.pop();
     }
     // End Main Action Processing Loop
+
+    // Now that combat is done do checks that were flagged during the combat loop.
+    // This is for things like critical hits and death
+    let checkStack = [];
+    // Build the checkStack by seeing if the check collection has any keys.
+    _.forEach(state.units,(unit) => {
+      if(_.size(unit.check) > 0) {
+        checkStack.push(unit);
+      }
+    });
+    // Process the checkStack
+    while(checkStack.length > 0) {
+      // Get the next unit object to process
+      let unit = checkStack.pop();
+
+      if(unit.check.crit) {
+        // Process the crit if necessary
+      }
+      // Always do death check last incase any other check results in death
+      if(unit.check.death) {
+        // Process the death of the unit
+      }
+    }
+
+    // Now that post-combat checks are done.  Do the movement processing.
+    // The movement checks from highest to lowest priority are:
+    // 1 - fled
+    // 2 - flee
+    // 3 - damage
+    // 4 - break
+    // 5 - reserve
+    // 6 - delay
+    // 7 - time
+    while(movementStack.length > 0) {
+      // Get the unit object
+      let unit = movementStack.pop();
+
+      // Check the unit tags in th eorder specified above
+      // fled >> flee >> damage >> break >> reserve >> delay >> time
+      if(unit.tags.fled) {
+        // The unit has fled combat.  Remove the unit from the simulation.
+        stateRemoveUnit(state,unit);
+      }
+      else if(unit.tags.flee) {
+        // The unit has been fleeing.  Mark if as fled.
+        unitDoFled(unit,state);
+      }
+    }
   }
 
   function stateGetNonDeadUnits(state) {
