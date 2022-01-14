@@ -226,14 +226,14 @@ export function simulator2() {
     let damageRoll = _.random(1,100,false);
 
     // Adjust for YIELD and RESIST
-    let yld = action.yield;
-    let resist = actee.tags.resist;
+    let yld = action.yield || 0;
+    let resist = actee.tags.resist || 0;
     damageRoll = damageRoll + yld - resist;
 
     // Bounds check the damangeRoll
     // 0 <= damageRoll <= 100
-    damageRoll = _.max(0,damageRoll);
-    damageRoll = _.min(damageRoll,100);
+    damageRoll = Math.max(0,damageRoll);
+    damageRoll = Math.min(damageRoll,100);
 
     // Calculate actual damage
     let damage = _.round(action.volley * (damageRoll / 100),0);
@@ -571,10 +571,12 @@ export function simulator2() {
 
       if(unit.check.crit) {
         // Process the crit if necessary
+        console.info(`Processing crit check for ${unit.name}`);
       }
       // Always do death check last incase any other check results in death
       if(unit.check.death) {
         // Process the death of the unit
+        console.info(`Processing death check for ${unit.name}`);
       }
     }
 
@@ -590,6 +592,7 @@ export function simulator2() {
     while(movementStack.length > 0) {
       // Get the unit object
       let unit = movementStack.pop();
+      console.info(`Processing movement for ${unit.name}`);
 
       // Check the unit tags in th eorder specified above
       // fled >> flee >> damage >> break >> reserve >> delay >> time
@@ -600,6 +603,21 @@ export function simulator2() {
       else if(unit.tags.flee) {
         // The unit has been fleeing.  Mark if as fled.
         unitDoFled(unit,state);
+      }
+      else if(unitCheckDamage(unit,state)) {
+        unitDoFlee(unit);
+      }
+      else if(unitCheckBreak(unit,state)) {
+        unitDoFlee(unit);
+      }
+      else if(unitCheckDelay(unit,state)) {
+        unitTagRemove(unit);
+      }
+      else if(unitCheckReserve(unit,state)) {
+        unitTagRemove(unit);
+      }
+      else if(unitCheckTime(unit,state)) {
+        unitDoFlee(unit);
       }
     }
   }
@@ -682,6 +700,8 @@ export function simulator2() {
     });
   }
 
+  function stateRemoveUnit(state,unit) {}
+
   //////////////////////////////////////////////////////////////////////////////
   // Unit Functions ------------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
@@ -698,7 +718,7 @@ export function simulator2() {
       // If the damage is from a crit then ignore SR & RESIST
       // Check for SR
       if(_.isNumber(unit.tags.sr) && !crit) {
-        damage = _.max(0,damage - unit.tags.sr);
+        damage = Math.max(0,damage - unit.tags.sr);
       }
       // Check for RESIST
       if(_.isNumber(unit.tags.resist) && !crit) {
@@ -706,14 +726,14 @@ export function simulator2() {
       }
 
       // Decrease the unit's shields by damage amount
-      unit.shCur = _.max(0,unit.shCur - damage);
+      unit.shCur = Math.max(0,unit.shCur - damage);
     }
     else {
       // Damage the hull instead
       // If the damage is from a crit then ignore AR & RESIST
       // Check for AR
       if(_.isNumber(unit.tags.ar) && !crit) {
-        damage = _.max(0,damage - unit.tags.ar);
+        damage = Math.max(0,damage - unit.tags.ar);
       }
       // Check for RESIST
       if(_.isNumber(unit.tags.resist) && !crit) {
@@ -721,7 +741,7 @@ export function simulator2() {
       }
 
       // Decrease the unit's hull by the damage amount
-      unit.hlCur = _.max(0,unit.hlCur - damage);
+      unit.hlCur = Math.max(0,unit.hlCur - damage);
       hullHit = true; // This matters if the unit is a fighter
     }
 
@@ -732,6 +752,21 @@ export function simulator2() {
     let dead = (unit.hlCur <= 0 || (unit.tags.fighter && hullHit));
     return dead;
   }
+
+  function unitCheckBreak(unit) {}
+
+  function unitCheckDamage(unit) {}
+
+  function unitCheckDelay(unit) {}
+
+  function unitCheckReserve(unit) {}
+
+  function unitCheckTime(unit) {}
+
+  function unitDoFled(unit) {}
+
+  function unitDoFlee(unit) {}
+
   function unitDoHitRoll(unit,target,action) {
     // Calculate the to hit roll for the unit
 
