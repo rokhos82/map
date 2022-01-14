@@ -70,7 +70,16 @@ export function simulator2() {
     }
   };
 
-  _service.fight = (simulation) => {};
+  _service.fight = (simulation) => {
+    // Is the simulation initialized?
+    if(simulation.statue === "Waiting") {
+      let done = false;
+      while(simulation.maxTurns > simulation.turns.length && !done) {
+        _service.oneRound(simulation);
+        done = simulation.done;
+      }
+    }
+  };
 
   // Simulation Functions ------------------------------------------------------
   function setupFaction(simulation,faction) {
@@ -164,7 +173,9 @@ export function simulator2() {
     return targets;
   }
 
+  //////////////////////////////////////////////////////////////////////////////
   // Fleet Functions -----------------------------------------------------------
+  //////////////////////////////////////////////////////////////////////////////
   function fleetTargetList(fleet) {
     let targets = [];
 
@@ -213,6 +224,11 @@ export function simulator2() {
     });
 
     return lr;
+  }
+
+  function fleetRemoveUnit(fleet,unit) {
+    // Remove the unit from the fleet's unit collection
+    delete fleet.units[unit.uuid];
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -324,6 +340,20 @@ export function simulator2() {
     }
 
     // TODO: Add an event for this...
+  }
+
+  function stateDoDynamicTags(state) {
+    // Go through active units and update any dynamic tags they have.
+    let dynamicTags = ["offline"];
+
+    // Go through all of the units
+    _.forEach(state.units,(unit) => {
+      // Go through all of the dynamic tags
+      _.forEach(dynamicTags,(tag) => {
+        // Have the unit update the tag
+        unitUpdateTag(unit,tag);
+      });
+    });
   }
 
   function stateDoHit(state,action,stack) {
@@ -578,7 +608,7 @@ export function simulator2() {
         // Process the death of the unit
         console.info(`Processing death check for ${unit.name}`);
       }
-    }
+    } // End of Check Loop
 
     // Now that post-combat checks are done.  Do the movement processing.
     // The movement checks from highest to lowest priority are:
@@ -619,7 +649,13 @@ export function simulator2() {
       else if(unitCheckTime(unit,state)) {
         unitDoFlee(unit);
       }
-    }
+    } // End of Movement Loop
+
+    // The original had a doCriticalHits here but I think that might have
+    // moved to the check loop above.
+
+    // Update dynamic tags
+    stateDoDynamicTags(state);
   }
 
   function stateGetNonDeadUnits(state) {
@@ -700,7 +736,24 @@ export function simulator2() {
     });
   }
 
-  function stateRemoveUnit(state,unit) {}
+  function stateRemoveUnit(state,unit) {
+    // This removed the unit from combat
+    // Check for dead first so that a unit that dies while fleeing doesn't get into the fled list
+
+    // Did the unit die?
+    if(unit.dead) {
+      // Yes, add the unit to the list of units that have died.
+      state.fleets[unit.fleetId].destroyed[unit.uuid] = unit;
+    }
+    // Did the unit flee?
+    else if(unit.tags.fled) {
+      // Yes, add the unit to the list of units that have fled.
+      state.fleets[unit.fleetId].fled[unit.uuid] = unit;
+    }
+
+    // Now, remove the unit from the list of active units in the fleet
+    fleetRemoveUnit(fleet,unit);
+  }
 
   //////////////////////////////////////////////////////////////////////////////
   // Unit Functions ------------------------------------------------------------
@@ -753,19 +806,121 @@ export function simulator2() {
     return dead;
   }
 
-  function unitCheckBreak(unit) {}
+  function unitCheckBreak(unit,state) {
+    console.info(`unitBreakCheck(${unit.name})`);
+    // Return true if the unit's breakoff level has been reached.
+    // The breakoff threshold is the break value as a percentage of the maximum hull in the fleet.
+    let flee = false;
 
-  function unitCheckDamage(unit) {}
+    // Get the breakoff level from the unit or the unit's fleet.
+    let breakPercentage = (100 - unit.tags.break)/100;
+    let breakThreshold = state.fleets[unit.fleetId].hullMax * breakPercentage;
 
-  function unitCheckDelay(unit) {}
+    console.info(`BREAK ${unit.tags.break}`,`THRESHOLD: ${breakThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
 
-  function unitCheckReserve(unit) {}
+    // How am I going to track current hull level for a fleet/faction?
+    if(breakThreshold >= state.fleets[unit.fleetId].hullCur) {
+      flee = true;
+    }
 
-  function unitCheckTime(unit) {}
+    return flee;
+  }
 
-  function unitDoFled(unit) {}
+  function unitCheckDamage(unit) {
+    // Return true if the unit needs to flee due to damage on the unit
+    console.info(`unitCheckDamage(${unit.name})`);
+    let flee = false;
 
-  function unitDoFlee(unit) {}
+    // TODO: I can move some of the threshold code to the Unit object in the constructor.  As long as the damage tag is static.
+
+    // First, check if the damage values is greater than 100.  If so, deal with shields.
+    if(unit.tags.damage > 100) {
+      // The damage value is greater than 100.
+      // Subtract 100 and convert to percentage.  This is the percentage of shields that must remain for the unit to stay in combat.
+      let shPercent = (unit.tags.damage - 100)/100;
+      let shMax = unit.shMax;
+      let shCur = unit.shCur;
+      let shThreshold = _.round(shMax * shPercent);
+      if(shCur < shThreshold) {
+        flee = true;
+      }
+    }
+    else {
+      // The damage values is less than or equal to 100.
+      // Convert to percentage.  This is the percentage of hull points that must remain for the unit to stay in combat.
+      let hlPercent = unit.tags.damage / 100;
+      let hlMax = unit.hlMax;
+      let hlCur = unit.hlCur;
+      let hlThreshold = _.round(hlMax * hlPercent);
+      if(hlCur < hlThreshold) {
+        flee = true;
+      }
+    }
+
+    return flee;
+  }
+
+  function unitCheckDelay(unit) {
+    console.info(`unitDelayCheck(${unit.name})`);
+    // Check for a delay tag.  If present update the value.  If the value <= 0 then return true.
+    let arrive = false;
+
+    if(unitHasTag(unit,"delay")) {
+      console.info(`Unit ${unit.name} has delay ${unit.tags.delay}`);
+      unit.tags.delay--;
+
+      if(unit.tags.delay <= 0) {
+        arrive = true;
+      }
+    }
+
+    return arrive;
+  }
+
+  function unitCheckReserve(unit,state) {
+    console.info(`unitReserveCheck(${unit.name})`);
+    // Return true if the reserve level has been reached.
+    let move = false;
+
+    // Check if the unit has a reserve tag
+    if(unit.tags.reserve && unit.tags.reserve > 0) {
+      // Determine if the faction has lost enough HULL points to move the unit out of reserve.
+      let reservePercentage = (100-unit.tags.reserve)/100;
+      let reserveThreshold = state.fleets[unit.fleetId].hullMax * reservePercentage;
+
+      console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
+
+      if(reserveThreshold >= state.fleets[unit.fleetId].hullCur) {
+        // The unit is leaving the reserve
+        console.info(`Unit ${unit.name} is leaving reserve!`);
+        move = true;
+      }
+    }
+
+    return move;
+  }
+
+  function unitCheckTime(unit) {
+    console.info(`Entering unitTimeCheck()`)
+    // Check for a time tag.
+    let flee = false;
+    return flee;
+  }
+
+  function unitDoFled(unit) {
+    // This is the last step and then the unit is removed from combat.
+    console.info(`unitDoFled(${unit.name})`);
+    // Move the unit to the fled state.
+    unitTagRemove(unit,"flee");
+    // Now, set the state to fled
+    unit.tags.fled = true;
+  }
+
+  function unitDoFlee(unit) {
+    // This causes the unit to be in a state of fleeing from combat
+    console.info(`unitDoFlee(${unit.name})`);
+    unit.tags.flee = true;
+  }
 
   function unitDoHitRoll(unit,target,action) {
     // Calculate the to hit roll for the unit
@@ -944,6 +1099,24 @@ export function simulator2() {
     });
 
     return hasTag;
+  }
+
+  function unitTagRemove(unit,tag) {}
+
+  function unitUpdateTag(unit,key) {
+    console.info(`unitUpdateTag(${unit.name}:${key})`);
+    // First, Look for general unit tags
+    if(_.isNumber(unit.tags[key])) {
+      // This tag is numeric.  Decrement it
+      unit.tags[key]--;
+    }
+    // Second, search brackets for the key
+    _.forEach(unit.brackets,(bracket) => {
+      if(_.isNumber(bracket[key])) {
+        // This tag is numeric.  Decrement it.
+        bracket[key]--;
+      }
+    });
   }
 
   return _service;
