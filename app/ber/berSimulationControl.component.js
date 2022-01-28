@@ -45,6 +45,7 @@ class berSimulationControlController {
 
   round() {
     this.simulator.oneRound(this.simulation);
+    this.archive.setSimulation(this.simulation.uuid,this.simulation);
     //this.lastState = _.last(this.simulation.turns);
     //this.ui.currentTurn = _.last(this.simulation.turns);
     //this.ui.currentPage++;
@@ -57,6 +58,11 @@ class berSimulationControlController {
     this.ui.currentTurn = _.last(this.simulation.turns);
     this.ui.currentPage = this.ui.currentTurn.turn;
     this.saveState();
+  }
+
+  results() {
+    console.info(`Go to results!`);
+    this.$state.go('berRoot.simulator.results');
   }
 }
 

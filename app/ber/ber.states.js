@@ -137,3 +137,9 @@ export const berSimulatorFleetDetailState = {
     '@^.^': 'berFleetDetail'
   }
 };
+
+export const berSimulatorResultsViewState = {
+  name: 'berRoot.simulator.results',
+  url: '/results',
+  component: 'berSimulatorResultsView'
+};

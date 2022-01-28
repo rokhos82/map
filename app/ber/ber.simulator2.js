@@ -61,6 +61,7 @@ export function simulator2() {
 
         // 4 Save the new state
         simulation.turns.push(state);
+        console.info(simulation);
       }
       else {
         // We have reached the turn limit.  Log an error.
@@ -262,7 +263,7 @@ export function simulator2() {
   function stateCreateEvent(state,msg,action) {
     // Create the event and push it into the event log.
     let evt = {
-      msg: msg;
+      msg: msg
     };
 
     state.events.push(evt);
@@ -352,7 +353,7 @@ export function simulator2() {
     }
 
     // Create the event for this
-    stateCreateEvent(`${actee.name} has taken ${action.damage} from ${actor.name}`);
+    stateCreateEvent(state,`${actee.name} has taken ${action.damage} from ${actor.name}`);
   }
 
   function stateDoDynamicTags(state) {
@@ -381,16 +382,40 @@ export function simulator2() {
     if(unitHasTag(actee,"flicker")) {
       // Flicker is present.  Roll to see if the hit was really a hit.
       let flickerRoll = _.random(1,100);
-      success = (flickerRoll <= actee.tags.flicker);
-      // TODO: Log an event for the attack missing
+
+      // Flicker works by converting hits to misses
+      // Thus, the success is made a failure if the flickerRoll is less
+      // than or equal to the target's flicker tag.
+      // Lastly, the success remains a success if the flickerRoll is greater
+      // than the flicker tag
+      success = (flickerRoll > actee.tags.flicker);
+
+      // Check the success flag.  If false, then log an event for flicker working.
+      if(!success) {
+        // Log an event detailing flicker working
+        stateCreateEvent(state,`${actee.name} dodges the attack from ${actor.name}!`,action);
+      }
     }
 
     // Check to see if the target has PD if the actor is a missile
     // If the attack was already a miss due to flicker don't check for PD
     if(success && unitHasTag(actor,"msl") && unitHasTag(actee,"pd")) {
+      // PD is present and the actor is a missile.  Roll to see if the attack is intercepted.
       let pdRoll = _.random(1,100);
-      success = (pdRoll <= actee.tags.pd);
-      // TODO: Log an event for the missile being destroyed
+
+      // PD works by intercepting hits from missile type attacks
+      // Normally, the successful hit is made a failure if the pdRoll is less than
+      // or equal to the target's PD tag.
+      // Thus, the successful hit remains a success if the pdRoll is greater
+      // than the PD tag.
+      success = (pdRoll > actee.tags.pd);
+
+      // Check the success flag.  If false, then log an event for PD working.
+      if(!success) {
+        // The hit has been rendered a failure.
+        // Log an event for PD intercepting the attack.
+        stateCreateEvent(state,`${actee.name} intercepts the attack from ${actor.name}!`,action);
+      }
     }
 
     // Check to see if the attack was a success
@@ -402,6 +427,8 @@ export function simulator2() {
       act.damage = damage;
       stack.push(act);
       // TODO: Log an event for the successful hit!
+      // Log an event for the successful hit!
+      stateCreateEvent(state,`${actee.name} is hit by ${actor.name}.`,action);
     }
   }
 
