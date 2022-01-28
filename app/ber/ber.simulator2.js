@@ -259,6 +259,18 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+  function stateCreateEvent(state,msg,action) {
+    // Create the event and push it into the event log.
+    let evt = {
+      msg: msg;
+    };
+
+    state.events.push(evt);
+
+    // Duplicate the message to the console for easier troubleshooting.
+    console.info(msg);
+  }
+
   function stateDatalinkGetTarget(state,unit) {
     // This function determines that target for a datalink group given a unit.
     // If the datalink group does not have a target then use the unit to get a target and save it for later.
@@ -339,7 +351,8 @@ export function simulator2() {
       actee.check.death = true;
     }
 
-    // TODO: Add an event for this...
+    // Create the event for this
+    stateCreateEvent(`${actee.name} has taken ${action.damage} from ${actor.name}`);
   }
 
   function stateDoDynamicTags(state) {
