@@ -46,23 +46,16 @@ class berSimulationControlController {
   round() {
     this.simulator.oneRound(this.simulation);
     this.archive.setSimulation(this.simulation.uuid,this.simulation);
-    //this.lastState = _.last(this.simulation.turns);
-    //this.ui.currentTurn = _.last(this.simulation.turns);
-    //this.ui.currentPage++;
-    //this.saveState();
+    this.archive.serializeSimulations();
   }
 
   run() {
-    this.simulation = this.simulator.fight();
-    this.lastState = this.simulation.state;
-    this.ui.currentTurn = _.last(this.simulation.turns);
-    this.ui.currentPage = this.ui.currentTurn.turn;
-    this.saveState();
+    this.simulator.fight(this.simulation);
   }
 
   results() {
     console.info(`Go to results!`);
-    this.$state.go('berRoot.simulator.results');
+    this.$state.go('.results',{uuid:this.simulation.uuid});
   }
 }
 

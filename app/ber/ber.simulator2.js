@@ -73,7 +73,7 @@ export function simulator2() {
 
   _service.fight = (simulation) => {
     // Is the simulation initialized?
-    if(simulation.statue === "Waiting") {
+    if(simulation.status === "Waiting") {
       let done = false;
       while(simulation.maxTurns > simulation.turns.length && !done) {
         _service.oneRound(simulation);
@@ -108,6 +108,10 @@ export function simulator2() {
     let factionUuid = faction.enemy[0];
     fleet.targetList = factionTargetList(simulation,factionUuid);
 
+    // Setup other data objects
+    fleet.destroyed = {};
+    fleet.fled = {};
+
     // Setup each unit
     _.forEach(fleet.units,(unit) => {
       setupUnit(simulation,faction,fleet,unit);
@@ -138,7 +142,7 @@ export function simulator2() {
       events: [],
       factions: _.cloneDeep(oldState.factions),
       fleets: _.cloneDeep(oldState.fleets),
-      units: {},
+      units: [],
       turn: oldState.turn+1,
       datalink: {},
       longRange: false,
@@ -263,8 +267,13 @@ export function simulator2() {
   function stateCreateEvent(state,msg,action) {
     // Create the event and push it into the event log.
     let evt = {
-      msg: msg
+      msg: msg,
     };
+
+    if(action) {
+      evt.actor = action.actor ? action.actor.name : "";
+      evt.actee = action.actee ? action.actee.name : "";
+    }
 
     state.events.push(evt);
 
@@ -352,8 +361,24 @@ export function simulator2() {
       actee.check.death = true;
     }
 
+    // Push the unit into the stack for later checking
+    state.units.push(actee);
+
     // Create the event for this
-    stateCreateEvent(state,`${actee.name} has taken ${action.damage} from ${actor.name}`);
+    stateCreateEvent(state,`${actee.name} has taken ${action.damage} from ${actor.name}`,action);
+  }
+
+  function stateDoDeath(state,unit) {
+    console.info(`stateDoDeath(${unit.name})`);
+
+    // Mark the unit as dead
+    unit.dead = true;
+
+    // Log an event for the death
+    stateCreateEvent(state,`${unit.name} has been destroyed!`,{actor:unit});
+
+    // Remove the unit from active list
+    stateRemoveUnit(state,unit);
   }
 
   function stateDoDynamicTags(state) {
@@ -451,11 +476,7 @@ export function simulator2() {
     movementStack = stateGetNonDeadUnits(state);
 
     // Log the new turn event
-    let evt = {
-      msg: `Turn ${state.turn}`
-    };
-    state.events.push(evt);
-    console.info(evt.msg);
+    console.info(`Turn ${state.turn}`);
     console.info(state);
     console.info(`Participants`,unitStack);
 
@@ -547,11 +568,7 @@ export function simulator2() {
           resolveStack.push(atk);
 
           // Push the event for this action into the event queue
-          let evt = {
-            msg: `${actor.name} launches a missile.`
-          };
-          state.events.push(evt);
-          console.info(`${evt.msg}`);
+          stateCreateEvent(state,`${actor.name} launches a missile.`,action);
         }
       }
       // Check for a multi attack
@@ -627,6 +644,7 @@ export function simulator2() {
 
     // Now that combat is done do checks that were flagged during the combat loop.
     // This is for things like critical hits and death
+    console.info(`Doing unit state checks`);
     let checkStack = [];
     // Build the checkStack by seeing if the check collection has any keys.
     _.forEach(state.units,(unit) => {
@@ -634,6 +652,7 @@ export function simulator2() {
         checkStack.push(unit);
       }
     });
+    console.info(checkStack);
     // Process the checkStack
     while(checkStack.length > 0) {
       // Get the next unit object to process
@@ -646,7 +665,7 @@ export function simulator2() {
       // Always do death check last incase any other check results in death
       if(unit.check.death) {
         // Process the death of the unit
-        console.info(`Processing death check for ${unit.name}`);
+        stateDoDeath(state,unit);
       }
     } // End of Check Loop
 
@@ -734,9 +753,14 @@ export function simulator2() {
         let fleet = state.fleets[fleetUuid];
         console.info(`stateGetParticipants:fleet(${fleet.name})`);
         _.forEach(fleet.units,(unit) => {
-          if(!longRange) {
+          // Check for dead units first
+          if(unit.dead) {
+            // Do nothing.
+          }
+          else if(!longRange) {
             console.info(`Standard Mode`);
             // This is a normal round.
+            // Check for dead units first
             if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
               parts.push(unit);
             }
@@ -779,6 +803,7 @@ export function simulator2() {
   function stateRemoveUnit(state,unit) {
     // This removed the unit from combat
     // Check for dead first so that a unit that dies while fleeing doesn't get into the fled list
+    let fleet = state.fleets[unit.fleetId];
 
     // Did the unit die?
     if(unit.dead) {
@@ -803,10 +828,12 @@ export function simulator2() {
     let damage = action.damage;
     let crit = action.crit;
     let hullHit = false;
+    console.info(`unitApplyDamage(${unit.name}:${damage})`);
 
     // TODO: Check to see if damage overflows to the HULL from the SHIELDS
     // Check to see if the unit has shields
     if(unit.shCur > 0) {
+      console.info(`Damage applied to shields`);
       // Yep, damage the shields
       // If the damage is from a crit then ignore SR & RESIST
       // Check for SR
@@ -822,6 +849,7 @@ export function simulator2() {
       unit.shCur = Math.max(0,unit.shCur - damage);
     }
     else {
+      console.info(`Damage applied to hull`);
       // Damage the hull instead
       // If the damage is from a crit then ignore AR & RESIST
       // Check for AR
@@ -842,7 +870,8 @@ export function simulator2() {
     // Conditions for death
     // 1 - the current hull value is 0
     // 2 - the hull was hit and the unit has a FIGHTER tag
-    let dead = (unit.hlCur <= 0 || (unit.tags.fighter && hullHit));
+    let dead = (unit.hlCur <= 0 || (unitHasTag(unit,"fighter") && hullHit));
+    console.info(unit);
     return dead;
   }
 

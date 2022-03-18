@@ -50,6 +50,30 @@ Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
   loadDefenseFleet() {
     this.fleetFile = this.defenders;
   }
+
+  loadFighterFleet() {
+    this.fleetFile = `KSE,1st Fleet,75,20,20,20,,,,
+F1001 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1002 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1003 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1004 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1005 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1006 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1007 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1008 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1009 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1010 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1011 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1012 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1013 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1014 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1015 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1016 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1017 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1018 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1019 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
+F1020 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER`;
+  }
 }
 
 berFleetsImportController.$inject = ["$scope","berArchive","berParser","$state"];

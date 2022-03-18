@@ -1,1 +1,23 @@
-<h1>Results Go Here</h1>
+<h2>{{$ctrl.simulation.name}} Results</h2>
+<div class="panel panel-default" ng-repeat="turn in $ctrl.simulation.turns track by $index">
+  <div class="panel-heading">Turn {{$index}}</div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Actor</th>
+        <th>Actee</th>
+        <th>Message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(id,event) in turn.events track by id">
+        <td>{{id}}</td>
+        <td>{{event.actor}}</td>
+        <td>{{event.actee}}</td>
+        <td>{{event.msg}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="panel-footer">End Turn {{$index}}</div>
+</div>

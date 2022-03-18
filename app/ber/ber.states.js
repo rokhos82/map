@@ -139,7 +139,15 @@ export const berSimulatorFleetDetailState = {
 };
 
 export const berSimulatorResultsViewState = {
-  name: 'berRoot.simulator.results',
-  url: '/results',
-  component: 'berSimulatorResultsView'
+  name: 'berRoot.simulator.view.results',
+  url: '/results/{uuid}',
+  resolve: {
+    simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let sim = archive.getSimulation($stateParams.uuid);
+      return sim;
+    }]
+  },
+  views: {
+    '@^.^': 'berSimulatorResultsView'
+  }
 };
