@@ -92,7 +92,7 @@ class berSimulatorCreateController {
 
   setupAndGo() {
     this.setup();
-    this.$state.go("^.view");
+    this.$state.go("^.list");
   }
 }
 
