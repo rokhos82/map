@@ -5,6 +5,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>Type</th>
         <th>Actor</th>
         <th>Actee</th>
         <th>Message</th>
@@ -12,7 +13,8 @@
     </thead>
     <tbody>
       <tr ng-repeat="(id,event) in turn.events track by id">
-        <td>{{id}}</td>
+        <td>{{id+1}}</td>
+        <td>{{event.type}}</td>
         <td>{{event.actor}}</td>
         <td>{{event.actee}}</td>
         <td>{{event.msg}}</td>

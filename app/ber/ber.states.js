@@ -97,7 +97,13 @@ export const berSimulatorRootState = {
   name: 'berRoot.simulator',
   url: '/combat',
   component: 'berSimulatorRoot',
-  redirectTo: 'berRoot.simulator.view'
+  redirectTo: 'berRoot.simulator.list'
+};
+
+export const berSimulatorListState = {
+  name: 'berRoot.simulator.list',
+  url: '/list',
+  component: 'berSimulatorList'
 };
 
 export const berSimulatorViewState = {

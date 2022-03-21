@@ -273,6 +273,7 @@ export function simulator2() {
     if(action) {
       evt.actor = action.actor ? action.actor.name : "";
       evt.actee = action.actee ? action.actee.name : "";
+      evt.type = action.type || "";
     }
 
     state.events.push(evt);
@@ -323,6 +324,8 @@ export function simulator2() {
       // The target is truthy!
       action.actee = actee;
 
+      stateCreateEvent(state,`${actor.name} targets ${actee.name}`,action);
+
       // Calculate the toHit roll for the attack
       let hitRoll = unitDoHitRoll(actor,actee,action);
       action.hitRoll = hitRoll;
@@ -331,6 +334,10 @@ export function simulator2() {
       // Calculate the success.  This is used in multiple places and calculated onece.
       let success = hitRoll > state.options.baseToHit;
 
+      if(_.isNaN(hitRoll)) {
+        console.info(`NAN`,action);
+      }
+
       // Check if the attack was successful.
       if(success) {
         // The attack was a success!
@@ -338,6 +345,11 @@ export function simulator2() {
         let hit = _.cloneDeep(action);
         hit.type = "hit";
         stack.push(hit);
+
+        stateCreateEvent(state,`${actor.name} hits ${actee.name} (${hitRoll})`,action);
+      }
+      else {
+        stateCreateEvent(state,`${actor.name} misses ${actee.name} (${hitRoll})`,action);
       }
     }
   }
@@ -365,7 +377,7 @@ export function simulator2() {
     state.units.push(actee);
 
     // Create the event for this
-    stateCreateEvent(state,`${actee.name} has taken ${action.damage} from ${actor.name}`,action);
+    stateCreateEvent(state,`${actee.name} takes ${action.damage} damage from ${actor.name}`,action);
   }
 
   function stateDoDeath(state,unit) {
@@ -379,6 +391,14 @@ export function simulator2() {
 
     // Remove the unit from active list
     stateRemoveUnit(state,unit);
+  }
+
+  function stateDoDoneCheck(state) {
+    // One side is completely eliminated
+    // The state has not changed for 3+ rounds
+    let finished = false;
+
+    return finished;
   }
 
   function stateDoDynamicTags(state) {
@@ -568,7 +588,7 @@ export function simulator2() {
           resolveStack.push(atk);
 
           // Push the event for this action into the event queue
-          stateCreateEvent(state,`${actor.name} launches a missile.`,action);
+          stateCreateEvent(state,`${actor.name} launches a missile (${atk.volley}-pt warhead).`,action);
         }
       }
       // Check for a multi attack
@@ -715,6 +735,8 @@ export function simulator2() {
 
     // Update dynamic tags
     stateDoDynamicTags(state);
+
+    stateDoDoneCheck(state);
   }
 
   function stateGetNonDeadUnits(state) {
@@ -863,7 +885,10 @@ export function simulator2() {
 
       // Decrease the unit's hull by the damage amount
       unit.hlCur = Math.max(0,unit.hlCur - damage);
-      hullHit = true; // This matters if the unit is a fighter
+
+      if(damage > 0) {
+        hullHit = true; // This matters if the unit is a fighter
+      }
     }
 
     // Determine if the unit is dead
@@ -994,7 +1019,7 @@ export function simulator2() {
   function unitDoHitRoll(unit,target,action) {
     // Calculate the to hit roll for the unit
 
-    let t = action.target;
+    let t = action.target || 0;
     let d = target.tags.defense;
 
     // Check for extremely disparate target and defense values.
