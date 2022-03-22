@@ -10,8 +10,9 @@ class berSimulatorViewController {
   }
 
   $onInit() {
-    this.simulations = this.archive.listSimulations();
   }
+
+  goBack() {}
 }
 
 berSimulatorViewController.$inject = ["$scope","berArchive"];
