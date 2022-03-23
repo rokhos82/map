@@ -4,21 +4,26 @@
  * @desc
  */
 class berSimulatorViewController {
-  constructor($scope,archive) {
+  constructor($scope,archive,$state) {
     this.$scope = $scope;
     this.archive = archive;
+    this.$state = $state;
   }
 
   $onInit() {
   }
 
-  goBack() {}
+  goBack() {
+    this.$state.go('^');
+  }
 }
 
-berSimulatorViewController.$inject = ["$scope","berArchive"];
+berSimulatorViewController.$inject = ["$scope","berArchive","$state"];
 
 export const berSimulatorView = {
-  bindings: {},
+  bindings: {
+    simulation: "<"
+  },
   controller: berSimulatorViewController,
   template: require('./berSimulatorView.component.html')
 };

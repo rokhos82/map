@@ -47,6 +47,10 @@ class berSimulatorListController {
       this.$state.reload();
     }
   }
+
+  goToSimulation(uuid) {
+    this.$state.go('^.view',{uuid: uuid});
+  }
 }
 
 berSimulatorListController.$inject = ["$scope","berArchive","$state"];

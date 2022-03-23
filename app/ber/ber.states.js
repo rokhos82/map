@@ -108,7 +108,13 @@ export const berSimulatorListState = {
 
 export const berSimulatorViewState = {
   name: 'berRoot.simulator.view',
-  url: '/view',
+  url: '/view/{uuid}',
+  resolve: {
+    simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let sim = archive.getSimulation($stateParams.uuid);
+      return sim;
+    }]
+  },
   component: 'berSimulatorView'
 };
 
