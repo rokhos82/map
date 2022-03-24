@@ -72,15 +72,15 @@ export const berFleetsListState = {
   component: 'berFleetList'
 };
 
-export const berFleetsViewState = {
+/*export const berFleetsViewState = {
   name: 'berRoot.fleets.view',
   url: '/view',
   component: 'berFleetsView',
-};
+};*/
 
 export const berFleetsDetailState = {
-  name: 'berRoot.fleets.view.detail',
-  url: '/{uuid}',
+  name: 'berRoot.fleets.detail',
+  url: 'view/{uuid}',
   resolve: {
     fleet: ["berArchive","$stateParams",(archive,$stateParams) => {
       let fleet = archive.getFleet($stateParams.uuid);

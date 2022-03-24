@@ -38,7 +38,7 @@ import {archive} from "./archive.service.js";
 import {
   berRootState,
   berWelcomeState,
-  berFleetsRootState,berFleetsListState,berFleetsViewState,berFleetsImportState,berFleetsDetailState,
+  berFleetsRootState,berFleetsListState,berFleetsImportState,berFleetsDetailState,
   berSimulatorRootState,berSimulatorListState,berSimulatorViewState,berSimulatorCreateState,berSimulatorFleetDetailState,berSimulatorResultsViewState
 } from "./ber.states.js";
 
@@ -64,7 +64,7 @@ function berModuleController($uiRouter) {
   $stateRegistry.register(berWelcomeState);
   $stateRegistry.register(berFleetsRootState)
   $stateRegistry.register(berFleetsListState);
-  $stateRegistry.register(berFleetsViewState);
+  //$stateRegistry.register(berFleetsViewState);
   $stateRegistry.register(berFleetsImportState);
   $stateRegistry.register(berFleetsDetailState);
 

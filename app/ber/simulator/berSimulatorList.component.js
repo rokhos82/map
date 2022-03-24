@@ -4,10 +4,11 @@
  * @desc Lists all of the simulations registered
  */
 class berSimulatorListController {
-  constructor($scope,archive,$state) {
+  constructor($scope,archive,$state,$window) {
     this.$scope = $scope;
     this.archive = archive;
     this.$state = $state;
+    this.$window = $window;
 
     this.ui = {};
     this.ui.simulations = {};
@@ -30,13 +31,17 @@ class berSimulatorListController {
 
   deleteSelected() {
     let work = false;
-    _.forEach(this.ui.simulations,(deleteSim,key) => {
-      if(deleteSim) {
-        // Remove the simulation from the list.
-        this.archive.deleteSimulation(key);
-        work = true;
-      }
-    });
+
+    // Confirm with the user that they want to proceed with the deletions
+    if(this.$window.confirm("Do you really want to delete the selected simulations?")) {
+      _.forEach(this.ui.simulations,(deleteSim,key) => {
+        if(deleteSim) {
+          // Remove the simulation from the list.
+          this.archive.deleteSimulation(key);
+          work = true;
+        }
+      });
+    }
 
     // Did any work get done?
     if(work) {
@@ -53,7 +58,7 @@ class berSimulatorListController {
   }
 }
 
-berSimulatorListController.$inject = ["$scope","berArchive","$state"];
+berSimulatorListController.$inject = ["$scope","berArchive","$state","$window"];
 
 export const berSimulatorList = {
   bindings: {},
