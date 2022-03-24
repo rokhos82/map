@@ -12,6 +12,7 @@ import {berSimulationControl} from "./berSimulationControl.component.js";
 import {berResultView} from "./berResultView.component.js";
 
 import {berFleetsRoot} from "./fleets/berFleetsRoot.component.js";
+import {berFleetList} from "./fleets/berFleetList.component.js";
 import {berFleetsImport} from "./fleets/berFleetsImport.component.js";
 import {berFleetInfo} from "./berFleetInfo.component.js";
 import {berFleetCard} from "./fleets/berFleetCard.component.js";
@@ -37,7 +38,7 @@ import {archive} from "./archive.service.js";
 import {
   berRootState,
   berWelcomeState,
-  berFleetsRootState,berFleetsViewState,berFleetsImportState,berFleetsDetailState,
+  berFleetsRootState,berFleetsListState,berFleetsViewState,berFleetsImportState,berFleetsDetailState,
   berSimulatorRootState,berSimulatorListState,berSimulatorViewState,berSimulatorCreateState,berSimulatorFleetDetailState,berSimulatorResultsViewState
 } from "./ber.states.js";
 
@@ -62,6 +63,7 @@ function berModuleController($uiRouter) {
   $stateRegistry.register(berRootState);
   $stateRegistry.register(berWelcomeState);
   $stateRegistry.register(berFleetsRootState)
+  $stateRegistry.register(berFleetsListState);
   $stateRegistry.register(berFleetsViewState);
   $stateRegistry.register(berFleetsImportState);
   $stateRegistry.register(berFleetsDetailState);
@@ -83,6 +85,7 @@ BER.component('berSimulationControl',berSimulationControl);
 BER.component('berResultView',berResultView)
 
 BER.component('berFleetsRoot',berFleetsRoot);
+BER.component('berFleetList',berFleetList);
 BER.component('berFleetsImport',berFleetsImport);
 BER.component('berFleetInfo',berFleetInfo);
 BER.component('berFleetCard',berFleetCard);

@@ -4,11 +4,12 @@
  * @desc
  */
 class berSimulatorCreateController {
-  constructor($scope,archive,uuid,$state) {
+  constructor($scope,archive,uuid,$state,simulator) {
     this.$scope = $scope;
     this.archive = archive;
     this.uuid = uuid;
     this.$state = $state;
+    this.simulator = simulator;
 
     this.ui = {};
     this.fleets = {};
@@ -82,6 +83,8 @@ class berSimulatorCreateController {
 
     console.info(sim);
 
+    this.simulator.setup(sim);
+
     // Save the simulation object
     this.archive.setSimulation(sim.uuid,sim);
     this.archive.serializeSimulations();
@@ -96,7 +99,7 @@ class berSimulatorCreateController {
   }
 }
 
-berSimulatorCreateController.$inject = ["$scope","berArchive","mobius-core-uuid","$state"];
+berSimulatorCreateController.$inject = ["$scope","berArchive","mobius-core-uuid","$state","berSimulator2"];
 
 export const berSimulatorCreate = {
   bindings: {},

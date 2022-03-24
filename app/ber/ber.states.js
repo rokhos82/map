@@ -63,7 +63,13 @@ export const berFleetsRootState = {
   name: 'berRoot.fleets',
   url: '/fleets',
   component: 'berFleetsRoot',
-  redirectTo: 'berRoot.fleets.view'
+  redirectTo: 'berRoot.fleets.list'
+};
+
+export const berFleetsListState = {
+  name: 'berRoot.fleets.list',
+  url: '/list',
+  component: 'berFleetList'
 };
 
 export const berFleetsViewState = {

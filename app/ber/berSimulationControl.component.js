@@ -27,7 +27,7 @@ class berSimulationControlController {
     this.archive.serializeSimulations();
 
     // Refresh the current state.
-    this.$state.reload();
+    this.$state.go('^');
   }
 
   initialize() {
