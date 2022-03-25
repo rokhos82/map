@@ -11,6 +11,8 @@ class berSimulatorViewController {
   }
 
   $onInit() {
+    if(!this.simulation) {
+    }
   }
 
   goBack() {
@@ -18,7 +20,7 @@ class berSimulatorViewController {
   }
 }
 
-berSimulatorViewController.$inject = ["$scope","berArchive","$state"];
+berSimulatorViewController.$inject = ["$scope","berArchive","$state","$stateParams"];
 
 export const berSimulatorView = {
   bindings: {
