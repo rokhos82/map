@@ -4,14 +4,17 @@
  * @desc
  */
 class berSimulatorViewController {
-  constructor($scope,archive,$state) {
+  constructor($scope,archive,$state,$stateParams) {
     this.$scope = $scope;
     this.archive = archive;
     this.$state = $state;
+    this.$params = $stateParams;
   }
 
   $onInit() {
+    console.log("Initializing simulatorViewController");
     if(!this.simulation) {
+      this.simulation = this.archive.getSimulation(this.$params.simUuid);
     }
   }
 

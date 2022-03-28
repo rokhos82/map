@@ -114,10 +114,10 @@ export const berSimulatorListState = {
 
 export const berSimulatorViewState = {
   name: 'berRoot.simulator.view',
-  url: '/view/{uuid}',
+  url: '/view/{simUuid}',
   resolve: {
     simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
-      let sim = archive.getSimulation($stateParams.uuid);
+      let sim = archive.getSimulation($stateParams.simUuid);
       return sim;
     }]
   },
@@ -157,11 +157,11 @@ export const berSimulatorFleetDetailState = {
 };
 
 export const berSimulatorResultsViewState = {
-  name: 'berRoot.simulator.view.results',
-  url: '/results/{uuid}',
+  name: 'berRoot.simulator.results',
+  url: '/results/{simUuid}',
   resolve: {
     simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
-      let sim = archive.getSimulation($stateParams.uuid);
+      let sim = archive.getSimulation($stateParams.simUuid);
       return sim;
     }]
   },

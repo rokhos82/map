@@ -55,7 +55,7 @@ class berSimulationControlController {
 
   results() {
     console.info(`Go to results!`);
-    this.$state.go('.results',{uuid:this.simulation.uuid});
+    this.$state.go('^.results',{simUuid: this.simulation.uuid});
   }
 }
 

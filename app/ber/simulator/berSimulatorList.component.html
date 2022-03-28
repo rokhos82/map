@@ -17,11 +17,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="simulation in $ctrl.simulations" ng-click="$ctrl.goToSimulation(simulation.uuid)">
+        <tr ng-repeat="simulation in $ctrl.simulations">
           <td><input name="select{{simulation.uuid}}" type="checkbox" ng-change="$ctrl.toggleSimulationCheck()" ng-model="$ctrl.ui.simulations[simulation.uuid]" /></td>
-          <td>{{simulation.name}}</td>
-          <td><span><span ng-class="{'text-danger': simulation.status=='Error','text-warning': (simulation.status == 'Running' || simulation.status== 'Waiting'),'text-info': simulation.status == 'Pending','text-success': simulation.status == 'Finished'}">{{simulation.status}}</span></span></td>
-          <td><span class="badge">{{simulation.turns.length-1}}</span></td>
+          <td ng-click="$ctrl.goToSimulation(simulation.uuid)">{{simulation.name}}</td>
+          <td ng-click="$ctrl.goToSimulation(simulation.uuid)"><span><span ng-class="{'text-danger': simulation.status=='Error','text-warning': (simulation.status == 'Running' || simulation.status== 'Waiting'),'text-info': simulation.status == 'Pending','text-success': simulation.status == 'Finished'}">{{simulation.status}}</span></span></td>
+          <td ng-click="$ctrl.goToSimulation(simulation.uuid)"><span class="badge">{{simulation.turns.length-1}}</span></td>
         </tr>
       </tbody>
     </table>

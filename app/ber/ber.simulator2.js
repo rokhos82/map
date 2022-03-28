@@ -61,7 +61,7 @@ export function simulator2() {
 
         // 4 Save the new state
         simulation.turns.push(state);
-        console.info(simulation);
+        console.info(state);
       }
       else {
         // We have reached the turn limit.  Log an error.
@@ -274,6 +274,8 @@ export function simulator2() {
       evt.actor = action.actor ? action.actor.name : "";
       evt.actee = action.actee ? action.actee.name : "";
       evt.type = action.type || "";
+      evt.channel = action.channel || null;
+      evt.amount = action.amount || 0;
     }
 
     state.events.push(evt);
@@ -361,23 +363,31 @@ export function simulator2() {
     console.info(`stateDoDamage(${actee.name}:${action.damage})`);
 
     // Calculate if the unit is dead
-    let dead = unitApplyDamage(actee,action,actor);
+    let token = unitApplyDamage(actee,action,actor);
     // Flag the unit for a critical hit check
     actee.check.crit = true;
 
     // Now process the death if neccessary
-    if(dead && !actee.dead) {
+    /*if(dead && !actee.dead) {
       // Don't do this if the unit is already dead.
       // This happens as multiple attacks can land on the same target in the same turn.
       // Flag the unit to have a death check done after the main combat round.
       actee.check.death = true;
-    }
+    }//*/
 
     // Push the unit into the stack for later checking
-    state.units.push(actee);
+    state.damage.push(token);
+    state.checks.push(actee);
 
     // Create the event for this
-    stateCreateEvent(state,`${actee.name} takes ${action.damage} damage from ${actor.name}`,action);
+    let blocked = action.damage - token.ammount;
+
+    if(blocked > 0) {
+      stateCreateEvent(state,`${actee.name} takes ${token.damage} (${blocked} blocked) from ${actor.name}`,action);
+    }
+    else {
+      stateCreateEvent(state,`${actee.name} takes ${action.damage} damage from ${actor.name}`,action);
+    }
   }
 
   function stateDoDeath(state,unit) {
@@ -846,10 +856,17 @@ export function simulator2() {
   // Unit Functions ------------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
   function unitApplyDamage(unit,action) {
+    // TODO: Move Death Check to Own Function
+    // TODO: Have this function return a damageStack token.  {uuid,channel,amount}
     // Apply the damage from the action to the unit
     let damage = action.damage;
     let crit = action.crit;
     let hullHit = false;
+    let token = {};
+    token.uuid = unit.uuid;
+    token.channel = "";
+    token.amount = 0;
+
     console.info(`unitApplyDamage(${unit.name}:${damage})`);
 
     // TODO: Check to see if damage overflows to the HULL from the SHIELDS
@@ -859,28 +876,33 @@ export function simulator2() {
       // Yep, damage the shields
       // If the damage is from a crit then ignore SR & RESIST
       // Check for SR
-      if(_.isNumber(unit.tags.sr) && !crit) {
+      if(unitHasTag(unit,"sr") && !crit) {
+        console.info(`Unit has SR`);
         damage = Math.max(0,damage - unit.tags.sr);
       }
       // Check for RESIST
-      if(_.isNumber(unit.tags.resist) && !crit) {
-        damage = _.round(damage * (unit.tags.resist / 100));
+      if(unitHasTag(unit,"resist") && !crit) {
+        damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
       // Decrease the unit's shields by damage amount
       unit.shCur = Math.max(0,unit.shCur - damage);
+
+      token.channel = "sh";
+      token.amount = damage;
     }
     else {
       console.info(`Damage applied to hull`);
       // Damage the hull instead
       // If the damage is from a crit then ignore AR & RESIST
       // Check for AR
-      if(_.isNumber(unit.tags.ar) && !crit) {
+      if(unitHasTag(unit,"ar") && !crit) {
+        console.info(`Unit has AR`);
         damage = Math.max(0,damage - unit.tags.ar);
       }
       // Check for RESIST
-      if(_.isNumber(unit.tags.resist) && !crit) {
-        damage = _.round(damage * (unit.tags.resist / 100));
+      if(unitHasTag(unit,"resist") && !crit) {
+        damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
       // Decrease the unit's hull by the damage amount
@@ -889,7 +911,17 @@ export function simulator2() {
       if(damage > 0) {
         hullHit = true; // This matters if the unit is a fighter
       }
+
+      token.channel = "hl";
+      token.amount = damage;
     }
+
+    action.channel = channel;
+    action.amount = amount;
+
+    console.log(`Token`,token);
+
+    return token;
 
     // Determine if the unit is dead
     // Conditions for death

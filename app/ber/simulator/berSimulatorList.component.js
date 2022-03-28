@@ -54,7 +54,7 @@ class berSimulatorListController {
   }
 
   goToSimulation(uuid) {
-    this.$state.go('^.view',{uuid: uuid});
+    this.$state.go('^.view',{simUuid: uuid});
   }
 }
 
