@@ -146,7 +146,9 @@ export function simulator2() {
       turn: oldState.turn+1,
       datalink: {},
       longRange: false,
-      options: oldState.options
+      options: oldState.options,
+      damage: [],
+      checks: []
     };
 
     state.longRange = checkLongRange(state.fleets);
@@ -264,6 +266,59 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+  function stateApplyDamageTokens(state) {
+    console.info(`stateApplyDamageTokens()`);
+    console.info(_.clone(state.damage));
+
+    // Pull tokens off the stack until there are none left
+    while(state.damage.length > 0) {
+      let token = state.damage.pop();
+      let unit = state.fleets[token.fleetUuid].units[token.uuid];
+
+      console.info(_.cloneDeep(unit),_.cloneDeep(token));
+
+      if(token.channel == "sh") {
+        // Deduct the damage from the unit's shields
+
+        // If the shields "burst" then add an event to indicate that additional damage was deflected?
+        let remainder = _.max(unit.shCur - token.amount,0);
+        let actualDamage = token.amount - remainder;
+        console.info(remainder,actualDamage);
+
+        if(remainder > 0) {
+          // Shields "burst" and deflected part of the damage.
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} (${remainder} deflected)`,{actor:unit});
+        }
+        else {
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage}`,{actor:unit});
+        }
+
+        // Remove the correct amount of shields from the target.
+        unit.shCur -= actualDamage;
+      }
+      else if(token.channel == "hl") {
+          // Deduct the damage from the unit's hull
+
+          // Calculate if there is more damage than hull
+          let remainder = _.max(unit.hlCur - token.amount,0);
+          let actualDamage = token.amount - remainder;
+
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage}`,{actor:unit});
+
+          if(remainder > 0 && unit.check.death != true) {
+            // The unit has been destroyed.  Flag it for a death check if not already flagged.
+            unit.check.death = true;
+          }
+
+          // Remove the correct amount of shields from the target.
+          unit.hlCur -= actualDamage;
+      }
+      else {
+        console.warn(`stateApplyDamageTokens - channel '${token.channel} unknown'`);
+      }
+    }
+  }
+
   function stateCreateEvent(state,msg,action) {
     // Create the event and push it into the event log.
     let evt = {
@@ -356,6 +411,8 @@ export function simulator2() {
     }
   }
 
+  function stateDoCritChecks(state) {}
+
   function stateDoDamage(state,action,stack) {
     // Apply the damage to the target
     let actor = action.actor;
@@ -364,8 +421,6 @@ export function simulator2() {
 
     // Calculate if the unit is dead
     let token = unitApplyDamage(actee,action,actor);
-    // Flag the unit for a critical hit check
-    actee.check.crit = true;
 
     // Now process the death if neccessary
     /*if(dead && !actee.dead) {
@@ -377,7 +432,6 @@ export function simulator2() {
 
     // Push the unit into the stack for later checking
     state.damage.push(token);
-    state.checks.push(actee);
 
     // Create the event for this
     let blocked = action.damage - token.ammount;
@@ -402,6 +456,8 @@ export function simulator2() {
     // Remove the unit from active list
     stateRemoveUnit(state,unit);
   }
+
+  function stateDoDeathChecks(state) {}
 
   function stateDoDoneCheck(state) {
     // One side is completely eliminated
@@ -672,32 +728,14 @@ export function simulator2() {
     }
     // End Main Action Processing Loop
 
-    // Now that combat is done do checks that were flagged during the combat loop.
-    // This is for things like critical hits and death
-    console.info(`Doing unit state checks`);
-    let checkStack = [];
-    // Build the checkStack by seeing if the check collection has any keys.
-    _.forEach(state.units,(unit) => {
-      if(_.size(unit.check) > 0) {
-        checkStack.push(unit);
-      }
-    });
-    console.info(checkStack);
-    // Process the checkStack
-    while(checkStack.length > 0) {
-      // Get the next unit object to process
-      let unit = checkStack.pop();
+    // Apply damage tokens
+    stateApplyDamageTokens(state);
 
-      if(unit.check.crit) {
-        // Process the crit if necessary
-        console.info(`Processing crit check for ${unit.name}`);
-      }
-      // Always do death check last incase any other check results in death
-      if(unit.check.death) {
-        // Process the death of the unit
-        stateDoDeath(state,unit);
-      }
-    } // End of Check Loop
+    // Do crit checks
+    stateDoCritChecks(state);
+
+    // Do death checks
+    stateDoDeathChecks(state);
 
     // Now that post-combat checks are done.  Do the movement processing.
     // The movement checks from highest to lowest priority are:
@@ -864,6 +902,8 @@ export function simulator2() {
     let hullHit = false;
     let token = {};
     token.uuid = unit.uuid;
+    token.fleetUuid = unit.fleetId;
+    token.factionUuid = unit.factionId;
     token.channel = "";
     token.amount = 0;
 
@@ -885,9 +925,7 @@ export function simulator2() {
         damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
-      // Decrease the unit's shields by damage amount
-      unit.shCur = Math.max(0,unit.shCur - damage);
-
+      // Fill in the damage token
       token.channel = "sh";
       token.amount = damage;
     }
@@ -905,31 +943,14 @@ export function simulator2() {
         damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
-      // Decrease the unit's hull by the damage amount
-      unit.hlCur = Math.max(0,unit.hlCur - damage);
-
-      if(damage > 0) {
-        hullHit = true; // This matters if the unit is a fighter
-      }
-
+      // Fill in the damage token
       token.channel = "hl";
       token.amount = damage;
     }
 
-    action.channel = channel;
-    action.amount = amount;
-
     console.log(`Token`,token);
 
     return token;
-
-    // Determine if the unit is dead
-    // Conditions for death
-    // 1 - the current hull value is 0
-    // 2 - the hull was hit and the unit has a FIGHTER tag
-    let dead = (unit.hlCur <= 0 || (unitHasTag(unit,"fighter") && hullHit));
-    console.info(unit);
-    return dead;
   }
 
   function unitCheckBreak(unit,state) {
