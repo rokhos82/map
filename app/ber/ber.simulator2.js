@@ -281,16 +281,26 @@ export function simulator2() {
         // Deduct the damage from the unit's shields
 
         // If the shields "burst" then add an event to indicate that additional damage was deflected?
-        let remainder = _.max(unit.shCur - token.amount,0);
-        let actualDamage = token.amount - remainder;
+        let remainder = 0;
+        let actualDamage = 0;
+        if(token.amount > unit.shCur) {
+          // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+          remainder = token.amount - unit.shCur;
+          actualDamage = unit.shCur;
+        }
+        else {
+          // Otherwise, just deduct the damage from the current shields and continue on.
+          remainder = 0;
+          actualDamage = token.amount;
+        }
         console.info(remainder,actualDamage);
 
         if(remainder > 0) {
           // Shields "burst" and deflected part of the damage.
-          stateCreateEvent(state,`${unit.name} takes ${actualDamage} (${remainder} deflected)`,{actor:unit});
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage (${remainder} deflected)`,{actor:unit});
         }
         else {
-          stateCreateEvent(state,`${unit.name} takes ${actualDamage}`,{actor:unit});
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage`,{actor:unit});
         }
 
         // Remove the correct amount of shields from the target.
@@ -299,22 +309,34 @@ export function simulator2() {
       else if(token.channel == "hl") {
           // Deduct the damage from the unit's hull
 
-          // Calculate if there is more damage than hull
-          let remainder = _.max(unit.hlCur - token.amount,0);
-          let actualDamage = token.amount - remainder;
+          // If the shields "burst" then add an event to indicate that additional damage was deflected?
+          let remainder = 0;
+          let actualDamage = 0;
+          if(token.amount > unit.hlCur) {
+            // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+            remainder = token.amount - unit.hlCur;
+            actualDamage = unit.shCur;
+          }
+          else {
+            // Otherwise, just deduct the damage from the current shields and continue on.
+            remainder = 0;
+            actualDamage = token.amount;
+          }
+          console.info(remainder,actualDamage);
 
-          stateCreateEvent(state,`${unit.name} takes ${actualDamage}`,{actor:unit});
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
 
           if(remainder > 0 && unit.check.death != true) {
             // The unit has been destroyed.  Flag it for a death check if not already flagged.
             unit.check.death = true;
+            state.checks.push(unit);
           }
 
           // Remove the correct amount of shields from the target.
           unit.hlCur -= actualDamage;
       }
       else {
-        console.warn(`stateApplyDamageTokens - channel '${token.channel} unknown'`);
+        console.warn(`stateApplyDamageTokens - channel '${token.channel}' unknown'`);
       }
     }
   }
@@ -457,7 +479,19 @@ export function simulator2() {
     stateRemoveUnit(state,unit);
   }
 
-  function stateDoDeathChecks(state) {}
+  function stateDoDeathChecks(state) {
+    console.info(`stateDoDeathChecks`);
+
+    // Loop through the checks queue
+    let deathChecks = _.filter(state.checks,(unit) => {
+      return unit.check.death;
+    });
+
+    while(deathChecks.length > 0) {
+      let unit = deathChecks.pop();
+      stateDoDeath(state,unit);
+    }
+  }
 
   function stateDoDoneCheck(state) {
     // One side is completely eliminated
