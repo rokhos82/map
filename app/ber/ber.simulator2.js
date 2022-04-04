@@ -554,11 +554,13 @@ function fleetDoDoneCheck(fleet) {
     let dynamicTags = ["offline"];
 
     // Go through all of the units
-    _.forEach(state.units,(unit) => {
-      // Go through all of the dynamic tags
-      _.forEach(dynamicTags,(tag) => {
-        // Have the unit update the tag
-        unitUpdateTag(unit,tag);
+    _.forEach(state.fleets,(fleet) => {
+      _.forEach(fleet.units,(unit) => {
+        // Go through all of the dynamic tags
+        _.forEach(dynamicTags,(tag) => {
+          // Have the unit update the tag
+          unitUpdateTag(unit,tag);
+        });
       });
     });
   }
@@ -621,7 +623,7 @@ function fleetDoDoneCheck(fleet) {
       stack.push(act);
       // TODO: Log an event for the successful hit!
       // Log an event for the successful hit!
-      stateCreateEvent(state,`${actee.name} is hit by ${actor.name}.`,action);
+      stateCreateEvent(state,`${actee.name} is hit by ${actor.name} for ${act.damage} damage.`,action);
     }
   }
 
@@ -1001,7 +1003,7 @@ function fleetDoDoneCheck(fleet) {
       // If the damage is from a crit then ignore SR & RESIST
       // Check for SR
       if(unitHasTag(unit,"sr") && !crit) {
-        console.info(`Unit has SR`);
+        console.info(`Unit has SR (${unit.tags.sr})`);
         damage = Math.max(0,damage - unit.tags.sr);
       }
       // Check for RESIST
@@ -1019,7 +1021,7 @@ function fleetDoDoneCheck(fleet) {
       // If the damage is from a crit then ignore AR & RESIST
       // Check for AR
       if(unitHasTag(unit,"ar") && !crit) {
-        console.info(`Unit has AR`);
+        console.info(`Unit has AR (${unit.tags.ar})`);
         damage = Math.max(0,damage - unit.tags.ar);
       }
       // Check for RESIST
@@ -1344,13 +1346,13 @@ function fleetDoDoneCheck(fleet) {
   function unitUpdateTag(unit,key) {
     console.info(`unitUpdateTag(${unit.name}:${key})`);
     // First, Look for general unit tags
-    if(_.isNumber(unit.tags[key])) {
+    if(_.isNumber(unit.tags[key]) && unit.tags[key] > 0) {
       // This tag is numeric.  Decrement it
       unit.tags[key]--;
     }
     // Second, search brackets for the key
     _.forEach(unit.brackets,(bracket) => {
-      if(_.isNumber(bracket[key])) {
+      if(_.isNumber(bracket[key]) && bracket[key] > 0) {
         // This tag is numeric.  Decrement it.
         bracket[key]--;
       }
