@@ -51,6 +51,8 @@ class berSimulationControlController {
 
   run() {
     this.simulator.fight(this.simulation);
+    this.archive.setSimulation(this.simulation.uuid,this.simulation);
+    this.archive.serializeSimulations();
   }
 
   results() {

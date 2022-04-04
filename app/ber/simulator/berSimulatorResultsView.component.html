@@ -26,6 +26,11 @@
       <div class="panel-body">
         <div class="panel panel-default" ng-repeat="fleet in turn.fleets">
           <div class="panel-heading">Fleet: {{fleet.name}}</div>
+          <div class="panel-body">
+            <p>Ship Count: 0</p>
+            <p>Current Hull: {{fleet.currentHull}}</p>
+            <p>Max Hull: {{fleet.totalHull}}</p>
+          </div>
           <table class="table table-striped table-hover">
             <thead>
               <tr>

@@ -59,7 +59,12 @@ export function simulator2() {
         // 3 Do Round
         stateDoRound(state,simulation.options);
 
-        // 4 Save the new state
+        // 4 Are we done yet?
+        if(state.done) {
+          simulation.done = true;
+        }
+
+        // 5 Save the new state
         simulation.turns.push(state);
         console.info(state);
       }
@@ -162,6 +167,21 @@ export function simulator2() {
   }
 
   // Faction Functions ---------------------------------------------------------
+function factionDoDoneCheck(faction,fleets) {
+  console.info(`factionDoDoneCheck(${faction.name})`);
+
+  let done = true;
+
+  // Check to see if all of the fleets are done
+  _.forEach(faction.fleets,(fleetId) => {
+    let fleet = fleets[fleetId];
+    // Is the fleet done?
+    done = fleetDoDoneCheck(fleet);
+  });
+
+  return done;
+}
+
   function factionTargetList(simulation,factionUuid) {
     // Builds the list of valid targets for the provided faction.
     console.info(factionUuid,simulation);
@@ -183,6 +203,20 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // Fleet Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+
+function fleetDoDoneCheck(fleet) {
+  console.info(`fleetDoDoneCheck(${fleet.name})`);
+  console.info(fleet.units);
+
+  let done = true;
+
+  // What checks for the fleet to be done?
+  // 1 - No units left
+  done = (fleet.currentHull <= 0);
+
+  return done;
+}
+
   function fleetTargetList(fleet) {
     let targets = [];
 
@@ -236,6 +270,9 @@ export function simulator2() {
   function fleetRemoveUnit(fleet,unit) {
     // Remove the unit from the fleet's unit collection
     delete fleet.units[unit.uuid];
+
+    // Update the hull current for the fleet
+    fleet.currentHull -= unit.hlMax;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -326,7 +363,7 @@ export function simulator2() {
 
           stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
 
-          if(remainder > 0 && unit.check.death != true) {
+          if((remainder > 0 || unit.hlCur <= 0) && unit.check.death != true) {
             // The unit has been destroyed.  Flag it for a death check if not already flagged.
             unit.check.death = true;
             state.checks.push(unit);
@@ -379,7 +416,12 @@ export function simulator2() {
       target = unitGetTagetRandom(unit,state);
 
       // Save the UUID for later use by other group members.
-      state.datalink[dlGroupName] = target.uuid;
+      if(target) {
+        state.datalink[dlGroupName] = target.uuid;
+      }
+      else {
+        state.datalink[dlGroupName] = false;
+      }
     }
     return target;
   }
@@ -494,11 +536,17 @@ export function simulator2() {
   }
 
   function stateDoDoneCheck(state) {
+    console.info(`stateDoDoneCheck()`);
     // One side is completely eliminated
     // The state has not changed for 3+ rounds
-    let finished = false;
+    let finished = true;
 
-    return finished;
+    // Are all of the the fleets in a faction gone?
+    _.forEach(state.factions,(faction) => {
+      finished = factionDoDoneCheck(faction,state.fleets);
+    });
+
+    state.done = finished;
   }
 
   function stateDoDynamicTags(state) {
@@ -802,10 +850,10 @@ export function simulator2() {
         unitDoFlee(unit);
       }
       else if(unitCheckDelay(unit,state)) {
-        unitTagRemove(unit);
+        unitTagRemove(unit,"delay");
       }
       else if(unitCheckReserve(unit,state)) {
-        unitTagRemove(unit);
+        unitTagRemove(unit,"reserve");
       }
       else if(unitCheckTime(unit,state)) {
         unitDoFlee(unit);
@@ -825,12 +873,14 @@ export function simulator2() {
     let units = [];
 
     // Loop through all of the units in the state object
-    _.forEach(state.units,(unit) => {
-      // Check if the unit is dead
-      if(!unit.dead) {
-        // The unit is not dead, add it to the stack
-        units.push(unit);
-      }
+    _.forEach(state.fleets,(fleet) => {
+      _.forEach(fleet.units,(unit) => {
+        // Check if the unit is dead
+        if(!unit.dead) {
+          // The unit is not dead, add it to the stack
+          units.push(unit);
+        }
+      });
     });
 
     return units;
@@ -1000,7 +1050,7 @@ export function simulator2() {
     console.info(`BREAK ${unit.tags.break}`,`THRESHOLD: ${breakThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
 
     // How am I going to track current hull level for a fleet/faction?
-    if(breakThreshold >= state.fleets[unit.fleetId].hullCur) {
+    if(breakThreshold >= state.fleets[unit.fleetId].currentHull) {
       flee = true;
     }
 
@@ -1064,14 +1114,14 @@ export function simulator2() {
     let move = false;
 
     // Check if the unit has a reserve tag
-    if(unit.tags.reserve && unit.tags.reserve > 0) {
+    if(unitHasTag(unit,"reserve") && unit.tags.reserve > 0) {
       // Determine if the faction has lost enough HULL points to move the unit out of reserve.
       let reservePercentage = (100-unit.tags.reserve)/100;
-      let reserveThreshold = state.fleets[unit.fleetId].hullMax * reservePercentage;
+      let reserveThreshold = _.round(state.fleets[unit.fleetId].totalHull * reservePercentage);
 
-      console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
+      console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].currentHull}`);
 
-      if(reserveThreshold >= state.fleets[unit.fleetId].hullCur) {
+      if(reserveThreshold >= state.fleets[unit.fleetId].currentHull) {
         // The unit is leaving the reserve
         console.info(`Unit ${unit.name} is leaving reserve!`);
         move = true;
@@ -1181,7 +1231,9 @@ export function simulator2() {
       target = unitGetTagetRandom(unit,state);
     }
 
-    console.info(`unitGetTarget(${unit.name}):${target.name}`);
+    if(target) {
+      console.info(`unitGetTarget(${unit.name}):${target.name}`);
+    }
 
     return target;
   }
@@ -1282,7 +1334,12 @@ export function simulator2() {
     return hasTag;
   }
 
-  function unitTagRemove(unit,tag) {}
+  function unitTagRemove(unit,tag) {
+    // Remove the tag from the unit
+    if(unitHasTag(unit,tag)) {
+      delete unit.tags[tag];
+    }
+  }
 
   function unitUpdateTag(unit,key) {
     console.info(`unitUpdateTag(${unit.name}:${key})`);
