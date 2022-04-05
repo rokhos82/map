@@ -445,7 +445,7 @@ function fleetDoDoneCheck(fleet) {
       // The target is truthy!
       action.actee = actee;
 
-      stateCreateEvent(state,`${actor.name} targets ${actee.name}`,action);
+      stateCreateEvent(state,`${actor.name} targets ${actee.name}`,{actor:action.actor,actee:action.actee,type:"target"});
 
       // Calculate the toHit roll for the attack
       let hitRoll = unitDoHitRoll(actor,actee,action);
@@ -1345,18 +1345,49 @@ function fleetDoDoneCheck(fleet) {
 
   function unitUpdateTag(unit,key) {
     console.info(`unitUpdateTag(${unit.name}:${key})`);
+
     // First, Look for general unit tags
     if(_.isNumber(unit.tags[key]) && unit.tags[key] > 0) {
       // This tag is numeric.  Decrement it
       unit.tags[key]--;
     }
+
     // Second, search brackets for the key
     _.forEach(unit.brackets,(bracket) => {
       if(_.isNumber(bracket[key]) && bracket[key] > 0) {
         // This tag is numeric.  Decrement it.
+        console.info(`Old Value`,bracket[key]);
         bracket[key]--;
+        console.info(`New Value`,bracket[key]);
+
+        // Since the tag was updated.  Lets update the tag string too.
+        unitBracketUpdateTagString(bracket);
       }
     });
+  }
+
+  function unitUpdateTagString(unit) {
+    console.info(`unitUpdateTagString(${unit.name})`);
+
+    // Loop through each bracket and update it's tag string
+    _.forEach(unit.brackets,bracket => unitBracketUpdateTagString(bracket));
+  }
+
+  function unitBracketUpdateTagString(bracket) {
+    // Start with volley
+    let tagString = `${bracket.volley}`;
+
+    // Does it have target
+    if(_.isNumber(bracket.target) && bracket.target > 0) {
+      tagString += ` target ${bracket.target}`;
+    }
+
+    // Is there offline
+    if(_.isNumber(bracket.offline) && bracket.offline > 0) {
+      for(let i = 0;i < bracket.offline;i++) {
+        tagString += ` offline`;
+      }
+    }
   }
 
   return _service;

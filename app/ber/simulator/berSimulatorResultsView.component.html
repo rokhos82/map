@@ -38,10 +38,10 @@
             <thead>
               <tr>
                 <th>Name</th>
-                <th>Max SH</th>
                 <th>Cur SH</th>
-                <th>Max HL</th>
+                <th>Max SH</th>
                 <th>Cur HL</th>
+                <th>Max HL</th>
                 <th>Attacks</th>
                 <th>Tags</th>
               </tr>
@@ -49,10 +49,10 @@
             <tbody>
               <tr ng-repeat="unit in fleet.units">
                 <td>{{unit.name}}</td>
-                <td>{{unit.shMax}}</td>
                 <td>{{unit.shCur}}</td>
-                <td>{{unit.hlMax}}</td>
+                <td>{{unit.shMax}}</td>
                 <td>{{unit.hlCur}}</td>
+                <td>{{unit.hlMax}}</td>
                 <td>{{$ctrl.unit.attackString(unit)}}</td>
                 <td>{{$ctrl.unit.tagString(unit)}}</td>
               </tr>
