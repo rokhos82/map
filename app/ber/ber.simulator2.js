@@ -1375,7 +1375,7 @@ function fleetDoDoneCheck(fleet) {
 
   function unitBracketUpdateTagString(bracket) {
     // Start with volley
-    let tagString = `${bracket.volley}`;
+    let tagString = `[${bracket.volley}`;
 
     // Does it have target
     if(_.isNumber(bracket.target) && bracket.target > 0) {
@@ -1388,6 +1388,10 @@ function fleetDoDoneCheck(fleet) {
         tagString += ` offline`;
       }
     }
+
+    tagString += `]`;
+
+    bracket.tag = tagString;
   }
 
   return _service;
