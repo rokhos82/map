@@ -551,7 +551,7 @@ function fleetDoDoneCheck(fleet) {
 
   function stateDoDynamicTags(state) {
     // Go through active units and update any dynamic tags they have.
-    let dynamicTags = ["offline"];
+    let dynamicTags = ["offline","long"];
 
     // Go through all of the units
     _.forEach(state.fleets,(fleet) => {
@@ -918,16 +918,22 @@ function fleetDoDoneCheck(fleet) {
             // This is a normal round.
             // Check for dead units first
             if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
+              console.info(`Adding front-line unit: ${unit.name}`);
               parts.push(unit);
             }
             else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
+              console.info(`Adding artillery unit: ${unit.name}`);
               reserve.push(unit);
+            }
+            else {
+              console.info(`Adding reserve unit: ${unit.name}`);
             }
           }
           else {
             console.info(`Long Range Mode`);
             // This is the long range round.  Filter out units that don't have a long tag.
             if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
+              console.info(`Adding long-range unit: ${unit.name}`);
               parts.push(unit);
             }
           }
@@ -1311,8 +1317,14 @@ function fleetDoDoneCheck(fleet) {
     let hasTag = false;
 
     // Check general unit tags
-    if(!!unit.tags[tag]) {
-      hasTag = true;
+    console.info(`Check unit tags for ${tag}`,unit.tags);
+    if(_.has(unit.tags,tag)) {
+      if(_.isNumber(unit.tags[tag]) && unit.tags[tag] > 0) {
+        hasTag = true;
+      }
+      else if(unit.tags[tag]) {
+        hasTag = true;
+      }
     }
 
     // These tags require specifc processing
@@ -1327,9 +1339,15 @@ function fleetDoDoneCheck(fleet) {
 
     // Check weapon tags
     _.forEach(unit.brackets,(bracket) =>{
+      console.info(`Checking bracket for ${tag}`,bracket);
       if(_.has(bracket,tag)) {
-        console.info(`Checking for ${tag}`,bracket);
-        hasTag = true;
+        // Is the tag a numeric tag?
+        if(_.isNumber(bracket[tag]) && bracket[tag]) {
+          hasTag = true;
+        }
+        else if(bracket[tag]) {
+          hasTag = true;
+        }
       }
     });
 

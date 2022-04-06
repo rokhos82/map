@@ -207,7 +207,7 @@ export function parser(uuid) {
     // Get bp tag
     let bp = _(bracketString).words(/bp \d+ \d+/).words(/\d+/g).map(x=>+x).value() || false;
     // Get the boolean flags
-    let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value()[0] || false;
+    let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value().length || 0;
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
     let glbl = _(bracketString).words(/global/).map(x=>_.isString(x)).value()[0] || false;
     let offline = _(bracketString).words(/offline/g).map(x=>_.isString(x)).value().length || 0;
