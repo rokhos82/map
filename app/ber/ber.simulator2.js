@@ -919,22 +919,32 @@ function fleetDoDoneCheck(fleet) {
             // Check for dead units first
             if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
               console.info(`Adding front-line unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is in the front-line`,{actor:unit});
               parts.push(unit);
             }
             else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
               console.info(`Adding artillery unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is artillery`,{actor:unit});
               reserve.push(unit);
             }
             else {
               console.info(`Adding reserve unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is in the reserve`,{actor:unit});
             }
           }
           else {
             console.info(`Long Range Mode`);
             // This is the long range round.  Filter out units that don't have a long tag.
-            if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
-              console.info(`Adding long-range unit: ${unit.name}`);
-              parts.push(unit);
+            if(unitHasTag(unit,"long")) {
+              if(!unitHasTag(unit,"reserve") || unitHasTag(unit,"artillery")) {
+                console.info(`Adding long-range unit: ${unit.name}`);
+                stateCreateEvent(state,`${unit.name} has a long-range weapons`,{actor:unit});
+                parts.push(unit);
+              }
+            }
+            else {
+              console.info(`No long-range weapons: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} does not have long-range weapons`,{actor:unit});
             }
           }
         });
