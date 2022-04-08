@@ -433,8 +433,11 @@ function fleetDoDoneCheck(fleet) {
 
     // Adjust ammo if it is present
     // TODO: Generalize for ROF on weapons
+    // BUG: ammo is not being accounted for some how
     if(_.isNumber(action.ammo) && !unitHasTag(actor,"msl")) {
+      console.info(`Consuming ammo`);
       actor.brackets[action.hash].ammo--;
+      unitBracketUpdateTagString(actor.brackets[action.hash]);
     }
 
     // Get a target for the attack
@@ -973,6 +976,7 @@ function fleetDoDoneCheck(fleet) {
   }
 
   function stateRemoveUnit(state,unit) {
+    console.info(`stateRemoveUnit(${unit.name})`);
     // This removed the unit from combat
     // Check for dead first so that a unit that dies while fleeing doesn't get into the fled list
     let fleet = state.fleets[unit.fleetId];
@@ -980,12 +984,14 @@ function fleetDoDoneCheck(fleet) {
     // Did the unit die?
     if(unit.dead) {
       // Yes, add the unit to the list of units that have died.
-      state.fleets[unit.fleetId].destroyed[unit.uuid] = unit;
+      fleet.destroyed[unit.uuid] = unit;
+      fleet.destroyedCount++;
     }
     // Did the unit flee?
     else if(unit.tags.fled) {
       // Yes, add the unit to the list of units that have fled.
-      state.fleets[unit.fleetId].fled[unit.uuid] = unit;
+      fleet.fled[unit.uuid] = unit;
+      fleet.fledCount++;
     }
 
     // Now, remove the unit from the list of active units in the fleet
@@ -1408,6 +1414,21 @@ function fleetDoDoneCheck(fleet) {
     // Does it have target
     if(_.isNumber(bracket.target) && bracket.target > 0) {
       tagString += ` target ${bracket.target}`;
+    }
+
+    // Does it have msl?
+    if(_.isObject(bracket.missile)) {
+      tagString += ` mis${bracket.missile.bm}${bracket.missile.sh}${bracket.missile.tp}${bracket.missile.hl}`;
+    }
+
+    // Does it have ammo?
+    if(_.isNumber(bracket.ammo)) {
+      tagString += ` ammo ${bracket.ammo}`;
+    }
+
+    // Is there artillery?
+    if(_.has(bracket,"artillery") && bracket.artillery) {
+      tagString += ` artillery`;
     }
 
     // Is there offline
