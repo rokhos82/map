@@ -59,7 +59,12 @@ export function simulator2() {
         // 3 Do Round
         stateDoRound(state,simulation.options);
 
-        // 4 Save the new state
+        // 4 Are we done yet?
+        if(state.done) {
+          simulation.done = true;
+        }
+
+        // 5 Save the new state
         simulation.turns.push(state);
         console.info(state);
       }
@@ -146,7 +151,9 @@ export function simulator2() {
       turn: oldState.turn+1,
       datalink: {},
       longRange: false,
-      options: oldState.options
+      options: oldState.options,
+      damage: [],
+      checks: []
     };
 
     state.longRange = checkLongRange(state.fleets);
@@ -160,6 +167,21 @@ export function simulator2() {
   }
 
   // Faction Functions ---------------------------------------------------------
+function factionDoDoneCheck(faction,fleets) {
+  console.info(`factionDoDoneCheck(${faction.name})`);
+
+  let done = true;
+
+  // Check to see if all of the fleets are done
+  _.forEach(faction.fleets,(fleetId) => {
+    let fleet = fleets[fleetId];
+    // Is the fleet done?
+    done = fleetDoDoneCheck(fleet);
+  });
+
+  return done;
+}
+
   function factionTargetList(simulation,factionUuid) {
     // Builds the list of valid targets for the provided faction.
     console.info(factionUuid,simulation);
@@ -181,6 +203,20 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // Fleet Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+
+function fleetDoDoneCheck(fleet) {
+  console.info(`fleetDoDoneCheck(${fleet.name})`);
+  console.info(fleet.units);
+
+  let done = true;
+
+  // What checks for the fleet to be done?
+  // 1 - No units left
+  done = (fleet.currentHull <= 0);
+
+  return done;
+}
+
   function fleetTargetList(fleet) {
     let targets = [];
 
@@ -234,6 +270,9 @@ export function simulator2() {
   function fleetRemoveUnit(fleet,unit) {
     // Remove the unit from the fleet's unit collection
     delete fleet.units[unit.uuid];
+
+    // Update the hull current for the fleet
+    fleet.currentHull -= unit.hlMax;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -264,6 +303,81 @@ export function simulator2() {
   //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
+  function stateApplyDamageTokens(state) {
+    console.info(`stateApplyDamageTokens()`);
+    console.info(_.clone(state.damage));
+
+    // Pull tokens off the stack until there are none left
+    while(state.damage.length > 0) {
+      let token = state.damage.pop();
+      let unit = state.fleets[token.fleetUuid].units[token.uuid];
+
+      console.info(_.cloneDeep(unit),_.cloneDeep(token));
+
+      if(token.channel == "sh") {
+        // Deduct the damage from the unit's shields
+
+        // If the shields "burst" then add an event to indicate that additional damage was deflected?
+        let remainder = 0;
+        let actualDamage = 0;
+        if(token.amount > unit.shCur) {
+          // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+          remainder = token.amount - unit.shCur;
+          actualDamage = unit.shCur;
+        }
+        else {
+          // Otherwise, just deduct the damage from the current shields and continue on.
+          remainder = 0;
+          actualDamage = token.amount;
+        }
+        console.info(remainder,actualDamage);
+
+        if(remainder > 0) {
+          // Shields "burst" and deflected part of the damage.
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage (${remainder} deflected)`,{actor:unit});
+        }
+        else {
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage`,{actor:unit});
+        }
+
+        // Remove the correct amount of shields from the target.
+        unit.shCur -= actualDamage;
+      }
+      else if(token.channel == "hl") {
+          // Deduct the damage from the unit's hull
+
+          // If the shields "burst" then add an event to indicate that additional damage was deflected?
+          let remainder = 0;
+          let actualDamage = 0;
+          if(token.amount > unit.hlCur) {
+            // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+            remainder = token.amount - unit.hlCur;
+            actualDamage = unit.shCur;
+          }
+          else {
+            // Otherwise, just deduct the damage from the current shields and continue on.
+            remainder = 0;
+            actualDamage = token.amount;
+          }
+          console.info(remainder,actualDamage);
+
+          stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
+
+          if((remainder > 0 || unit.hlCur <= 0) && unit.check.death != true) {
+            // The unit has been destroyed.  Flag it for a death check if not already flagged.
+            unit.check.death = true;
+            state.checks.push(unit);
+          }
+
+          // Remove the correct amount of shields from the target.
+          unit.hlCur -= actualDamage;
+      }
+      else {
+        console.warn(`stateApplyDamageTokens - channel '${token.channel}' unknown'`);
+      }
+    }
+  }
+
   function stateCreateEvent(state,msg,action) {
     // Create the event and push it into the event log.
     let evt = {
@@ -302,20 +416,28 @@ export function simulator2() {
       target = unitGetTagetRandom(unit,state);
 
       // Save the UUID for later use by other group members.
-      state.datalink[dlGroupName] = target.uuid;
+      if(target) {
+        state.datalink[dlGroupName] = target.uuid;
+      }
+      else {
+        state.datalink[dlGroupName] = false;
+      }
     }
     return target;
   }
 
   function stateDoAttack(state,action,stack) {
     // Process the attack action
-    console.info(`Attack(${action.actor.name})`,action.actor);
+    console.info(`Attack(${action.actor.name})`,action);
     let actor = action.actor;
 
     // Adjust ammo if it is present
     // TODO: Generalize for ROF on weapons
+    // BUG: ammo is not being accounted for some how
     if(_.isNumber(action.ammo) && !unitHasTag(actor,"msl")) {
-      actor.brackets[action.hash].ammo--;
+      console.info(`Consuming ammo`);
+      state.fleets[actor.fleetId].units[actor.uuid].brackets[action.hash].ammo--;
+      unitBracketUpdateTagString(actor.brackets[action.hash]);
     }
 
     // Get a target for the attack
@@ -326,7 +448,7 @@ export function simulator2() {
       // The target is truthy!
       action.actee = actee;
 
-      stateCreateEvent(state,`${actor.name} targets ${actee.name}`,action);
+      stateCreateEvent(state,`${actor.name} targets ${actee.name}`,{actor:action.actor,actee:action.actee,type:"target"});
 
       // Calculate the toHit roll for the attack
       let hitRoll = unitDoHitRoll(actor,actee,action);
@@ -356,6 +478,8 @@ export function simulator2() {
     }
   }
 
+  function stateDoCritChecks(state) {}
+
   function stateDoDamage(state,action,stack) {
     // Apply the damage to the target
     let actor = action.actor;
@@ -364,8 +488,6 @@ export function simulator2() {
 
     // Calculate if the unit is dead
     let token = unitApplyDamage(actee,action,actor);
-    // Flag the unit for a critical hit check
-    actee.check.crit = true;
 
     // Now process the death if neccessary
     /*if(dead && !actee.dead) {
@@ -377,7 +499,6 @@ export function simulator2() {
 
     // Push the unit into the stack for later checking
     state.damage.push(token);
-    state.checks.push(actee);
 
     // Create the event for this
     let blocked = action.damage - token.ammount;
@@ -403,24 +524,46 @@ export function simulator2() {
     stateRemoveUnit(state,unit);
   }
 
+  function stateDoDeathChecks(state) {
+    console.info(`stateDoDeathChecks`);
+
+    // Loop through the checks queue
+    let deathChecks = _.filter(state.checks,(unit) => {
+      return unit.check.death;
+    });
+
+    while(deathChecks.length > 0) {
+      let unit = deathChecks.pop();
+      stateDoDeath(state,unit);
+    }
+  }
+
   function stateDoDoneCheck(state) {
+    console.info(`stateDoDoneCheck()`);
     // One side is completely eliminated
     // The state has not changed for 3+ rounds
-    let finished = false;
+    let finished = true;
 
-    return finished;
+    // Are all of the the fleets in a faction gone?
+    _.forEach(state.factions,(faction) => {
+      finished = factionDoDoneCheck(faction,state.fleets);
+    });
+
+    state.done = finished;
   }
 
   function stateDoDynamicTags(state) {
     // Go through active units and update any dynamic tags they have.
-    let dynamicTags = ["offline"];
+    let dynamicTags = ["offline","long"];
 
     // Go through all of the units
-    _.forEach(state.units,(unit) => {
-      // Go through all of the dynamic tags
-      _.forEach(dynamicTags,(tag) => {
-        // Have the unit update the tag
-        unitUpdateTag(unit,tag);
+    _.forEach(state.fleets,(fleet) => {
+      _.forEach(fleet.units,(unit) => {
+        // Go through all of the dynamic tags
+        _.forEach(dynamicTags,(tag) => {
+          // Have the unit update the tag
+          unitUpdateTag(unit,tag);
+        });
       });
     });
   }
@@ -483,7 +626,7 @@ export function simulator2() {
       stack.push(act);
       // TODO: Log an event for the successful hit!
       // Log an event for the successful hit!
-      stateCreateEvent(state,`${actee.name} is hit by ${actor.name}.`,action);
+      stateCreateEvent(state,`${actee.name} is hit by ${actor.name} for ${act.damage} damage.`,action);
     }
   }
 
@@ -574,31 +717,31 @@ export function simulator2() {
         let actor = action.actor;
 
         // Adjust the ammo for the missile action (if it uses ammo)
-        if(_.isNumber(action.ammo)) {
+        if(_.isNumber(action.ammo) && action.ammo > 0) {
           // The action does require ammo.  Decrement the ammo count by one
           // TODO: Need to generalize to account for ROF on launchers
-          actor.brackets[action.hash].ammo--;
-        }
+          state.fleets[actor.fleetId].units[actor.uuid].brackets[action.hash].ammo--;
 
-        // Create a new action for each missile in the volley
-        for(let i = 0;i < action.volley;i++) {
-          // Start with this action
-          let atk = _.cloneDeep(action);
+          // Create a new action for each missile in the volley
+          for(let i = 0;i < action.volley;i++) {
+            // Start with this action
+            let atk = _.cloneDeep(action);
 
-          // Change the action to reflect that it is a missile
-          atk.actor = atk.missile;
-          atk.actor.name = `${actor.name} Missile ${i+1}`;
-          atk.actor.factionId = actor.factionId;
-          atk.actor.fleetId = actor.fleetId;
-          atk.volley = atk.missile.tp;
-          atk.type = "attack";
-          atk.actor.tags = {"msl":true};
+            // Change the action to reflect that it is a missile
+            atk.actor = atk.missile;
+            atk.actor.name = `${actor.name} Missile ${i+1}`;
+            atk.actor.factionId = actor.factionId;
+            atk.actor.fleetId = actor.fleetId;
+            atk.volley = atk.missile.tp;
+            atk.type = "attack";
+            atk.actor.tags = {"msl":true};
 
-          // Push the new action onto the action stack (resolveStack)
-          resolveStack.push(atk);
+            // Push the new action onto the action stack (resolveStack)
+            resolveStack.push(atk);
 
-          // Push the event for this action into the event queue
-          stateCreateEvent(state,`${actor.name} launches a missile (${atk.volley}-pt warhead).`,action);
+            // Push the event for this action into the event queue
+            stateCreateEvent(state,`${actor.name} launches a missile (${atk.volley}-pt warhead).`,action);
+          }
         }
       }
       // Check for a multi attack
@@ -672,32 +815,14 @@ export function simulator2() {
     }
     // End Main Action Processing Loop
 
-    // Now that combat is done do checks that were flagged during the combat loop.
-    // This is for things like critical hits and death
-    console.info(`Doing unit state checks`);
-    let checkStack = [];
-    // Build the checkStack by seeing if the check collection has any keys.
-    _.forEach(state.units,(unit) => {
-      if(_.size(unit.check) > 0) {
-        checkStack.push(unit);
-      }
-    });
-    console.info(checkStack);
-    // Process the checkStack
-    while(checkStack.length > 0) {
-      // Get the next unit object to process
-      let unit = checkStack.pop();
+    // Apply damage tokens
+    stateApplyDamageTokens(state);
 
-      if(unit.check.crit) {
-        // Process the crit if necessary
-        console.info(`Processing crit check for ${unit.name}`);
-      }
-      // Always do death check last incase any other check results in death
-      if(unit.check.death) {
-        // Process the death of the unit
-        stateDoDeath(state,unit);
-      }
-    } // End of Check Loop
+    // Do crit checks
+    stateDoCritChecks(state);
+
+    // Do death checks
+    stateDoDeathChecks(state);
 
     // Now that post-combat checks are done.  Do the movement processing.
     // The movement checks from highest to lowest priority are:
@@ -730,10 +855,10 @@ export function simulator2() {
         unitDoFlee(unit);
       }
       else if(unitCheckDelay(unit,state)) {
-        unitTagRemove(unit);
+        unitTagRemove(unit,"delay");
       }
       else if(unitCheckReserve(unit,state)) {
-        unitTagRemove(unit);
+        unitTagRemove(unit,"reserve");
       }
       else if(unitCheckTime(unit,state)) {
         unitDoFlee(unit);
@@ -753,12 +878,14 @@ export function simulator2() {
     let units = [];
 
     // Loop through all of the units in the state object
-    _.forEach(state.units,(unit) => {
-      // Check if the unit is dead
-      if(!unit.dead) {
-        // The unit is not dead, add it to the stack
-        units.push(unit);
-      }
+    _.forEach(state.fleets,(fleet) => {
+      _.forEach(fleet.units,(unit) => {
+        // Check if the unit is dead
+        if(!unit.dead) {
+          // The unit is not dead, add it to the stack
+          units.push(unit);
+        }
+      });
     });
 
     return units;
@@ -794,17 +921,33 @@ export function simulator2() {
             // This is a normal round.
             // Check for dead units first
             if(!unitHasTag(unit,"reserve") && !unitHasTag(unit,"delay")) {
+              console.info(`Adding front-line unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is in the front-line`,{actor:unit});
               parts.push(unit);
             }
             else if(unitHasTag(unit,"reserve") && unitHasTag(unit,"artillery") ) {
+              console.info(`Adding artillery unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is artillery`,{actor:unit});
               reserve.push(unit);
+            }
+            else {
+              console.info(`Adding reserve unit: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} is in the reserve`,{actor:unit});
             }
           }
           else {
             console.info(`Long Range Mode`);
             // This is the long range round.  Filter out units that don't have a long tag.
-            if(!unitHasTag(unit,"reserve") && unitHasTag(unit,"long")) {
-              parts.push(unit);
+            if(unitHasTag(unit,"long")) {
+              if(!unitHasTag(unit,"reserve") || unitHasTag(unit,"artillery")) {
+                console.info(`Adding long-range unit: ${unit.name}`);
+                stateCreateEvent(state,`${unit.name} has a long-range weapons`,{actor:unit});
+                parts.push(unit);
+              }
+            }
+            else {
+              console.info(`No long-range weapons: ${unit.name}`);
+              stateCreateEvent(state,`${unit.name} does not have long-range weapons`,{actor:unit});
             }
           }
         });
@@ -833,6 +976,7 @@ export function simulator2() {
   }
 
   function stateRemoveUnit(state,unit) {
+    console.info(`stateRemoveUnit(${unit.name})`);
     // This removed the unit from combat
     // Check for dead first so that a unit that dies while fleeing doesn't get into the fled list
     let fleet = state.fleets[unit.fleetId];
@@ -840,12 +984,14 @@ export function simulator2() {
     // Did the unit die?
     if(unit.dead) {
       // Yes, add the unit to the list of units that have died.
-      state.fleets[unit.fleetId].destroyed[unit.uuid] = unit;
+      fleet.destroyed[unit.uuid] = unit;
+      fleet.destroyedCount++;
     }
     // Did the unit flee?
     else if(unit.tags.fled) {
       // Yes, add the unit to the list of units that have fled.
-      state.fleets[unit.fleetId].fled[unit.uuid] = unit;
+      fleet.fled[unit.uuid] = unit;
+      fleet.fledCount++;
     }
 
     // Now, remove the unit from the list of active units in the fleet
@@ -864,6 +1010,8 @@ export function simulator2() {
     let hullHit = false;
     let token = {};
     token.uuid = unit.uuid;
+    token.fleetUuid = unit.fleetId;
+    token.factionUuid = unit.factionId;
     token.channel = "";
     token.amount = 0;
 
@@ -877,7 +1025,7 @@ export function simulator2() {
       // If the damage is from a crit then ignore SR & RESIST
       // Check for SR
       if(unitHasTag(unit,"sr") && !crit) {
-        console.info(`Unit has SR`);
+        console.info(`Unit has SR (${unit.tags.sr})`);
         damage = Math.max(0,damage - unit.tags.sr);
       }
       // Check for RESIST
@@ -885,9 +1033,7 @@ export function simulator2() {
         damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
-      // Decrease the unit's shields by damage amount
-      unit.shCur = Math.max(0,unit.shCur - damage);
-
+      // Fill in the damage token
       token.channel = "sh";
       token.amount = damage;
     }
@@ -897,7 +1043,7 @@ export function simulator2() {
       // If the damage is from a crit then ignore AR & RESIST
       // Check for AR
       if(unitHasTag(unit,"ar") && !crit) {
-        console.info(`Unit has AR`);
+        console.info(`Unit has AR (${unit.tags.ar})`);
         damage = Math.max(0,damage - unit.tags.ar);
       }
       // Check for RESIST
@@ -905,31 +1051,14 @@ export function simulator2() {
         damage = _.round(damage * (1 - unit.tags.resist / 100));
       }
 
-      // Decrease the unit's hull by the damage amount
-      unit.hlCur = Math.max(0,unit.hlCur - damage);
-
-      if(damage > 0) {
-        hullHit = true; // This matters if the unit is a fighter
-      }
-
+      // Fill in the damage token
       token.channel = "hl";
       token.amount = damage;
     }
 
-    action.channel = channel;
-    action.amount = amount;
-
     console.log(`Token`,token);
 
     return token;
-
-    // Determine if the unit is dead
-    // Conditions for death
-    // 1 - the current hull value is 0
-    // 2 - the hull was hit and the unit has a FIGHTER tag
-    let dead = (unit.hlCur <= 0 || (unitHasTag(unit,"fighter") && hullHit));
-    console.info(unit);
-    return dead;
   }
 
   function unitCheckBreak(unit,state) {
@@ -945,7 +1074,7 @@ export function simulator2() {
     console.info(`BREAK ${unit.tags.break}`,`THRESHOLD: ${breakThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
 
     // How am I going to track current hull level for a fleet/faction?
-    if(breakThreshold >= state.fleets[unit.fleetId].hullCur) {
+    if(breakThreshold >= state.fleets[unit.fleetId].currentHull) {
       flee = true;
     }
 
@@ -1009,14 +1138,14 @@ export function simulator2() {
     let move = false;
 
     // Check if the unit has a reserve tag
-    if(unit.tags.reserve && unit.tags.reserve > 0) {
+    if(unitHasTag(unit,"reserve") && unit.tags.reserve > 0) {
       // Determine if the faction has lost enough HULL points to move the unit out of reserve.
       let reservePercentage = (100-unit.tags.reserve)/100;
-      let reserveThreshold = state.fleets[unit.fleetId].hullMax * reservePercentage;
+      let reserveThreshold = _.round(state.fleets[unit.fleetId].totalHull * reservePercentage);
 
-      console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].hullCur}`);
+      console.info(`RESERVE ${unit.tags.reserve}`,`THRESHOLD: ${reserveThreshold}`,`CURRENT: ${state.fleets[unit.fleetId].currentHull}`);
 
-      if(reserveThreshold >= state.fleets[unit.fleetId].hullCur) {
+      if(reserveThreshold >= state.fleets[unit.fleetId].currentHull) {
         // The unit is leaving the reserve
         console.info(`Unit ${unit.name} is leaving reserve!`);
         move = true;
@@ -1126,7 +1255,9 @@ export function simulator2() {
       target = unitGetTagetRandom(unit,state);
     }
 
-    console.info(`unitGetTarget(${unit.name}):${target.name}`);
+    if(target) {
+      console.info(`unitGetTarget(${unit.name}):${target.name}`);
+    }
 
     return target;
   }
@@ -1202,8 +1333,14 @@ export function simulator2() {
     let hasTag = false;
 
     // Check general unit tags
-    if(!!unit.tags[tag]) {
-      hasTag = true;
+    console.info(`Check unit tags for ${tag}`,unit.tags);
+    if(_.has(unit.tags,tag)) {
+      if(_.isNumber(unit.tags[tag]) && unit.tags[tag] > 0) {
+        hasTag = true;
+      }
+      else if(unit.tags[tag]) {
+        hasTag = true;
+      }
     }
 
     // These tags require specifc processing
@@ -1218,31 +1355,92 @@ export function simulator2() {
 
     // Check weapon tags
     _.forEach(unit.brackets,(bracket) =>{
+      console.info(`Checking bracket for ${tag}`,bracket);
       if(_.has(bracket,tag)) {
-        console.info(`Checking for ${tag}`,bracket);
-        hasTag = true;
+        // Is the tag a numeric tag?
+        if(_.isNumber(bracket[tag]) && bracket[tag]) {
+          hasTag = true;
+        }
+        else if(bracket[tag]) {
+          hasTag = true;
+        }
       }
     });
 
     return hasTag;
   }
 
-  function unitTagRemove(unit,tag) {}
+  function unitTagRemove(unit,tag) {
+    // Remove the tag from the unit
+    if(unitHasTag(unit,tag)) {
+      delete unit.tags[tag];
+    }
+  }
 
   function unitUpdateTag(unit,key) {
     console.info(`unitUpdateTag(${unit.name}:${key})`);
+
     // First, Look for general unit tags
-    if(_.isNumber(unit.tags[key])) {
+    if(_.isNumber(unit.tags[key]) && unit.tags[key] > 0) {
       // This tag is numeric.  Decrement it
       unit.tags[key]--;
     }
+
     // Second, search brackets for the key
     _.forEach(unit.brackets,(bracket) => {
-      if(_.isNumber(bracket[key])) {
+      if(_.isNumber(bracket[key]) && bracket[key] > 0) {
         // This tag is numeric.  Decrement it.
+        console.info(`Old Value`,bracket[key]);
         bracket[key]--;
+        console.info(`New Value`,bracket[key]);
+
+        // Since the tag was updated.  Lets update the tag string too.
+        unitBracketUpdateTagString(bracket);
       }
     });
+  }
+
+  function unitUpdateTagString(unit) {
+    console.info(`unitUpdateTagString(${unit.name})`);
+
+    // Loop through each bracket and update it's tag string
+    _.forEach(unit.brackets,bracket => unitBracketUpdateTagString(bracket));
+  }
+
+  function unitBracketUpdateTagString(bracket) {
+    // Start with volley
+    let tagString = `[${bracket.volley}`;
+
+    // Does it have target
+    if(_.isNumber(bracket.target) && bracket.target > 0) {
+      tagString += ` target ${bracket.target}`;
+    }
+
+    // Does it have msl?
+    if(_.isObject(bracket.missile)) {
+      tagString += ` mis${bracket.missile.bm}${bracket.missile.sh}${bracket.missile.tp}${bracket.missile.hl}`;
+    }
+
+    // Does it have ammo?
+    if(_.isNumber(bracket.ammo)) {
+      tagString += ` ammo ${bracket.ammo}`;
+    }
+
+    // Is there artillery?
+    if(_.has(bracket,"artillery") && bracket.artillery) {
+      tagString += ` artillery`;
+    }
+
+    // Is there offline
+    if(_.isNumber(bracket.offline) && bracket.offline > 0) {
+      for(let i = 0;i < bracket.offline;i++) {
+        tagString += ` offline`;
+      }
+    }
+
+    tagString += `]`;
+
+    bracket.tag = tagString;
   }
 
   return _service;
