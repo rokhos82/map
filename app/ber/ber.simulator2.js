@@ -428,7 +428,7 @@ function fleetDoDoneCheck(fleet) {
 
   function stateDoAttack(state,action,stack) {
     // Process the attack action
-    console.info(`Attack(${action.actor.name})`,action.actor);
+    console.info(`Attack(${action.actor.name})`,action);
     let actor = action.actor;
 
     // Adjust ammo if it is present
@@ -436,7 +436,7 @@ function fleetDoDoneCheck(fleet) {
     // BUG: ammo is not being accounted for some how
     if(_.isNumber(action.ammo) && !unitHasTag(actor,"msl")) {
       console.info(`Consuming ammo`);
-      actor.brackets[action.hash].ammo--;
+      state.fleets[actor.fleetId].units[actor.uuid].brackets[action.hash].ammo--;
       unitBracketUpdateTagString(actor.brackets[action.hash]);
     }
 
@@ -717,31 +717,31 @@ function fleetDoDoneCheck(fleet) {
         let actor = action.actor;
 
         // Adjust the ammo for the missile action (if it uses ammo)
-        if(_.isNumber(action.ammo)) {
+        if(_.isNumber(action.ammo) && action.ammo > 0) {
           // The action does require ammo.  Decrement the ammo count by one
           // TODO: Need to generalize to account for ROF on launchers
-          actor.brackets[action.hash].ammo--;
-        }
+          state.fleets[actor.fleetId].units[actor.uuid].brackets[action.hash].ammo--;
 
-        // Create a new action for each missile in the volley
-        for(let i = 0;i < action.volley;i++) {
-          // Start with this action
-          let atk = _.cloneDeep(action);
+          // Create a new action for each missile in the volley
+          for(let i = 0;i < action.volley;i++) {
+            // Start with this action
+            let atk = _.cloneDeep(action);
 
-          // Change the action to reflect that it is a missile
-          atk.actor = atk.missile;
-          atk.actor.name = `${actor.name} Missile ${i+1}`;
-          atk.actor.factionId = actor.factionId;
-          atk.actor.fleetId = actor.fleetId;
-          atk.volley = atk.missile.tp;
-          atk.type = "attack";
-          atk.actor.tags = {"msl":true};
+            // Change the action to reflect that it is a missile
+            atk.actor = atk.missile;
+            atk.actor.name = `${actor.name} Missile ${i+1}`;
+            atk.actor.factionId = actor.factionId;
+            atk.actor.fleetId = actor.fleetId;
+            atk.volley = atk.missile.tp;
+            atk.type = "attack";
+            atk.actor.tags = {"msl":true};
 
-          // Push the new action onto the action stack (resolveStack)
-          resolveStack.push(atk);
+            // Push the new action onto the action stack (resolveStack)
+            resolveStack.push(atk);
 
-          // Push the event for this action into the event queue
-          stateCreateEvent(state,`${actor.name} launches a missile (${atk.volley}-pt warhead).`,action);
+            // Push the event for this action into the event queue
+            stateCreateEvent(state,`${actor.name} launches a missile (${atk.volley}-pt warhead).`,action);
+          }
         }
       }
       // Check for a multi attack
