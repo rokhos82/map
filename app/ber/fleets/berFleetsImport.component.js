@@ -58,7 +58,7 @@ Blue Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90`;
 
   importFleetAndGo() {
     this.importFleet();
-    this.$state.go("^.view");
+    this.$state.go("^.list");
   }
 
   loadAttackFleet() {

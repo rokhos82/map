@@ -6,15 +6,17 @@
           <th><input type="checkbox" name="selectAll" ng-change="$ctrl.toggleSelectAll()" ng-model="$ctrl.ui.selectAll" /></th>
           <th>Fleet</th>
           <th>Unit Count</th>
+          <th>Max Hull</th>
           <th>Break</th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="fleet in $ctrl.fleets" ng-click="$ctrl.goToFleet(fleet.uuid)">
+        <tr ng-repeat="fleet in $ctrl.fleets">
           <td><input type="checkbox" name="{{fleet.uuid}}" ng-change="$ctrl.toggleFleetCheck()" ng-model="$ctrl.ui.fleets[fleet.uuid]" /></td>
-          <td>{{fleet.label}}</td>
-          <td>{{fleet.unitCount}}</td>
-          <td>{{fleet.break}}</td>
+          <td ng-click="$ctrl.goToFleet(fleet.uuid)">{{fleet.label}}</td>
+          <td ng-click="$ctrl.goToFleet(fleet.uuid)">{{fleet.unitCount}}</td>
+          <td ng-click="$ctrl.goToFleet(fleet.uuid)">{{fleet.totalHull}}</td>
+          <td ng-click="$ctrl.goToFleet(fleet.uuid)">{{fleet.break}}</td>
         </tr>
       </tbody>
     </table>
