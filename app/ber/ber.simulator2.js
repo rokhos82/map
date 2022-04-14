@@ -523,15 +523,18 @@ function fleetDoDoneCheck(fleet) {
 
   function stateDoDeath(state,unit) {
     console.info(`stateDoDeath(${unit.name})`);
+    let u = state.fleets[unit.fleetId].units[unit.uuid];
 
-    // Mark the unit as dead
-    state.fleets[unit.fleetId].units[unit.uuid].dead = true;
+    if(!u.dead) {
+      // Mark the unit as dead
+      u.dead = true;
 
-    // Log an event for the death
-    stateCreateEvent(state,`${unit.name} has been destroyed!`,{actor:unit});
+      // Log an event for the death
+      stateCreateEvent(state,`${u.name} has been destroyed!`,{actor:u});
 
-    // Remove the unit from active list
-    stateRemoveUnit(state,unit);
+      // Remove the unit from active list
+      stateRemoveUnit(state,u);
+    }
   }
 
   function stateDoDeathChecks(state) {
@@ -544,7 +547,9 @@ function fleetDoDoneCheck(fleet) {
 
     while(deathChecks.length > 0) {
       let unit = deathChecks.pop();
-      stateDoDeath(state,unit);
+      if(!state.fleets[unit.fleetId].units[unit.uuid].dead) {
+        stateDoDeath(state,unit);
+      }
     }
   }
 
@@ -552,7 +557,7 @@ function fleetDoDoneCheck(fleet) {
     console.info(`stateDoDoneCheck()`);
     // One side is completely eliminated
     // The state has not changed for 3+ rounds
-    let finished = true;
+    let finished = false;
 
     // Are all of the the fleets in a faction gone?
     _.forEach(state.factions,(faction) => {
@@ -992,6 +997,7 @@ function fleetDoDoneCheck(fleet) {
     // This removed the unit from combat
     // Check for dead first so that a unit that dies while fleeing doesn't get into the fled list
     let fleet = state.fleets[unit.fleetId];
+    unit = fleet.units[unit.uuid];
 
     // Did the unit die?
     if(unit.dead) {
@@ -999,6 +1005,9 @@ function fleetDoDoneCheck(fleet) {
       console.info(`${unit.name} died`);
       fleet.destroyed[unit.uuid] = unit;
       fleet.destroyedCount++;
+
+      // Now, remove the unit from the list of active units in the fleet
+      fleetRemoveUnit(fleet,unit);
     }
     // Did the unit flee?
     else if(unit.tags.fled) {
@@ -1006,10 +1015,10 @@ function fleetDoDoneCheck(fleet) {
       console.info(`${unit.name} fled`);
       fleet.fled[unit.uuid] = unit;
       fleet.fledCount++;
-    }
 
-    // Now, remove the unit from the list of active units in the fleet
-    fleetRemoveUnit(fleet,unit);
+      // Now, remove the unit from the list of active units in the fleet
+      fleetRemoveUnit(fleet,unit);
+    }
   }
 
   //////////////////////////////////////////////////////////////////////////////
