@@ -26,6 +26,7 @@
               <li role="menuitem"><a ng-click="$ctrl.loadAttackFleet()" href="">Attack Fleet</a></li>
               <li role="menuitem"><a ng-click="$ctrl.loadDefenseFleet()" href="">Defense Fleet</a></li>
               <li role="menuitem"><a ng-click="$ctrl.loadFighterFleet()" href="">Fighter Fleet</a></li>
+              <li role="menuitme" ng-repeat="(key,label) in $ctrl.prebuiltFleetsList"><a ng-click="$ctrl.loadFleet(key)">{{label}}</a></li>
             </ul>
           </div>
         </div>

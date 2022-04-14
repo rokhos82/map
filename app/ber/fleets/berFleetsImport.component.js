@@ -26,6 +26,24 @@ Cheap Missile Corvette 3,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFE
 Cheap Missile Corvette 4,0,0,0,0,6,6,5,5,0,0,0,[6 mis0011 target 15 ammo 2] DEFENSE 25 DAMAGE 90
 Artillery Frigate 1,8,8,1,1,0,0,9,9,0,0,0,[8 target 90 artillery] RESERVE 50 DAMAGE 90
 Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
+
+    this.prebuiltFleetsList = {
+      "simple1":"Simple Red Team",
+      "simple2":"Simple Blue Team"
+    };
+    this.prebuiltFleets = {};
+    this.prebuiltFleets["simple1"] = `Red,Simple 1,50,5,20,0,0,0,0
+Red Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Red Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Red Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Red Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Red Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90`;
+    this.prebuiltFleets["simple2"] = `Blue,Simple 2,50,5,20,0,0,0,0
+Blue Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Blue Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Blue Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Blue Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
+Blue Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90`;
   }
 
   $onInit() {}
@@ -73,6 +91,10 @@ F1017 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0
 F1018 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
 F1019 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER
 F1020 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[2 mis0041 ammo 1 target 15][1 mis0001] DEFENSE 15 FIGHTER`;
+  }
+
+  loadFleet(key) {
+    this.fleetFile = this.prebuiltFleets[key];
   }
 }
 
