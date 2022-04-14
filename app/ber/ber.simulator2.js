@@ -212,7 +212,8 @@ function fleetDoDoneCheck(fleet) {
 
   // What checks for the fleet to be done?
   // 1 - No units left
-  done = (fleet.currentHull <= 0);
+  //done = (fleet.currentHull <= 0);
+  done = (fleet.unitCount <= 0);
 
   return done;
 }
@@ -268,11 +269,13 @@ function fleetDoDoneCheck(fleet) {
   }
 
   function fleetRemoveUnit(fleet,unit) {
+    console.info(`fleetRemoveUnit(${fleet.name}:${unit.name})`);
     // Remove the unit from the fleet's unit collection
     delete fleet.units[unit.uuid];
 
     // Update the hull current for the fleet
     fleet.currentHull -= unit.hlMax;
+    fleet.unitCount--;
   }
 
   //////////////////////////////////////////////////////////////////////////////
@@ -985,12 +988,14 @@ function fleetDoDoneCheck(fleet) {
     // Did the unit die?
     if(unit.dead) {
       // Yes, add the unit to the list of units that have died.
+      console.info(`${unit.name} died`);
       fleet.destroyed[unit.uuid] = unit;
       fleet.destroyedCount++;
     }
     // Did the unit flee?
     else if(unit.tags.fled) {
       // Yes, add the unit to the list of units that have fled.
+      console.info(`${unit.name} fled`);
       fleet.fled[unit.uuid] = unit;
       fleet.fledCount++;
     }

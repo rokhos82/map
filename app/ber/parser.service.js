@@ -20,6 +20,8 @@ export function parser(uuid) {
     fleet.label = `${fleet.race} - ${fleet.name}`;
     fleet.break = fleetInfo[2];
     fleet.target = fleetInfo[5];
+    fleet.fledCount = 0;
+    fleet.destroyedCount = 0;
 
     // Parse Unit Description Lines (UDLs).
     let units = {};
