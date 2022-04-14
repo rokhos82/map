@@ -13,6 +13,7 @@ class berSimulatorResultsViewController {
 
     this.ui = {};
     this.ui.search = {};
+    this.ui.turns = {};
   }
 
   $onInit() {
@@ -24,6 +25,10 @@ class berSimulatorResultsViewController {
 
   toggleDebug() {
     this.ui.debug = !this.ui.debug;
+  }
+
+  toggleEvents(index) {
+    this.ui.turns[index] = !this.ui.turns[index];
   }
 }
 
