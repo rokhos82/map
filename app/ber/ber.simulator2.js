@@ -85,6 +85,8 @@ export function simulator2() {
         done = simulation.done;
       }
     }
+
+    simulation.status = "Finished";
   };
 
   // Simulation Functions ------------------------------------------------------
@@ -179,6 +181,8 @@ function factionDoDoneCheck(faction,fleets) {
     done = fleetDoDoneCheck(fleet);
   });
 
+  console.info(done);
+
   return done;
 }
 
@@ -214,6 +218,8 @@ function fleetDoDoneCheck(fleet) {
   // 1 - No units left
   //done = (fleet.currentHull <= 0);
   done = (fleet.unitCount <= 0);
+
+  console.info(done);
 
   return done;
 }
@@ -550,8 +556,10 @@ function fleetDoDoneCheck(fleet) {
 
     // Are all of the the fleets in a faction gone?
     _.forEach(state.factions,(faction) => {
-      finished = factionDoDoneCheck(faction,state.fleets);
+      finished = (factionDoDoneCheck(faction,state.fleets) || finished);
     });
+
+    console.info(finished);
 
     state.done = finished;
   }
