@@ -208,6 +208,14 @@ export function parser(uuid) {
     let ammo = _(bracketString).words(/(ammo|shots) \d+/).words(/\d+/).map(x=>+x).value()[0] || undefined;
     // Get bp tag
     let bp = _(bracketString).words(/bp \d+ \d+/).words(/\d+/g).map(x=>+x).value() || false;
+    // Get dl tag
+    let dl = _(bracketString).words(/dl \w+/).words(/\w+$/).value()[0] || false;
+    // Get hull tag
+    let hull = _(bracketString).words(/hull \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
+    // Get scan tag
+    let scan = _(bracketString).words(/scan \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
+    // Get rof tag
+    let rof = _(bracketString).words(/rof \d+ \d+/).words(/\d+/g).map(x=>+x).value() || [];
     // Get the boolean flags
     let long = _(bracketString).words(/long/).map(x=>_.isString(x)).value().length || 0;
     let artillery = _(bracketString).words(/artillery/).map(x=>_.isString(x)).value()[0] || false;
@@ -216,6 +224,11 @@ export function parser(uuid) {
     let af = _(bracketString).words(/af/).map(x=>_.isString(x)).value()[0] || false;
     let flak = _(bracketString).words(/flak/).map(x=>_.isString(x)).value()[0] || false;
     let crack = _(bracketString).words(/\s+crack\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let dis = _(bracketString).words(/\s+dis\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let heat = _(bracketString).words(/\s+heat\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let meson = _(bracketString).words(/\s+meson\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let pen = _(bracketString).words(/\s+pen\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let vibro = _(bracketString).words(/\s+vibro\s+/).map(x=>_.isString(x)).value()[0] || false;
 
     let bracket = {};
     bracket.tag = bracketString;
@@ -232,6 +245,32 @@ export function parser(uuid) {
     bracket.af = af;
     bracket.flak = flak;
     bracket.crack = crack;
+    bracket.dl = dl;
+    bracket.dis = dis;
+    bracket.heat = heat;
+    bracket.meson = meson;
+    bracket.pen = pen;
+    bracket.vibro = vibro;
+
+    // Build out the hull object
+    bracket.hull = {
+      base: hull[0] || false,
+      range: hull[1] || false
+    };
+    if(_.isNumber(bracket.hull.base) && _.isNumber(bracket.hull.range)) {
+      bracket.hull.lower = bracket.hull.base - bracket.hull.range;
+      bracket.hull.upper = bracket.hull.base + bracket.hull.range;
+    }
+
+    // Build out the scan object
+    bracket.scan = {
+      base: scan[0] || false,
+      range: scan[1] || false
+    };
+    if(_.isNumber(bracket.scan.base) && _.isNumber(bracket.scan.range)) {
+      bracket.scan.lower = bracket.scan.base - bracket.scan.range;
+      bracket.scan.upper = bracket.scan.base + tags.scan.range;
+    }
 
     // Build the bp object
     if(bp.length > 1) {

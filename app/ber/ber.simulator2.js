@@ -1434,9 +1434,9 @@ function fleetDoDoneCheck(fleet) {
     // Start with volley
     let tagString = `[${bracket.volley}`;
 
-    // Does it have target
-    if(_.isNumber(bracket.target) && bracket.target > 0) {
-      tagString += ` target ${bracket.target}`;
+    // Does it have multi?
+    if(_.isNumber(bracket.multi) && bracket.multi > 0) {
+      tagString += ` multi ${bracket.multi}`;
     }
 
     // Does it have msl?
@@ -1444,15 +1444,51 @@ function fleetDoDoneCheck(fleet) {
       tagString += ` mis${bracket.missile.bm}${bracket.missile.sh}${bracket.missile.tp}${bracket.missile.hl}`;
     }
 
+    // Does it have yield?
+    if(_.isNumber(bracket.yield) && bracket.yield > 0) {
+      tagString += ` yield ${bracket.yield}`;
+    }
+
+    // Does it have target?
+    if(_.isNumber(bracket.target) && bracket.target > 0) {
+      tagString += ` target ${bracket.target}`;
+    }
+
     // Does it have ammo?
     if(_.isNumber(bracket.ammo)) {
       tagString += ` ammo ${bracket.ammo}`;
+    }
+
+    // Is there datalink?
+    if(_.isString(bracket.dl)) {
+      tagString += ` dl ${bracket.dl}`;
     }
 
     // Is there artillery?
     if(_.has(bracket,"artillery") && bracket.artillery) {
       tagString += ` artillery`;
     }
+
+    // Is there global?
+    if(_.has(bracket,"global") && bracket.global) {
+      tagString += ` global`;
+    }
+
+    // Is there long?
+    if(_.isNumber(bracket.long) && bracket.long > 0) {
+      for(let i = 0;i < bracket.long;i++) {
+        tagString += ` long`;
+      }
+    }
+
+    // Is there af?
+    tagString += (_.has(bracket,"af") && bracket.af) ? ` af` : ``;
+
+    // Is there flak?
+    tagString += (_.has(bracket,"flak") && bracket.flak) ? ` flak` : ``;
+
+    // Is there crack?
+    tagString += (_.has(bracket,"crack") && bracket.crack) ? ` crack` : ``;
 
     // Is there offline
     if(_.isNumber(bracket.offline) && bracket.offline > 0) {
