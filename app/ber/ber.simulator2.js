@@ -1490,6 +1490,21 @@ function fleetDoDoneCheck(fleet) {
     // Is there crack?
     tagString += (_.has(bracket,"crack") && bracket.crack) ? ` crack` : ``;
 
+    // Is there dis?
+    tagString += (_.has(bracket,"dis") && bracket.dis) ? ` dis` : ``;
+
+    // Is there heat?
+    tagString += (_.has(bracket,"heat") && bracket.heat) ? ` heat`: ``;
+
+    // Is there meson?
+    tagString += (_.has(bracket,"meson") && bracket.meson) ? ` meson`: ``;
+
+    // Is there pen?
+    tagString += (_.has(bracket,"pen") && bracket.pen) ? ` pen`: ``;
+
+    // Is there vibro?
+    tagString += (_.has(bracket,"vibro") && bracket.vibro) ? ` vibro`: ``;
+
     // Is there offline
     if(_.isNumber(bracket.offline) && bracket.offline > 0) {
       for(let i = 0;i < bracket.offline;i++) {

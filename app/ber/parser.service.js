@@ -223,12 +223,12 @@ export function parser(uuid) {
     let offline = _(bracketString).words(/offline/g).map(x=>_.isString(x)).value().length || 0;
     let af = _(bracketString).words(/af/).map(x=>_.isString(x)).value()[0] || false;
     let flak = _(bracketString).words(/flak/).map(x=>_.isString(x)).value()[0] || false;
-    let crack = _(bracketString).words(/\s+crack\s+/).map(x=>_.isString(x)).value()[0] || false;
-    let dis = _(bracketString).words(/\s+dis\s+/).map(x=>_.isString(x)).value()[0] || false;
-    let heat = _(bracketString).words(/\s+heat\s+/).map(x=>_.isString(x)).value()[0] || false;
-    let meson = _(bracketString).words(/\s+meson\s+/).map(x=>_.isString(x)).value()[0] || false;
-    let pen = _(bracketString).words(/\s+pen\s+/).map(x=>_.isString(x)).value()[0] || false;
-    let vibro = _(bracketString).words(/\s+vibro\s+/).map(x=>_.isString(x)).value()[0] || false;
+    let crack = _(bracketString).words(/crack/).map(x=>_.isString(x)).value()[0] || false;
+    let dis = _(bracketString).words(/dis/).map(x=>_.isString(x)).value()[0] || false;
+    let heat = _(bracketString).words(/heat/).map(x=>_.isString(x)).value()[0] || false;
+    let meson = _(bracketString).words(/meson/).map(x=>_.isString(x)).value()[0] || false;
+    let pen = _(bracketString).words(/pen/).map(x=>_.isString(x)).value()[0] || false;
+    let vibro = _(bracketString).words(/vibro/).map(x=>_.isString(x)).value()[0] || false;
 
     let bracket = {};
     bracket.tag = bracketString;
