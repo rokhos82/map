@@ -12,7 +12,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: `Mobius Map Generator - ${package.version}`,
+      title: `Mobius App Project - ${package.version}`,
       template: './app/layout/index.html'
     }),
     new webpack.DefinePlugin({
