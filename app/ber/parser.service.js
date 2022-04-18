@@ -67,10 +67,12 @@ export function parser(uuid) {
     unit.bmCur = +unitInfo[2];
     unit.shMax = +unitInfo[3];
     unit.shCur = +unitInfo[4];
+    unit.shLast = unit.shCur;
     unit.tpMax = +unitInfo[5];
     unit.tpCur = +unitInfo[6];
     unit.hlMax = +unitInfo[7];
     unit.hlCur = +unitInfo[8];
+    unit.hlLast = unit.hlCur;
 
     let tags = unitInfo[12];
 
@@ -79,6 +81,19 @@ export function parser(uuid) {
     // Extract the brackets and store them separately.
     unit.brackets = unit.tags.brackets;
     delete unit.tags.brackets;
+
+    // Setup crit thresholds
+    // Crits happen at 80%, 60%, 40%, 20%, and 0% of max hull.
+    // The final crit is a "big bang" crit.  To see how the ship was destroyed.
+    // key: the hull value for each crit
+    // value: the crit object
+    unit.crits = {};
+
+    let crit80 = _.ceil(unit.hullMax * 0.8);
+    unit.crits[crit80] = {};
+
+    let crit60 = _.ceil(unit.hullMax * 0.6);
+    unit.crits[crit60] = {};
 
     //console.log(unit);
 

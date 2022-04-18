@@ -350,6 +350,7 @@ function fleetDoDoneCheck(fleet) {
         }
 
         // Remove the correct amount of shields from the target.
+        unit.shLast = unit.shCur;
         unit.shCur -= actualDamage;
       }
       else if(token.channel == "hl") {
@@ -374,7 +375,13 @@ function fleetDoDoneCheck(fleet) {
         stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
 
         // Remove the correct amount of shields from the target.
+        unit.hlLast = unit.hlCur;
         unit.hlCur -= actualDamage;
+
+        if(actualDamage > 0 && !unit.check.crit) {
+          unit.check.crit = true;
+          state.checks.push(unit);
+        }
 
         if(unit.hlCur <= 0 && unit.check.death != true) {
           // The unit has been destroyed.  Flag it for a death check if not already flagged.
@@ -488,7 +495,15 @@ function fleetDoDoneCheck(fleet) {
     }
   }
 
-  function stateDoCritChecks(state) {}
+  function stateDoCritChecks(state) {
+    console.info(`stateDoCritChecks()`);
+
+    let critChecks = _.filter(state.checks,(unit) => {
+      return unit.check.crit;
+    });
+
+    console.info(critChecks);
+  }
 
   function stateDoDamage(state,action,stack) {
     // Apply the damage to the target
@@ -547,7 +562,7 @@ function fleetDoDoneCheck(fleet) {
 
     while(deathChecks.length > 0) {
       let unit = deathChecks.pop();
-      if(!state.fleets[unit.fleetId].units[unit.uuid].dead) {
+      if(state.fleets[unit.fleetId].units[unit.uuid] && !state.fleets[unit.fleetId].units[unit.uuid].dead) {
         stateDoDeath(state,unit);
       }
     }
