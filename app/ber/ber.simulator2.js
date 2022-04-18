@@ -509,12 +509,15 @@ function fleetDoDoneCheck(fleet) {
       _.forEach(unit.crits,(critSlot) => {
         if(hl <= critSlot.threshold && !critSlot.crit) {
           let action = {};
-          action.actor = { name:unit.name };
-          action.actee = { name:unit.name };
+          action.actor = unit;
+          action.actee = unit;
           action.type = "crit";
 
           stateCreateEvent(state,`${unit.name} suffers a critical hit!`,action);
-          critSlot.crit = action;
+          critSlot.crit = {
+            type: "standard",
+            effect: unitCreateCrit(unit,"standard")
+          };
         }
       });
     });
@@ -1215,6 +1218,28 @@ function fleetDoDoneCheck(fleet) {
     // Check for a time tag.
     let flee = false;
     return flee;
+  }
+
+  function unitCreateCrit(unit,type) {
+    let critTables = {};
+    critTables.standard = [
+      {
+        minRoll: 1,
+        maxRoll: 90,
+        text: "Crew Casualties (10%)"
+      },
+      {
+        minRoll: 91,
+        maxRoll: 100,
+        text: "+1 Damage"
+      }
+    ];
+
+    let table = critTables[type];
+    let maxRoll = 0;
+    _.forEach(table,(entry) => {
+      maxRoll = _.max(maxRoll,entry.maxRoll);
+    });
   }
 
   function unitDoFled(unit) {
