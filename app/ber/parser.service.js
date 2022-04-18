@@ -89,11 +89,30 @@ export function parser(uuid) {
     // value: the crit object
     unit.crits = {};
 
-    let crit80 = _.ceil(unit.hullMax * 0.8);
-    unit.crits[crit80] = {};
+    let crit80 = _.ceil(unit.hlMax * 0.8);
+    unit.crits["crit80"] = {
+      threshold: crit80
+    };
 
-    let crit60 = _.ceil(unit.hullMax * 0.6);
-    unit.crits[crit60] = {};
+    let crit60 = _.ceil(unit.hlMax * 0.6);
+    unit.crits["crit60"] = {
+      threshold: crit60
+    };
+
+    let crit40 = _.ceil(unit.hlMax * 0.4);
+    unit.crits["crit40"] = {
+      threshold: crit40
+    };
+
+    let crit20 = _.ceil(unit.hlMax * 0.2);
+    unit.crits["crit20"] = {
+      threshold: crit20
+    };
+
+    let crit00 = 0;
+    unit.crits["crit00"] = {
+      threshold: crit00
+    };
 
     //console.log(unit);
 

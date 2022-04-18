@@ -503,6 +503,21 @@ function fleetDoDoneCheck(fleet) {
     });
 
     console.info(critChecks);
+
+    _.forEach(critChecks,(unit) => {
+      let hl = unit.hlCur;
+      _.forEach(unit.crits,(critSlot) => {
+        if(hl <= critSlot.threshold && !critSlot.crit) {
+          let action = {};
+          action.actor = { name:unit.name };
+          action.actee = { name:unit.name };
+          action.type = "crit";
+
+          stateCreateEvent(state,`${unit.name} suffers a critical hit!`,action);
+          critSlot.crit = action;
+        }
+      });
+    });
   }
 
   function stateDoDamage(state,action,stack) {
@@ -560,12 +575,11 @@ function fleetDoDoneCheck(fleet) {
       return unit.check.death;
     });
 
-    while(deathChecks.length > 0) {
-      let unit = deathChecks.pop();
+    _.forEach(deathChecks,(unit) => {
       if(state.fleets[unit.fleetId].units[unit.uuid] && !state.fleets[unit.fleetId].units[unit.uuid].dead) {
         stateDoDeath(state,unit);
       }
-    }
+    });
   }
 
   function stateDoDoneCheck(state) {
@@ -904,6 +918,9 @@ function fleetDoDoneCheck(fleet) {
     stateDoDynamicTags(state);
 
     stateDoDoneCheck(state);
+
+    // Cleanup State
+    state.checks = [];
   }
 
   function stateGetNonDeadUnits(state) {
@@ -1015,7 +1032,7 @@ function fleetDoDoneCheck(fleet) {
     unit = fleet.units[unit.uuid];
 
     // Did the unit die?
-    if(unit.dead) {
+    if(unit && unit.dead) {
       // Yes, add the unit to the list of units that have died.
       console.info(`${unit.name} died`);
       fleet.destroyed[unit.uuid] = unit;
@@ -1025,7 +1042,7 @@ function fleetDoDoneCheck(fleet) {
       fleetRemoveUnit(fleet,unit);
     }
     // Did the unit flee?
-    else if(unit.tags.fled) {
+    else if(unit && unit.tags.fled) {
       // Yes, add the unit to the list of units that have fled.
       console.info(`${unit.name} fled`);
       fleet.fled[unit.uuid] = unit;
