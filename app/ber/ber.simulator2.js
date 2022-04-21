@@ -1221,6 +1221,7 @@ function fleetDoDoneCheck(fleet) {
   }
 
   function unitCreateCrit(unit,type) {
+    console.info(`unitCreateCrit(${unit.name}:${type})`);
     let critTables = {};
     critTables.standard = [
       {
@@ -1236,10 +1237,28 @@ function fleetDoDoneCheck(fleet) {
     ];
 
     let table = critTables[type];
+    console.info(table);
     let maxRoll = 0;
     _.forEach(table,(entry) => {
-      maxRoll = _.max(maxRoll,entry.maxRoll);
+      console.info(entry);
+      maxRoll = _.max([maxRoll,entry.maxRoll]);
     });
+
+    console.info(`Max Roll: ${maxRoll}`);
+
+    let critRoll = _.random(1,maxRoll);
+    console.info(`Crit Roll: ${critRoll}`);
+
+    let crit = false;
+
+    _.forEach(table,(entry) => {
+      if(!_.isObject(crit) && critRoll <= entry.maxRoll) {
+        console.info(entry.text);
+        crit = _.cloneDeep(entry);
+      }
+    });
+
+    return crit;
   }
 
   function unitDoFled(unit) {

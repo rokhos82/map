@@ -27,7 +27,7 @@
               </tr>
             </tbody>
           </table>
-          <div class="panel-footer">End of Event Log</div>
+          <div class="panel-footer" ng-click="$ctrl.toggleEvents($index)">End of Event Log</div>
         </div>
         <div class="panel panel-default" ng-repeat="fleet in turn.fleets">
           <div class="panel-heading">Fleet: {{fleet.race}} - {{fleet.name}}</div>
