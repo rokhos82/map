@@ -1224,16 +1224,14 @@ function fleetDoDoneCheck(fleet) {
     console.info(`unitCreateCrit(${unit.name}:${type})`);
     let critTables = {};
     critTables.standard = [
-      {
-        minRoll: 1,
-        maxRoll: 90,
-        text: "Crew Casualties (10%)"
-      },
-      {
-        minRoll: 91,
-        maxRoll: 100,
-        text: "+1 Damage"
-      }
+      { minRoll: 1, maxRoll: 1, text: "Reactor Core Breach (Ship Explodes)", type: "death" },
+      { minRoll: 2, maxRoll: 3, text: "Structural Collapse (+3 damage)", type: "damage", amount: 3 },
+      { minRoll: 4, maxRoll: 5, text: "Explosion Amidships (+2 damage)", type: "damage", amount: 2 },
+      { minRoll: 6, maxRoll: 7, text: "Superstructure Hit (+1 damage)", type: "damage", amount: 1 },
+      { minRoll: 8, maxRoll: 9, text: "Intertial Dampeners Down (+1 damage)", type: "damage", amount: 1 },
+      { minRoll: 10, maxRoll: 13, text: "Weapons Damaged (Offline until repaired)", type: "effect", effect: "offline" },
+      { minRoll: 14, maxRoll: 15, text: "Radiation Leak (+5% crew casualties)", type: "crew", amount: 5 },
+      { minRool: 16, maxRoll: 17, text: "Coolant Leak (+5% crew casualties)", type: "crew", amount: 5}
     ];
 
     let table = critTables[type];
