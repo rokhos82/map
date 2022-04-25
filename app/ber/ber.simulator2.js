@@ -1229,9 +1229,18 @@ function fleetDoDoneCheck(fleet) {
       { minRoll: 4, maxRoll: 5, text: "Explosion Amidships (+2 damage)", type: "damage", amount: 2 },
       { minRoll: 6, maxRoll: 7, text: "Superstructure Hit (+1 damage)", type: "damage", amount: 1 },
       { minRoll: 8, maxRoll: 9, text: "Intertial Dampeners Down (+1 damage)", type: "damage", amount: 1 },
-      { minRoll: 10, maxRoll: 13, text: "Weapons Damaged (Offline until repaired)", type: "effect", effect: "offline" },
+      { minRoll: 10, maxRoll: 13, text: "Weapons Damaged (Offline until repaired)", type: "effect", effect: "offline", spread: "all" },
       { minRoll: 14, maxRoll: 15, text: "Radiation Leak (+5% crew casualties)", type: "crew", amount: 5 },
-      { minRool: 16, maxRoll: 17, text: "Coolant Leak (+5% crew casualties)", type: "crew", amount: 5}
+      { minRool: 16, maxRoll: 17, text: "Coolant Leak (+5% crew casualties)", type: "crew", amount: 5},
+      { minRool: 18, maxRoll: 19, text: "Hull Breach (+5% crew casualties)", type: "crew", amount: 5},
+      { minRoll: 20, maxRoll: 21, text: "Main Fusion Reactors Down (+1 damage)", type: "damage", amount: 1 },
+      { minRoll: 22, maxRoll: 23, text: "Auxiliary Fusion Reactors Down (+1 damage)", type: "damage", amount: 1 },
+      { minRoll: 24, maxRoll: 27, text: "Weapon Power Short (Some offline until repaired)", type: "effect", effect: "offline", spread: "some" },
+      { minRoll: 28, maxRoll: 31, text: "Engine Power Short (Drifting for 1 turn)", type: "effect", effect: "drifting", duration: 1 },
+      { minRoll: 32, maxRoll: 33, text: "Shuttle/Fighter Bay Hit" },
+      { minRoll: 34, maxRoll: 35, text: "Main Fire Control Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
+      { minRoll: 36, maxRoll: 37, text: "Main Scanners Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
+      { minRoll: 32, maxRoll: 33, text: "Maglock/Tractor Beams Down" }
     ];
 
     let table = critTables[type];
