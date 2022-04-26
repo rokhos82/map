@@ -487,10 +487,10 @@ function fleetDoDoneCheck(fleet) {
         hit.type = "hit";
         stack.push(hit);
 
-        stateCreateEvent(state,`${actor.name} hits ${actee.name} (${hitRoll})`,action);
+        stateCreateEvent(state,`${actor.name} hits ${actee.name} (${hitRoll} hit roll)`,action);
       }
       else {
-        stateCreateEvent(state,`${actor.name} misses ${actee.name} (${hitRoll})`,action);
+        stateCreateEvent(state,`${actor.name} misses ${actee.name} (${hitRoll} hit roll)`,action);
       }
     }
   }
@@ -513,11 +513,12 @@ function fleetDoDoneCheck(fleet) {
           action.actee = unit;
           action.type = "crit";
 
-          stateCreateEvent(state,`${unit.name} suffers a critical hit!`,action);
           critSlot.crit = {
             type: "standard",
             effect: unitCreateCrit(unit,"standard")
           };
+
+          stateCreateEvent(state,`${unit.name} suffers a critical hit! ${critSlot.crit.effect.text}`,action);
         }
       });
     });
