@@ -1271,7 +1271,8 @@ function fleetDoDoneCheck(fleet) {
       { minRoll: 32, maxRoll: 33, text: "Shuttle/Fighter Bay Hit" },
       { minRoll: 34, maxRoll: 35, text: "Main Fire Control Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
       { minRoll: 36, maxRoll: 37, text: "Main Scanners Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
-      { minRoll: 32, maxRoll: 33, text: "Maglock/Tractor Beams Down" }
+      { minRoll: 32, maxRoll: 33, text: "Maglock/Tractor Beams Down" },
+      { minRoll: 34, maxRoll: 35, text: "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)", type: "multiple", effects: [] },
     ];
 
     let table = critTables[type];
