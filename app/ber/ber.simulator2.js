@@ -1,4 +1,4 @@
-export function simulator2() {
+export function simulator2(library) {
   let _service = {};
 
   _service.setup = (simulation) => {
@@ -1272,7 +1272,9 @@ function fleetDoDoneCheck(fleet) {
       { minRoll: 34, maxRoll: 35, text: "Main Fire Control Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
       { minRoll: 36, maxRoll: 37, text: "Main Scanners Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
       { minRoll: 32, maxRoll: 33, text: "Maglock/Tractor Beams Down" },
-      { minRoll: 34, maxRoll: 35, text: "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)", type: "multiple", effects: [] },
+      { minRoll: 34, maxRoll: 35, text: "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)", type: "multiple", effects: [{ type: "effect", effect: "destruction", area: "bridge" },{ type: "effect", effect: "offline", spread: "all", duration: 1 }] },
+      { minRoll: 36, maxRoll: 37, text: "Main Engineering Hit (Drifting for 1 turn)", type: "effect", effect: "drifting", duration: 1 },
+      { minRoll: 38, maxRoll: 41, text: "Warp Engine Hit (No warp movement until repaired)", type: "effect", effect: "nomove" }
     ];
 
     let table = critTables[type];
@@ -1635,6 +1637,6 @@ function fleetDoDoneCheck(fleet) {
   return _service;
 }
 
-simulator2.$inject = [];
+simulator2.$inject = ["berLibrary"];
 
 // Service Function Definitions Below

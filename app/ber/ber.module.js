@@ -33,6 +33,7 @@ import {simulator} from "./ber.simulator.js";
 import {simulator2} from "./ber.simulator2.js";
 import {state} from "./state.service.js";
 import {archive} from "./archive.service.js";
+import {library} from "./library.service.js";
 
 //import {berRootState,berWelcomeState,berImportState,berFleetsViewState,berFleetsViewDetailState,berSimulationState,berResultsState} from "./ber.states.js";
 import {
@@ -106,3 +107,4 @@ BER.factory('berSimulator',simulator);
 BER.factory('berSimulator2',simulator2);
 BER.factory('berState',state);
 BER.factory('berArchive',archive);
+BER.factory('berLibrary',library);
