@@ -312,8 +312,8 @@ function fleetDoDoneCheck(fleet) {
   //////////////////////////////////////////////////////////////////////////////
   // State Functions -----------------------------------------------------------
   //////////////////////////////////////////////////////////////////////////////
-  function stateApplyDamageTokens(state) {
-    console.info(`stateApplyDamageTokens()`);
+  function stateProcessDamageTokens(state) {
+    console.info(`stateProcessDamageTokens()`);
     console.info(_.clone(state.damage));
 
     // Pull tokens off the stack until there are none left
@@ -396,7 +396,7 @@ function fleetDoDoneCheck(fleet) {
       }
     }
     else {
-      console.warn(`stateApplyDamageTokens - channel '${token.channel}' unknown`);
+      console.warn(`stateApplyDamageToken() - channel '${token.channel}' unknown`);
     }
   }
 
@@ -512,7 +512,7 @@ function fleetDoDoneCheck(fleet) {
     _.forEach(critChecks,(unit) => {
       let hl = unit.hlCur;
       _.forEach(unit.crits,(critSlot) => {
-        if(hl <= critSlot.threshold && !critSlot.crit) {
+        if(hl <= critSlot.threshold && !_.isObject(critSlot.crit)) {
           let action = {};
           action.actor = unit;
           action.actee = unit;
@@ -523,9 +523,8 @@ function fleetDoDoneCheck(fleet) {
             effect: unitCreateCrit(unit,"standard")
           };
 
-          stateProcessCrit(state,unit,critSlot.crit);
-
           stateCreateEvent(state,`${unit.name} suffers a critical hit! ${critSlot.crit.effect.text}`,action);
+          stateProcessCrit(state,unit,critSlot.crit.effect);
         }
       });
     });
@@ -873,7 +872,7 @@ function fleetDoDoneCheck(fleet) {
     // End Main Action Processing Loop
 
     // Apply damage tokens
-    stateApplyDamageTokens(state);
+    stateProcessDamageTokens(state);
 
     // Do crit checks
     stateDoCritChecks(state);
@@ -1024,9 +1023,23 @@ function fleetDoDoneCheck(fleet) {
     console.info(crit);
 
     if(crit.type === "damage") {
+      console.info(`Processing damage crit (${crit.ammount} damage)`);
+      let token = {
+        uuid: unit.uuid,
+        fleetUuid: unit.fleetUuid,
+        factionUuid: unit.factionId,
+        channel: "hl",
+        amount: crit.amount
+      };
+      console.info(token);
+      stateApplyDamageToken(state,token,unit);
     }
     else if(crit.type === "crew") {}
     else if(crit.type === "offline") {}
+    else if(crit.type === "death") {
+      stateDoDeath(state,unit);
+    }
+    else {}
   }
 
   function stateGetUnitById(state,hash) {

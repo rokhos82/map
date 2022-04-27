@@ -34,17 +34,17 @@ Artillery Frigate 2,8,8,1,1,0,0,9,9,0,0,0,[8 target 90] RESERVE 10 DAMAGE 90`;
     };
     this.prebuiltFleets = {};
     this.prebuiltFleets["simple1"] = `Red,Simple 1,50,5,20,0,0,0,0
-Red Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Red Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Red Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Red Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Red Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90`;
+Red Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Red Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Red Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Red Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Red Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70`;
     this.prebuiltFleets["simple2"] = `Blue,Simple 2,50,5,20,0,0,0,0
-Blue Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Blue Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Blue Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Blue Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90
-Blue Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[10 target 90] DEFENSE 25 DAMAGE 90`;
+Blue Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Blue Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Blue Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Blue Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70
+Blue Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90] DEFENSE 25 DAMAGE 70`;
     this.prebuiltFleets["simple3"] = `TEST,Corvette Plus Screen,75,273,378,0,0,0,0,0
 CV1-0001 (Fleet Carrier Mk 1),0,0,1,1,0,0,6,6,0,0,0,DEFENSE 15 RESIST 5 CARRIER RESERVE 99 FLEE
 CV1-0002 (Fleet Carrier Mk 1),0,0,1,1,0,0,6,6,0,0,0,DEFENSE 15 RESIST 5 CARRIER RESERVE 99 FLEE
