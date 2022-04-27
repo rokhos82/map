@@ -323,75 +323,80 @@ function fleetDoDoneCheck(fleet) {
 
       console.info(_.cloneDeep(unit),_.cloneDeep(token));
 
-      if(token.channel == "sh") {
-        // Deduct the damage from the unit's shields
+      stateApplyDamageToken(state,token,unit);
+    }
+  }
 
-        // If the shields "burst" then add an event to indicate that additional damage was deflected?
-        let remainder = 0;
-        let actualDamage = 0;
-        if(token.amount > unit.shCur) {
-          // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
-          remainder = token.amount - unit.shCur;
-          actualDamage = unit.shCur;
-        }
-        else {
-          // Otherwise, just deduct the damage from the current shields and continue on.
-          remainder = 0;
-          actualDamage = token.amount;
-        }
-        console.info(remainder,actualDamage);
+  function stateApplyDamageToken(state,token,unit) {
+    console.info(`stateApplyDamageToken()`);
+    if(token.channel == "sh") {
+      // Deduct the damage from the unit's shields
 
-        if(remainder > 0) {
-          // Shields "burst" and deflected part of the damage.
-          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage (${remainder} deflected)`,{actor:unit});
-        }
-        else {
-          stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage`,{actor:unit});
-        }
-
-        // Remove the correct amount of shields from the target.
-        unit.shLast = unit.shCur;
-        unit.shCur -= actualDamage;
-      }
-      else if(token.channel == "hl") {
-        // Deduct the damage from the unit's hull
-
-        // If the shields "burst" then add an event to indicate that additional damage was deflected?
-        let remainder = 0;
-        let actualDamage = 0;
-        if(token.amount > unit.hlCur) {
-          // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
-          remainder = token.amount - unit.hlCur;
-          actualDamage = unit.hlCur;
-        }
-        else {
-          // Otherwise, just deduct the damage from the current hull and continue on.
-          remainder = 0;
-          actualDamage = token.amount;
-        }
-
-        console.info(remainder,actualDamage);
-
-        stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
-
-        // Remove the correct amount of shields from the target.
-        unit.hlLast = unit.hlCur;
-        unit.hlCur -= actualDamage;
-
-        if(actualDamage > 0 && !unit.check.crit) {
-          unit.check.crit = true;
-          state.checks.push(unit);
-        }
-
-        if(unit.hlCur <= 0 && unit.check.death != true) {
-          // The unit has been destroyed.  Flag it for a death check if not already flagged.
-          unit.check.death = true;
-          state.checks.push(unit);
-        }
+      // If the shields "burst" then add an event to indicate that additional damage was deflected?
+      let remainder = 0;
+      let actualDamage = 0;
+      if(token.amount > unit.shCur) {
+        // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+        remainder = token.amount - unit.shCur;
+        actualDamage = unit.shCur;
       }
       else {
-        console.warn(`stateApplyDamageTokens - channel '${token.channel}' unknown`);
+        // Otherwise, just deduct the damage from the current shields and continue on.
+        remainder = 0;
+        actualDamage = token.amount;
       }
+      console.info(remainder,actualDamage);
+
+      if(remainder > 0) {
+        // Shields "burst" and deflected part of the damage.
+        stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage (${remainder} deflected)`,{actor:unit});
+      }
+      else {
+        stateCreateEvent(state,`${unit.name} takes ${actualDamage} shield damage`,{actor:unit});
+      }
+
+      // Remove the correct amount of shields from the target.
+      unit.shLast = unit.shCur;
+      unit.shCur -= actualDamage;
+    }
+    else if(token.channel == "hl") {
+      // Deduct the damage from the unit's hull
+
+      // If the shields "burst" then add an event to indicate that additional damage was deflected?
+      let remainder = 0;
+      let actualDamage = 0;
+      if(token.amount > unit.hlCur) {
+        // There is more damage than shields remaining.  Apply the damage and report the remainder as deflected
+        remainder = token.amount - unit.hlCur;
+        actualDamage = unit.hlCur;
+      }
+      else {
+        // Otherwise, just deduct the damage from the current hull and continue on.
+        remainder = 0;
+        actualDamage = token.amount;
+      }
+
+      console.info(remainder,actualDamage);
+
+      stateCreateEvent(state,`${unit.name} takes ${actualDamage} hull damage`,{actor:unit});
+
+      // Remove the correct amount of shields from the target.
+      unit.hlLast = unit.hlCur;
+      unit.hlCur -= actualDamage;
+
+      if(actualDamage > 0 && !unit.check.crit) {
+        unit.check.crit = true;
+        state.checks.push(unit);
+      }
+
+      if(unit.hlCur <= 0 && unit.check.death != true) {
+        // The unit has been destroyed.  Flag it for a death check if not already flagged.
+        unit.check.death = true;
+        state.checks.push(unit);
+      }
+    }
+    else {
+      console.warn(`stateApplyDamageTokens - channel '${token.channel}' unknown`);
     }
   }
 
@@ -517,6 +522,8 @@ function fleetDoDoneCheck(fleet) {
             type: "standard",
             effect: unitCreateCrit(unit,"standard")
           };
+
+          stateProcessCrit(state,unit,critSlot.crit);
 
           stateCreateEvent(state,`${unit.name} suffers a critical hit! ${critSlot.crit.effect.text}`,action);
         }
@@ -1010,6 +1017,16 @@ function fleetDoDoneCheck(fleet) {
     console.log(parts);
 
     return parts;
+  }
+
+  function stateProcessCrit(state,unit,crit) {
+    console.info(`stateProcessCrit(${unit.name}:${crit.text})`);
+    console.info(crit);
+
+    if(crit.type === "damage") {
+    }
+    else if(crit.type === "crew") {}
+    else if(crit.type === "offline") {}
   }
 
   function stateGetUnitById(state,hash) {
