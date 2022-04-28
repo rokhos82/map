@@ -1,349 +1,349 @@
-1,1,14,"DIS: Primary Drive Offline (No movement for 1 turn)"
-1,1,15,"DIS: Primary Drive Down (No movement until repaired)"
-1,1,17,"DIS: Shield Generators Down (Sh=0 until repaired)"
-1,1,11,"DIS: Main Computer Offline (Offline for 1 turn)"
-2,1,19,"HEAT: Coolant Leak (+5% crew casualties)"
-2,1, 1,"HEAT: Fire: Level 1 (+1 damage)"
-2,1, 2,"HEAT: Fire: Level 2 (+2 damage)"
-2,1, 3,"HEAT: Fire: Level 3 (+3 damage)"
-3,1,19,"MESON: Hull Breached (+5% crew casualties)"
-3,1,19,"MESON: Crew Quarters Breached (+5% crew casualties)"
-3,1, 2,"MESON: Explosion Amidships (+2 damage)"
-3,1, 4,"MESON: Explosive Chain Reaction (+4 damage)"
-4,1,19,"VIBRO: Hull Breached (+5% crew casualties)"
-4,1, 1,"VIBRO: Inertial Dampeners Down (+1 damage)"
-4,1, 1,"VIBRO: Superstructure Hit (+1 damage)"
-4,1, 3,"VIBRO: Structural Collapse (+3 damage)"
-5,1,100,"Reactor Core Breach (Ship explodes)"
-5,2, 3,"Structural Collapse (+3 damage)"
-5,2, 2,"Explosion Amidships (+2 damage)"
-5,2, 1,"Superstructure Hit (+1 damage)"
-5,2, 1,"Inertial Dampeners Down (+1 damage)"
-5,4,13,"Weapons Damaged (Offline until repaired)"
-5,2,19,"Radiation Leak (+5% crew casualties)"
-5,2,19,"Coolant Leak (+5% crew casualties)"
-5,2,19,"Hull Breach (+5% crew casualties)"
-5,2, 1,"Main Fusion Reactors Down (+1 damage)"
-5,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-5,4,12,"Weapon Power Short (Some offline until repaired)"
-5,4,14,"Engine Power Short (Drifting for 1 turn)"
-5,2, 0,"Shuttle/Fighter Bay Hit"
-5,2,11,"Main Fire Control Out (Offline for 1 turn)"
-5,2,11,"Main Scanners Out (Offline for 1 turn)"
-5,2, 0,"Maglock/Tractor Beams Down"
-5,2,11,"Main Bridge Hit (Bridge crew killed, Offline for 1 turn)"
-5,2,14,"Main Engineering Hit (Drifting for 1 turn)"
-5,4,15,"Warp Engine Hit (No warp movement until repaired)"
-5,2,19,"Barracks/Cargo Holds Breached (+5% crew casualties)"
-5,2,19,"Warp Drive Down (No warp movement until repaired)"
-5,2,19,"Crew Quarters Breached (+5% crew casualties)"
-5,2,14,"Impulse Engines Down (Drifting for 1 turn)"
-5,2, 0,"Auxiliary Scanners Out"
-5,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-5,2, 0,"Emergency Power Out"
-5,2,20,"Primary Life Support Out (+10% crew casualties)"
-5,2,15,"Navigational Deflectors Out (No warp movement until repaired)"
-5,2,20,"Internal Damage (+10% crew casualties)"
-5,2,11,"Main Computer Down (Offline for 1 turn)"
-5,2,19,"Internal Damage (+5% crew casualties)"
-5,2,19,"Emergency Life Support Out (+5% crew casualties)"
-5,2, 0,"Auxiliary Computer Down"
-5,2, 0,"Auxiliary Fire Control Out"
-5,2, 1,"Fire: Level 1 (+1 damage)"
-5,2, 1,"Explosion Amidships (+1 damage)"
-5,2, 0,"ECM/Cloaking Systems Out"
-5,2, 2,"Fire: Level 2 (+2 damage)"
-5,2, 2,"Explosion Amidships (+2 damage)"
-5,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-5,2, 3,"Fire: Level 3 (+3 damage)"
-5,2, 0,"Auxiliary Bridge Hit"
-5,2, 4,"Explosive Chain Reaction (+4 damage)"
-5,2,16,"All Sensors Out (Offline and no movement until repaired)"
-5,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-5,1,100,"Reactor Containment Failure (Ship explodes)"
-6,1,100,"Reactor Core Breach (Unit explodes)"
-6,2, 3,"Structural Collapse (+3 damage)"
-6,2, 2,"Explosion mid level (+2 damage)"
-6,2, 1,"Superstructure Hit (+1 damage)"
-6,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-6,4,13,"Weapons Out (Offline until repaired)"
-6,2,19,"Radiation Leak (+5% crew casualties)"
-6,2,19,"Coolant Leak (+5% crew casualties)"
-6,4, 1,"Main Fusion Reactors Down (+1 damage)"
-6,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-6,8,12,"Power Couplings Down (Some offline until repaired)"
-6,2, 0,"Launch Facilities Hit"
-6,2,11,"Main Fire Control Out (Offline for 1 turn)"
-6,2,11,"Main Scanners Out (Offline for 1 turn)"
-6,2, 0,"Tractor Beams Down"
-6,2,11,"Main Command Hit (Command staff killed, Offline for 1 turn)"
-6,2,11,"Main Engineering Hit (Offline for 1 turn)"
-6,2, 2,"Powerplant Hit (+2 damage)"
-6,2,19,"Cargo Area Breached (+5% crew casualties)"
-6,6,19,"Barracks Breached (+5% crew casualties)"
-6,2, 0,"Backup Reactor Down"
-6,2, 0,"Auxiliary Scanners Out"
-6,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-6,2, 0,"Emergency Power Out"
-6,2,20,"Primary Life Support Out (+10% crew casualties)"
-6,2, 0,"Satellite Uplink Destroyed"
-6,2,20,"Internal Damage (+10% crew casualties)"
-6,2,11,"Main Computer Down (Offline for 1 turn)"
-6,2,19,"Internal Damage (+5% crew casualties)"
-6,2,19,"Emergency Life Support Out (+5% crew casualties)"
-6,2, 0,"Auxiliary Computer Down"
-6,2, 0,"Auxiliary Fire Control Out"
-6,2, 1,"Fire: Level 1 (+1 damage)"
-6,2, 1,"Explosion mid level (+1 damage)"
-6,2, 0,"ECM/Cloaking Systems Out"
-6,2, 2,"Fire: Level 2 (+2 damage)"
-6,2, 2,"Explosion mid level (+2 damage)"
-6,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-6,2, 3,"Fire: Level 3 (+3 damage)"
-6,2, 0,"Auxiliary Command Hit"
-6,2, 4,"Explosive Chain Reaction (+4 damage)"
-6,2,13,"All Sensors Out (Offline until repaired)"
-6,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-6,1,100,"Reactor Containment Failure (Unit explodes)"
-7,1,100,"Reactor Core Breach (Ship explodes)"
-7,2, 3,"Structural Collapse (+3 damage)"
-7,2, 2,"Explosion Amidships (+2 damage)"
-7,2, 1,"Superstructure Hit (+1 damage)"
-7,2, 1,"Inertial Dampeners Down (+1 damage)"
-7,4,13,"Weapons Damaged (Offline until repaired)"
-7,2,19,"Radiation Leak (+5% crew casualties)"
-7,2,19,"Coolant Leak (+5% crew casualties)"
-7,2,19,"Hull Breach (+5% crew casualties)"
-7,2, 1,"Main Fusion Reactors Down (+1 damage)"
-7,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-7,4,12,"Weapon Power Short (Some offline until repaired)"
-7,4,14,"Engine Power Short (Drifting for 1 turn)"
-7,2, 0,"Shuttle/Fighter Bay Hit"
-7,2,11,"Main Fire Control Out (Offline for 1 turn)"
-7,2,11,"Main Scanners Out (Offline for 1 turn)"
-7,2, 0,"Maglock/Tractor Beams Down"
-7,2,11,"Main Bridge Hit (Bridge crew killed, Offline for 1 turn)"
-7,2,14,"Main Engineering Hit (Drifting for 1 turn)"
-7,4,15,"Warp Engine Hit (No warp movement until repaired)"
-7,2,19,"Barracks/Cargo Holds Breached (+5% crew casualties)"
-7,2,19,"Warp Drive Down (No warp movement until repaired)"
-7,2,19,"Crew Quarters Breached (+5% crew casualties)"
-7,2,14,"Impulse Engines Down (Drifting for 1 turn)"
-7,2, 0,"Auxiliary Scanners Out"
-7,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-7,2, 0,"Emergency Power Out"
-7,2,20,"Primary Life Support Out (+10% crew casualties)"
-7,2,15,"Navigational Deflectors Out (No warp movement until repaired)"
-7,2,20,"Internal Damage (+10% crew casualties)"
-7,2,11,"Main Computer Down (Offline for 1 turn)"
-7,2,19,"Internal Damage (+5% crew casualties)"
-7,2,19,"Emergency Life Support Out (+5% crew casualties)"
-7,2, 0,"Auxiliary Computer Down"
-7,2, 0,"Auxiliary Fire Control Out"
-7,2, 1,"Fire: Level 1 (+1 damage)"
-7,6, 1,"All fighters in hangar destroyed (+1 damage)"
-7,2, 0,"ECM/Cloaking Systems Out"
-7,2, 2,"Fire: Level 2 (+2 damage)"
-7,4, 2,"All fighters in hangar destroyed (+2 damage)"
-7,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-7,2, 3,"Fire: Level 3 (+3 damage)"
-7,2, 0,"Auxiliary Bridge Hit"
-7,4, 4,"All fighters in hangar destroyed (+4 damage)"
-7,4,16,"All fighters in hangar destroyed (crippled, destruction imminent)"
-7,1,21,"All fighters in hangar destroyed (+25% crew casualties, crippled, destruction imminent)"
-7,1,100,"Carrier lost with all hands in catastrophic explosion"
-7,2,16,"All Sensors Out (Offline and no movement until repaired)"
-7,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-7,1,100,"Reactor Containment Failure (Ship explodes)"
-8,1,100,"Reactor Core Breach (Unit explodes)"
-8,2, 3,"Structural Collapse (+3 damage)"
-8,2, 2,"Explosion mid deck (+2 damage)"
-8,2, 1,"Superstructure Hit (+1 damage)"
-8,2, 1,"Artificial Gravity Out (+1 damage)"
-8,4,13,"Weapons Out (Offline until repaired)"
-8,2,19,"Radiation Leak (+5% crew casualties)"
-8,2,19,"Coolant Leak (+5% crew casualties)"
-8,2,19,"Hull Breach (+5% crew casualties)"
-8,2, 1,"Main Fusion Reactors Down (+1 damage)"
-8,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-8,8,12,"Weapon Power Couplings Down (Some offline until repaired)"
-8,2, 0,"Shuttle/Fighter Bay Hit"
-8,2,11,"Main Fire Control Out (Offline for 1 turn)"
-8,2,11,"Main Scanners Out (Offline for 1 turn)"
-8,2, 0,"Tractor Beams Down"
-8,2,11,"Main Bridge Hit (Bridge crew killed, Offline for 1 turn)"
-8,2,11,"Main Engineering Hit (Offline for 1 turn)"
-8,4,11,"Main Power Hit (offline for 1 turn)"
-8,2,19,"Barracks/Cargo Holds Breached (+5% crew casualties)"
-8,2, 0,"Station Keeping Engines Offline (orbit will decay)"
-8,2,19,"Crew Quarters Breached (+5% crew casualties)"
-8,2, 0,"Observation Deck Destroyed"
-8,2, 0,"Auxiliary Scanners Out"
-8,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-8,2, 0,"Emergency Power Out"
-8,2,20,"Primary Life Support Out (+10% crew casualties)"
-8,2, 0,"Navigational Control Out (No docking until repaired)"
-8,2,20,"Internal Damage (+10% crew casualties)"
-8,2,11,"Main Computer Down (Offline for 1 turn)"
-8,2,19,"Internal Damage (+5% crew casualties)"
-8,2,19,"Emergency Life Support Out (+5% crew casualties)"
-8,2, 0,"Auxiliary Computer Down"
-8,2, 0,"Auxiliary Fire Control Out"
-8,2, 1,"Fire: Level 1 (+1 damage)"
-8,2, 1,"Explosion mid deck (+1 damage)"
-8,2, 0,"ECM/Cloaking Systems Out"
-8,2, 2,"Fire: Level 2 (+2 damage)"
-8,2, 2,"Explosion Amidships (+2 damage)"
-8,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-8,2, 3,"Fire: Level 3 (+3 damage)"
-8,2, 0,"Auxiliary Bridge Hit"
-8,2, 4,"Explosive Chain Reaction (+4 damage)"
-8,2,13,"All Sensors Out (Offline until repaired)"
-8,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-8,1,100,"Reactor Containment Failure (Unit explodes)"
-9,1,100,"Reactor Core Breach (Ship explodes)"
-9,2, 3,"Structural Collapse (+3 damage)"
-9,2, 2,"Explosion Amidships (+2 damage)"
-9,2, 1,"Superstructure Hit (+1 damage)"
-9,2, 1,"Inertial Dampeners Down (+1 damage)"
-9,4,13,"Weapons Damaged (Offline until repaired)"
-9,2,19,"Radiation Leak (+5% crew casualties)"
-9,2,19,"Coolant Leak (+5% crew casualties)"
-9,2,19,"Hull Breach (+5% crew casualties)"
-9,2, 1,"Main Fusion Reactors Down (+1 damage)"
-9,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-9,4,12,"Weapon Power Short (Some offline until repaired)"
-9,4,14,"Engine Power Short (Drifting for 1 turn)"
-9,2, 0,"Shuttle/Fighter Bay Hit"
-9,2,11,"Main Fire Control Out (Offline for 1 turn)"
-9,2,11,"Main Scanners Out (Offline for 1 turn)"
-9,2, 0,"Maglock/Tractor Beams Down"
-9,2,11,"Main Bridge Hit (Bridge crew killed, Offline for 1 turn)"
-9,2,14,"Main Engineering Hit (Drifting for 1 turn)"
-9,4,15,"Warp Engine Hit (No warp movement until repaired)"
-9,2,19,"Barracks/Cargo Holds Breached (+5% crew casualties)"
-9,2,19,"Warp Drive Down (No warp movement until repaired)"
-9,2,19,"Crew Quarters Breached (+5% crew casualties)"
-9,2,14,"Impulse Engines Down (Drifting for 1 turn)"
-9,2, 0,"Auxiliary Scanners Out"
-9,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-9,2, 0,"Emergency Power Out"
-9,2,20,"Primary Life Support Out (+10% crew casualties)"
-9,2,15,"Navigational Deflectors Out (No warp movement until repaired)"
-9,2,20,"Internal Damage (+10% crew casualties)"
-9,2,11,"Main Computer Down (Offline for 1 turn)"
-9,2,19,"Internal Damage (+5% crew casualties)"
-9,2,19,"Emergency Life Support Out (+5% crew casualties)"
-9,2, 0,"Auxiliary Computer Down"
-9,2, 0,"Auxiliary Fire Control Out"
-9,2, 1,"Fire: Level 1 (+1 damage)"
-9,6, 1,"Cargo explodes (+1 damage)"
-9,2, 0,"ECM/Cloaking Systems Out"
-9,2, 2,"Fire: Level 2 (+2 damage)"
-9,4, 2,"Cargo explodes (+2 damage)"
-9,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-9,2, 3,"Fire: Level 3 (+3 damage)"
-9,2, 0,"Auxiliary Bridge Hit"
-9,4, 4,"Cargo explodes (+4 damage)"
-9,4,16,"Cargo explodes and burns (crippled, destruction imminent)"
-9,1,21,"Cargo explodes and burns (+25% crew casualties, crippled, destruction imminent)"
-9,1,100,"Unit lost with all hands in catastrophic explosion"
-9,2,16,"All Sensors Out (Offline and no movement until repaired)"
-9,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-9,1,100,"Reactor Containment Failure (Ship explodes)"
-10,1,100,"Autonomic Systems Destroyed (creature dies instantly)"
-10,2, 3,"Structural Collapse (+3 damage)"
-10,2, 2,"Internal Organ Bursts (+2 damage)"
-10,2, 1,"Vitals Hit (+1 damage)"
-10,2, 1,"Structural Integrity Compromised (+1 damage)"
-10,4,13,"Weapons Out (Offline until healed)"
-10,2,19,"Bio-energy Leak (life signs down 5%)"
-10,2,19,"Toxins Leak (life signs down 5%)"
-10,2,19,"Carapace breach (life signs down 5%)"
-10,2, 1,"Main Bio-Energy Generator Down (+1 damage)"
-10,2, 1,"Auxiliary Bio-Energy Generator Down (+1 damage)"
-10,8,14,"Stunned (Drifting for 1 turn)"
-10,2, 0,"Brood/Swarmer Bay Hit"
-10,2,11,"Weapons Control Seizure (Offline for 1 turn)"
-10,2,11,"Blinded (Offline for 1 turn)"
-10,2, 0,"Grappling Systems Hit"
-10,2,11,"Main Control Center Hit ('Bridge Crew' Killed, Offline for 1 turn)"
-10,2,11,"Vitals Hit (Offline for 1 turn)"
-10,4,15,"FTL Propulsion Hit (No warp movement until repaired)"
-10,2,19,"Hive/Cargo Pod Beached (life signs down 5%)"
-10,2,15,"FTL Propulsion Down (No warp movement until repaired)"
-10,2,19,"Vitals Hit (life signs down 5%)"
-10,2,14,"Normal Space propulsion Down (Drifting for 1 turn)"
-10,2, 0,"Auxiliary Senses Lost"
-10,2,13,"Weapon Feeds Hit (Offline until healed)"
-10,2, 0,"Energy Reserves Destroyed"
-10,2,20,"Vitals Hit (life signs down 10%)"
-10,2,15,"FTL Navigation Control Damage (No warp movement until healed)"
-10,2,20,"Internal Damage (life signs down 10%)"
-10,2,11,"Vitals Hit (Offline for 1 turn)"
-10,2,19,"Internal Damage (life signs down 5%)"
-10,2,19,"Vitals Hit (life signs down 5%)"
-10,2, 0,"Auxiliary Neural Network Down"
-10,2, 0,"Auxiliary Fire Control Out"
-10,2, 1,"Fire: Level 1 (+1 damage)"
-10,2, 1,"Internal Organ Bursts (+1 damage)"
-10,2, 0,"Electro-magnetic Jamming/Cloak Disabled"
-10,2, 2,"Fire: Level 2 (+2 damage)"
-10,2, 2,"Internal Organ Bursts (+2 damage)"
-10,2,18,"Ammunition Pod/Sack Explosion (+Tp damage)"
-10,2, 3,"Fire: Level 3 (+3 damage)"
-10,2, 0,"Auxiliary Control Center Hit"
-10,2, 4,"Internal Organ Bursts (+4 damage)"
-10,2,16,"Blinded (Offline and No movement until healed)"
-10,2,17,"Shield Generators Down (Sh=0 until healed)"
-10,1,100,"Brain Shot (creature dies instantly)"
-11,1,100,"Reactor Core Breach (Vehicle explodes)"
-11,2, 3,"Structural Collapse (+3 damage)"
-11,2, 2,"Internal Explosion (+2 damage)"
-11,2, 1,"Superstructure Hit (+1 damage)"
-11,2, 1,"Suspension Broken (+1 damage)"
-11,4,13,"Weapons Out (Offline until repaired)"
-11,2,19,"Radiation Leak (+5% crew casualties)"
-11,2,19,"Coolant Leak (+5% crew casualties)"
-11,2,19,"Hull Breach (+5% crew casualties)"
-11,2, 1,"Main Fusion Reactors Down (+1 damage)"
-11,2, 1,"Auxiliary Fusion Reactors Down (+1 damage)"
-11,8,12,"Weapon Power Couplings Down (Some offline until repaired)"
-11,2, 0,"Drone Bay Hit"
-11,2,11,"Main Fire Control Out (Offline for 1 turn)"
-11,2,11,"Main Scanners Out (Offline for 1 turn)"
-11,2, 0,"Towing Gear Wrecked"
-11,2,11,"Command Section Hit (Command crew killed, Offline for 1 turn)"
-11,2,14,"Main Engineering Hit (Drifting for 1 turn)"
-11,4,15,"Drive Systems Hit (No movement until repaired)"
-11,2,19,"Storage Bins Breached (+5% crew casualties)"
-11,2,15,"Main Drive Down (No movement until repaired)"
-11,2,19,"Crew Compartment Breached (+5% crew casualties)"
-11,2,15,"Main Drive Down (No movement until repaired)"
-11,2, 0,"Auxiliary Scanners Out"
-11,2,13,"Weapon Power Couplings Down (Offline until repaired)"
-11,2, 0,"Emergency Power Out"
-11,2,20,"Primary Life Support Out (+10% crew casualties)"
-11,2,15,"Navigational Control Out (No movement until repaired)"
-11,2,20,"Internal Damage (+10% crew casualties)"
-11,2,11,"Main Computer Down (Offline for 1 turn)"
-11,2,19,"Internal Damage (+5% crew casualties)"
-11,2,19,"Emergency Life Support Out (+5% crew casualties)"
-11,2, 0,"Auxiliary Computer Down"
-11,2, 0,"Auxiliary Fire Control Out"
-11,2, 1,"Fire: Level 1 (+1 damage)"
-11,2, 1,"Internal Explosion (+1 damage)"
-11,2, 0,"ECM/Cloaking Systems Out"
-11,2, 2,"Fire: Level 2 (+2 damage)"
-11,2, 2,"Internal Explosion(+2 damage)"
-11,2,18,"Ammunition Bay/Magazine Explosion (+Tp damage)"
-11,2, 3,"Fire: Level 3 (+3 damage)"
-11,2, 0,"Communications Equipment Destroyed"
-11,2, 4,"Explosive Chain Reaction (+4 damage)"
-11,2,16,"All Sensors Out (Offline and No movement until repaired)"
-11,2,17,"Shield Power Couplings Down (Sh=0 until repaired)"
-11,1,100,"Reactor Containment Failure (Vehicle explodes)"
-12,1,19,"PSI: Psionic Assault (+5% crew casualties)"
-12,1,20,"PSI: Psionic Assault (+10% crew casualties)"
-12,1,14,"PSI: Navigation crew disrupted (No movement for 1 turn)"
-12,1,11,"PSI: Weapons crew disrupted (Offline for 1 turn)"
+{"table": "dis","weight": 1,"text": "DIS: Main Computer Offline (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "dis","weight": 1,"text": "DIS: Primary Drive Offline (No movement for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "dis","weight": 1,"text": "DIS: Primary Drive Down (No movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "dis","weight": 1,"text": "DIS: Shield Generators Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "heat","weight": 1,"text": "HEAT: Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "heat","weight": 1,"text": "HEAT: Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "heat","weight": 1,"text": "HEAT: Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "heat","weight": 1,"text": "HEAT: Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "meson","weight": 1,"text": "MESON: Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "meson","weight": 1,"text": "MESON: Explosive Chain Reaction (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "meson","weight": 1,"text": "MESON: Hull Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "meson","weight": 1,"text": "MESON: Crew Quarters Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vibro","weight": 1,"text": "VIBRO: Inertial Dampeners Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vibro","weight": 1,"text": "VIBRO: Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vibro","weight": 1,"text": "VIBRO: Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "vibro","weight": 1,"text": "VIBRO: Hull Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Shuttle/Fighter Bay Hit","effect":false}
+{"table": "standard","weight": 2,"text": "Maglock/Tractor Beams Down","effect":false}
+{"table": "standard","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "standard","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "standard","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "standard","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "standard","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "standard","weight": 2,"text": "Auxiliary Bridge Hit","effect":false}
+{"table": "standard","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Inertial Dampeners Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Explosion Amidships (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "standard","weight": 2,"text": "Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "standard","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "standard","weight": 2,"text": "Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "standard","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "standard","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "standard","weight": 2,"text": "Explosive Chain Reaction (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "standard","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "standard","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "standard","weight": 2,"text": "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "standard","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "standard","weight": 4,"text": "Weapon Power Short (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "standard","weight": 4,"text": "Weapons Damaged (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "standard","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "standard","weight": 4,"text": "Engine Power Short (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "standard","weight": 2,"text": "Main Engineering Hit (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "standard","weight": 2,"text": "Impulse Engines Down (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "standard","weight": 4,"text": "Warp Engine Hit (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "standard","weight": 2,"text": "Navigational Deflectors Out (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "standard","weight": 2,"text": "All Sensors Out (Offline and no movement until repaired)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "standard","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "standard","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "standard","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Hull Breach (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Barracks/Cargo Holds Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Warp Drive Down (No warp movement until repaired)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Crew Quarters Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "standard","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "standard","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "standard","weight": 1,"text": "Reactor Core Breach (Ship explodes)","effect":{"type": "death"}}
+{"table": "standard","weight": 1,"text": "Reactor Containment Failure (Ship explodes)","effect":{"type": "death"}}
+{"table": "building","weight": 2,"text": "Launch Facilities Hit","effect":false}
+{"table": "building","weight": 2,"text": "Tractor Beams Down","effect":false}
+{"table": "building","weight": 2,"text": "Backup Reactor Down","effect":false}
+{"table": "building","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "building","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "building","weight": 2,"text": "Satellite Uplink Destroyed","effect":false}
+{"table": "building","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "building","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "building","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "building","weight": 2,"text": "Auxiliary Command Hit","effect":false}
+{"table": "building","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "building","weight": 4,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "building","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "building","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "building","weight": 2,"text": "Explosion mid level (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "building","weight": 2,"text": "Explosion mid level (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "building","weight": 2,"text": "Powerplant Hit (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "building","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "building","weight": 2,"text": "Explosion mid level (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "building","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "building","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "building","weight": 2,"text": "Explosive Chain Reaction (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "building","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "building","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "building","weight": 2,"text": "Main Command Hit (Command staff killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "building","weight": 2,"text": "Main Engineering Hit (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "building","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "building","weight": 8,"text": "Power Couplings Down (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "building","weight": 4,"text": "Weapons Out (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "building","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "building","weight": 2,"text": "All Sensors Out (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "building","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "building","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "building","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "building","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 2,"text": "Cargo Area Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 6,"text": "Barracks Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "building","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "building","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "building","weight": 1,"text": "Reactor Core Breach (Unit explodes)","effect":{"type": "death"}}
+{"table": "building","weight": 1,"text": "Reactor Containment Failure (Unit explodes)","effect":{"type": "death"}}
+{"table": "carrier","weight": 2,"text": "Shuttle/Fighter Bay Hit","effect":false}
+{"table": "carrier","weight": 2,"text": "Maglock/Tractor Beams Down","effect":false}
+{"table": "carrier","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "carrier","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "carrier","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "carrier","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "carrier","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "carrier","weight": 2,"text": "Auxiliary Bridge Hit","effect":false}
+{"table": "carrier","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 2,"text": "Inertial Dampeners Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 2,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 6,"text": "All fighters in hangar destroyed (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "carrier","weight": 2,"text": "Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "carrier","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "carrier","weight": 4,"text": "All fighters in hangar destroyed (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "carrier","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "carrier","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "carrier","weight": 4,"text": "All fighters in hangar destroyed (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "carrier","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "carrier","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "carrier","weight": 2,"text": "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "carrier","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "carrier","weight": 4,"text": "Weapon Power Short (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "carrier","weight": 4,"text": "Weapons Damaged (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "carrier","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "carrier","weight": 4,"text": "Engine Power Short (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "carrier","weight": 2,"text": "Main Engineering Hit (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "carrier","weight": 2,"text": "Impulse Engines Down (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "carrier","weight": 4,"text": "Warp Engine Hit (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "carrier","weight": 2,"text": "Navigational Deflectors Out (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "carrier","weight": 4,"text": "All fighters in hangar destroyed (crippled, destruction imminent)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "carrier","weight": 2,"text": "All Sensors Out (Offline and no movement until repaired)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "carrier","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "carrier","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "carrier","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Hull Breach (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Barracks/Cargo Holds Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Warp Drive Down (No warp movement until repaired)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Crew Quarters Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "carrier","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "carrier","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "carrier","weight": 1,"text": "All fighters in hangar destroyed (+25% crew casualties, crippled, destruction imminent)","effect":{"type":"multiple","effects":[{"type":"crew","amount":25},{"type":"cripple"}]}}
+{"table": "carrier","weight": 1,"text": "Reactor Core Breach (Ship explodes)","effect":{"type": "death"}}
+{"table": "carrier","weight": 1,"text": "Carrier lost with all hands in catastrophic explosion","effect":{"type": "death"}}
+{"table": "carrier","weight": 1,"text": "Reactor Containment Failure (Ship explodes)","effect":{"type": "death"}}
+{"table": "orbital","weight": 2,"text": "Shuttle/Fighter Bay Hit","effect":false}
+{"table": "orbital","weight": 2,"text": "Tractor Beams Down","effect":false}
+{"table": "orbital","weight": 2,"text": "Station Keeping Engines Offline (orbit will decay)","effect":false}
+{"table": "orbital","weight": 2,"text": "Observation Deck Destroyed","effect":false}
+{"table": "orbital","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "orbital","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "orbital","weight": 2,"text": "Navigational Control Out (No docking until repaired)","effect":false}
+{"table": "orbital","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "orbital","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "orbital","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "orbital","weight": 2,"text": "Auxiliary Bridge Hit","effect":false}
+{"table": "orbital","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Artificial Gravity Out (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Explosion mid deck (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "orbital","weight": 2,"text": "Explosion mid deck (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "orbital","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "orbital","weight": 2,"text": "Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "orbital","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "orbital","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "orbital","weight": 2,"text": "Explosive Chain Reaction (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "orbital","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 2,"text": "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 2,"text": "Main Engineering Hit (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 4,"text": "Main Power Hit (offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "orbital","weight": 8,"text": "Weapon Power Couplings Down (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "orbital","weight": 4,"text": "Weapons Out (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "orbital","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "orbital","weight": 2,"text": "All Sensors Out (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "orbital","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "orbital","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "orbital","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Hull Breach (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Barracks/Cargo Holds Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Crew Quarters Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "orbital","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "orbital","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "orbital","weight": 1,"text": "Reactor Core Breach (Unit explodes)","effect":{"type": "death"}}
+{"table": "orbital","weight": 1,"text": "Reactor Containment Failure (Unit explodes)","effect":{"type": "death"}}
+{"table": "volatile","weight": 2,"text": "Shuttle/Fighter Bay Hit","effect":false}
+{"table": "volatile","weight": 2,"text": "Maglock/Tractor Beams Down","effect":false}
+{"table": "volatile","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "volatile","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "volatile","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "volatile","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "volatile","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "volatile","weight": 2,"text": "Auxiliary Bridge Hit","effect":false}
+{"table": "volatile","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 2,"text": "Inertial Dampeners Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 2,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 6,"text": "Cargo explodes (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "volatile","weight": 2,"text": "Explosion Amidships (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "volatile","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "volatile","weight": 4,"text": "Cargo explodes (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "volatile","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "volatile","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "volatile","weight": 4,"text": "Cargo explodes (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "volatile","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "volatile","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "volatile","weight": 2,"text": "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "volatile","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "volatile","weight": 4,"text": "Weapon Power Short (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "volatile","weight": 4,"text": "Weapons Damaged (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "volatile","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "volatile","weight": 4,"text": "Engine Power Short (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "volatile","weight": 2,"text": "Main Engineering Hit (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "volatile","weight": 2,"text": "Impulse Engines Down (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "volatile","weight": 4,"text": "Warp Engine Hit (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "volatile","weight": 2,"text": "Navigational Deflectors Out (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "volatile","weight": 4,"text": "Cargo explodes and burns (crippled, destruction imminent)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "volatile","weight": 2,"text": "All Sensors Out (Offline and no movement until repaired)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "volatile","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "volatile","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "volatile","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Hull Breach (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Barracks/Cargo Holds Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Warp Drive Down (No warp movement until repaired)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Crew Quarters Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "volatile","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "volatile","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "volatile","weight": 1,"text": "Cargo explodes and burns (+25% crew casualties, crippled, destruction imminent)","effect":{"type":"multiple","effects":[{"type":"crew","amount":25},{"type":"cripple"}]}}
+{"table": "volatile","weight": 1,"text": "Reactor Core Breach (Ship explodes)","effect":{"type": "death"}}
+{"table": "volatile","weight": 1,"text": "Unit lost with all hands in catastrophic explosion","effect":{"type": "death"}}
+{"table": "volatile","weight": 1,"text": "Reactor Containment Failure (Ship explodes)","effect":{"type": "death"}}
+{"table": "bio","weight": 2,"text": "Brood/Swarmer Bay Hit","effect":false}
+{"table": "bio","weight": 2,"text": "Grappling Systems Hit","effect":false}
+{"table": "bio","weight": 2,"text": "Auxiliary Senses Lost","effect":false}
+{"table": "bio","weight": 2,"text": "Energy Reserves Destroyed","effect":false}
+{"table": "bio","weight": 2,"text": "Auxiliary Neural Network Down","effect":false}
+{"table": "bio","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "bio","weight": 2,"text": "Electro-magnetic Jamming/Cloak Disabled","effect":false}
+{"table": "bio","weight": 2,"text": "Auxiliary Control Center Hit","effect":false}
+{"table": "bio","weight": 2,"text": "Vitals Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Structural Integrity Compromised (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Main Bio-Energy Generator Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Auxiliary Bio-Energy Generator Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Internal Organ Bursts (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "bio","weight": 2,"text": "Internal Organ Bursts (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "bio","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "bio","weight": 2,"text": "Internal Organ Bursts (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "bio","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "bio","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "bio","weight": 2,"text": "Internal Organ Bursts (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "bio","weight": 2,"text": "Weapons Control Seizure (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "bio","weight": 2,"text": "Blinded (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "bio","weight": 2,"text": "Main Control Center Hit ('Bridge Crew' Killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "bio","weight": 2,"text": "Vitals Hit (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "bio","weight": 2,"text": "Vitals Hit (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "bio","weight": 4,"text": "Weapons Out (Offline until healed)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "bio","weight": 2,"text": "Weapon Feeds Hit (Offline until healed)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "bio","weight": 8,"text": "Stunned (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "bio","weight": 2,"text": "Normal Space propulsion Down (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "bio","weight": 4,"text": "FTL Propulsion Hit (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "bio","weight": 2,"text": "FTL Propulsion Down (No warp movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "bio","weight": 2,"text": "FTL Navigation Control Damage (No warp movement until healed)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "bio","weight": 2,"text": "Blinded (Offline and No movement until healed)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "bio","weight": 2,"text": "Shield Generators Down (Sh=0 until healed)","effect":{"type":"disable","effect": "shield"}}
+{"table": "bio","weight": 2,"text": "Ammunition Pod/Sack Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "bio","weight": 2,"text": "Bio-energy Leak (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Toxins Leak (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Carapace breach (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Hive/Cargo Pod Beached (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Vitals Hit (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Internal Damage (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Vitals Hit (life signs down 5%)","effect":{"type":"crew","amount":5}}
+{"table": "bio","weight": 2,"text": "Vitals Hit (life signs down 10%)","effect":{"type":"crew","amount":10}}
+{"table": "bio","weight": 2,"text": "Internal Damage (life signs down 10%)","effect":{"type":"crew","amount":10}}
+{"table": "bio","weight": 1,"text": "Autonomic Systems Destroyed (creature dies instantly)","effect":{"type": "death"}}
+{"table": "bio","weight": 1,"text": "Brain Shot (creature dies instantly)","effect":{"type": "death"}}
+{"table": "vehicle","weight": 2,"text": "Drone Bay Hit","effect":false}
+{"table": "vehicle","weight": 2,"text": "Towing Gear Wrecked","effect":false}
+{"table": "vehicle","weight": 2,"text": "Auxiliary Scanners Out","effect":false}
+{"table": "vehicle","weight": 2,"text": "Emergency Power Out","effect":false}
+{"table": "vehicle","weight": 2,"text": "Auxiliary Computer Down","effect":false}
+{"table": "vehicle","weight": 2,"text": "Auxiliary Fire Control Out","effect":false}
+{"table": "vehicle","weight": 2,"text": "ECM/Cloaking Systems Out","effect":false}
+{"table": "vehicle","weight": 2,"text": "Communications Equipment Destroyed","effect":false}
+{"table": "vehicle","weight": 2,"text": "Superstructure Hit (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Suspension Broken (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Main Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Auxiliary Fusion Reactors Down (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Fire: Level 1 (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Internal Explosion (+1 damage)","effect":{"type": "damage","amount": 1}}
+{"table": "vehicle","weight": 2,"text": "Internal Explosion (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "vehicle","weight": 2,"text": "Fire: Level 2 (+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "vehicle","weight": 2,"text": "Internal Explosion(+2 damage)","effect":{"type": "damage","amount": 2}}
+{"table": "vehicle","weight": 2,"text": "Structural Collapse (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "vehicle","weight": 2,"text": "Fire: Level 3 (+3 damage)","effect":{"type": "damage","amount": 3}}
+{"table": "vehicle","weight": 2,"text": "Explosive Chain Reaction (+4 damage)","effect":{"type": "damage","amount": 4}}
+{"table": "vehicle","weight": 2,"text": "Main Fire Control Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "vehicle","weight": 2,"text": "Main Scanners Out (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "vehicle","weight": 2,"text": "Command Section Hit (Command crew killed, Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "vehicle","weight": 2,"text": "Main Computer Down (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "vehicle","weight": 8,"text": "Weapon Power Couplings Down (Some offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "some"}}
+{"table": "vehicle","weight": 4,"text": "Weapons Out (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "vehicle","weight": 2,"text": "Weapon Power Couplings Down (Offline until repaired)","effect":{"type": "effect","effect": "disabled","spread": "all"}}
+{"table": "vehicle","weight": 2,"text": "Main Engineering Hit (Drifting for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "vehicle","weight": 4,"text": "Drive Systems Hit (No movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "vehicle","weight": 2,"text": "Main Drive Down (No movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "vehicle","weight": 2,"text": "Main Drive Down (No movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "vehicle","weight": 2,"text": "Navigational Control Out (No movement until repaired)","effect":{"type":"effect","effect": "nomove"}}
+{"table": "vehicle","weight": 2,"text": "All Sensors Out (Offline and No movement until repaired)","effect":{"type":"effect","effect":"cripple"}}
+{"table": "vehicle","weight": 2,"text": "Shield Power Couplings Down (Sh=0 until repaired)","effect":{"type":"disable","effect": "shield"}}
+{"table": "vehicle","weight": 2,"text": "Ammunition Bay/Magazine Explosion (+Tp damage)","effect":{"type":"damage","amount": "tp"}}
+{"table": "vehicle","weight": 2,"text": "Radiation Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Coolant Leak (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Hull Breach (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Storage Bins Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Crew Compartment Breached (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Internal Damage (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Emergency Life Support Out (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "vehicle","weight": 2,"text": "Primary Life Support Out (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "vehicle","weight": 2,"text": "Internal Damage (+10% crew casualties)","effect":{"type":"crew","amount":10}}
+{"table": "vehicle","weight": 1,"text": "Reactor Core Breach (Vehicle explodes)","effect":{"type": "death"}}
+{"table": "vehicle","weight": 1,"text": "Reactor Containment Failure (Vehicle explodes)","effect":{"type": "death"}}
+{"table": "psi","weight": 1,"text": "PSI: Weapons crew disrupted (Offline for 1 turn)","effect":{"type": "effect","effect": "offline","spread": "all","duration":1}}
+{"table": "psi","weight": 1,"text": "PSI: Navigation crew disrupted (No movement for 1 turn)","effect":{"type": "effect","effect": "drifting","duration": 1}}
+{"table": "psi","weight": 1,"text": "PSI: Psionic Assault (+5% crew casualties)","effect":{"type":"crew","amount":5}}
+{"table": "psi","weight": 1,"text": "PSI: Psionic Assault (+10% crew casualties)","effect":{"type":"crew","amount":10}}

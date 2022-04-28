@@ -3,6 +3,7 @@ export function simulator2(library) {
 
   _service.setup = (simulation) => {
     simulation.status = "Waiting";
+    simulation.critTables = library.getCritTables();
 
     console.info(`Simulation:`,simulation);
 
@@ -155,7 +156,8 @@ export function simulator2(library) {
       longRange: false,
       options: oldState.options,
       damage: [],
-      checks: []
+      checks: [],
+      critTables: simulation.critTables
     };
 
     state.longRange = checkLongRange(state.fleets);
@@ -167,6 +169,8 @@ export function simulator2(library) {
 
     return state;
   }
+
+  function cleanupState(state) {}
 
   // Faction Functions ---------------------------------------------------------
 function factionDoDoneCheck(faction,fleets) {
@@ -520,7 +524,7 @@ function fleetDoDoneCheck(fleet) {
 
           critSlot.crit = {
             type: "standard",
-            effect: unitCreateCrit(unit,"standard")
+            effect: unitCreateCrit(unit,state.critTables["standard"])
           };
 
           stateCreateEvent(state,`${unit.name} suffers a critical hit! ${critSlot.crit.effect.text}`,action);
@@ -1022,20 +1026,57 @@ function fleetDoDoneCheck(fleet) {
     console.info(`stateProcessCrit(${unit.name}:${crit.text})`);
     console.info(crit);
 
-    if(crit.type === "damage") {
+    // Is the crit type a simple damage type?  Meaning it is of type 'damage' and a numerical amount of damage.
+    if(crit.type === "damage" && _.isNumber(crit.amount)) {
       console.info(`Processing damage crit (${crit.ammount} damage)`);
       let token = {
         uuid: unit.uuid,
         fleetUuid: unit.fleetUuid,
-        factionUuid: unit.factionId,
+        factionUuid: unit.factionUuid,
         channel: "hl",
         amount: crit.amount
       };
       console.info(token);
       stateApplyDamageToken(state,token,unit);
     }
-    else if(crit.type === "crew") {}
-    else if(crit.type === "offline") {}
+    // Is the crit type a complex damage type?  Meaning it is of the type 'damage' and a string amount of damage.
+    else if(crit.type === "damage" && _.isString(crit.ammount)) {
+      // Is the damage amount 'tp'?  This means that the damage is the current tp rating of the unit.
+      // These are magazine hits.
+      if(crit.amount === "tp") {
+        let token = {
+          uuid: unit.uuid,
+          fleetUuid: unit.fleetUuid,
+          factionUuid: unit.factionUuid,
+          channel: "hl",
+          amount: unit.tpCur
+        };
+        console.info(token);
+        stateApplyDamageToken(state,token,unit);
+      }
+    }
+    // Is this a crew damage effect?
+    else if(crit.type === "crew") {
+      // Descrease the crew tag by the amount specified by the crit
+    }
+    else if(crit.type === "effect") {
+      if(crit.effect === "offline") {
+        unitApplyTag(unit,{key:"offline",value:1,spread:crit.spread},"bracket");
+      }
+      else if(crit.effect === "disabled") {
+        unitApplyTag(unit,{key:"disabled",spred:crit.spread},"bracket")
+      }
+      else if(crit.effect === "drifting") {
+        unitApplyTag(unit,{key:"drifting",value:true},"unit");
+      }
+      else if(crit.effect === "cripple") {}
+      else if(crit.effect === "nomove") {}
+    }
+    else if(crit.type === "disable") {
+      if(crit.effect === "shield") {
+        unit.shCur = 0;
+      }
+    }
     else if(crit.type === "death") {
       stateDoDeath(state,unit);
     }
@@ -1150,6 +1191,34 @@ function fleetDoDoneCheck(fleet) {
     return token;
   }
 
+  function unitApplyTag(unit,tag,realm) {
+    console.info(`unitApplyTag(${unit.name}:${realm})`);
+    if(realm === "unit") {
+      unit.tags[tag.key] = tag.value;
+    }
+    else if(realm === "bracket") {
+      let brackets = false;
+      let bracketKeys = _.keys(unit.brackets);
+      if(tag.spread === "one") {
+        brackets = _.sampleSize(unit.brackets,1);
+      }
+      else if(tag.spread === "some") {
+        let num = _.random(1,bracketKeys.length);
+        brackets = _.sampleSize(unit.brackets,num);
+      }
+      else if(tag.spread === "all") {
+        brackets = _.values(unit.brackets);
+      }
+
+      // Are there brackets to process?
+      if(brackets) {
+        _.forEach(brackets,(bracket) => {
+          bracket.tags[tag.key] = tag.value;
+        });
+      }
+    }
+  }
+
   function unitCheckBreak(unit,state) {
     console.info(`unitBreakCheck(${unit.name})`);
     // Return true if the unit's breakoff level has been reached.
@@ -1251,33 +1320,8 @@ function fleetDoDoneCheck(fleet) {
     return flee;
   }
 
-  function unitCreateCrit(unit,type) {
-    console.info(`unitCreateCrit(${unit.name}:${type})`);
-    let critTables = {};
-    critTables.standard = [
-      { minRoll: 1, maxRoll: 1, text: "Reactor Core Breach (Ship Explodes)", type: "death" },
-      { minRoll: 2, maxRoll: 3, text: "Structural Collapse (+3 damage)", type: "damage", amount: 3 },
-      { minRoll: 4, maxRoll: 5, text: "Explosion Amidships (+2 damage)", type: "damage", amount: 2 },
-      { minRoll: 6, maxRoll: 7, text: "Superstructure Hit (+1 damage)", type: "damage", amount: 1 },
-      { minRoll: 8, maxRoll: 9, text: "Intertial Dampeners Down (+1 damage)", type: "damage", amount: 1 },
-      { minRoll: 10, maxRoll: 13, text: "Weapons Damaged (Offline until repaired)", type: "effect", effect: "offline", spread: "all" },
-      { minRoll: 14, maxRoll: 15, text: "Radiation Leak (+5% crew casualties)", type: "crew", amount: 5 },
-      { minRool: 16, maxRoll: 17, text: "Coolant Leak (+5% crew casualties)", type: "crew", amount: 5},
-      { minRool: 18, maxRoll: 19, text: "Hull Breach (+5% crew casualties)", type: "crew", amount: 5},
-      { minRoll: 20, maxRoll: 21, text: "Main Fusion Reactors Down (+1 damage)", type: "damage", amount: 1 },
-      { minRoll: 22, maxRoll: 23, text: "Auxiliary Fusion Reactors Down (+1 damage)", type: "damage", amount: 1 },
-      { minRoll: 24, maxRoll: 27, text: "Weapon Power Short (Some offline until repaired)", type: "effect", effect: "offline", spread: "some" },
-      { minRoll: 28, maxRoll: 31, text: "Engine Power Short (Drifting for 1 turn)", type: "effect", effect: "drifting", duration: 1 },
-      { minRoll: 32, maxRoll: 33, text: "Shuttle/Fighter Bay Hit" },
-      { minRoll: 34, maxRoll: 35, text: "Main Fire Control Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
-      { minRoll: 36, maxRoll: 37, text: "Main Scanners Out (Offline for 1 turn)", type: "effect", effect: "offline", spread: "all", duration: 1 },
-      { minRoll: 32, maxRoll: 33, text: "Maglock/Tractor Beams Down" },
-      { minRoll: 34, maxRoll: 35, text: "Main Bridge Hit (Bridge crew killed, Offline for 1 turn)", type: "multiple", effects: [{ type: "effect", effect: "destruction", area: "bridge" },{ type: "effect", effect: "offline", spread: "all", duration: 1 }] },
-      { minRoll: 36, maxRoll: 37, text: "Main Engineering Hit (Drifting for 1 turn)", type: "effect", effect: "drifting", duration: 1 },
-      { minRoll: 38, maxRoll: 41, text: "Warp Engine Hit (No warp movement until repaired)", type: "effect", effect: "nomove" }
-    ];
-
-    let table = critTables[type];
+  function unitCreateCrit(unit,table) {
+    console.info(`unitCreateCrit(${unit.name})`);
     console.info(table);
     let maxRoll = 0;
     _.forEach(table,(entry) => {

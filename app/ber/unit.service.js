@@ -6,7 +6,12 @@ export function unit() {
 
     _.forEach(unit.tags,(value,tag) => {
       if(tag !== "brackets" && tag !== "flags" && tag !== "scan" && tag !== "hull" && !!value) {
-        tagString += `${tag} ${value} `;
+        if(_.isBoolean) {
+          tagString += `${tag} `;
+        }
+        else {
+          tagString += `${tag} ${value} `;
+        }
       }
     });
 
