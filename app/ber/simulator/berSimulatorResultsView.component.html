@@ -55,7 +55,7 @@
             </thead>
             <tbody>
               <tr ng-repeat="unit in fleet.units">
-                <td>{{unit.name}}</td>
+                <td ng-click="$ctrl.gotoUnitDetail(unit.uuid)">{{unit.name}}</td>
                 <td>{{unit.shCur}}</td>
                 <td>{{unit.shMax}}</td>
                 <td>{{unit.hlCur}}</td>

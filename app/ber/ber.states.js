@@ -169,3 +169,20 @@ export const berSimulatorResultsViewState = {
     '@^.^': 'berSimulatorResultsView'
   }
 };
+
+export const berSimulatorResultsUnitDetailState = {
+  name: 'berRoot.simulator.results.unit',
+  url: '/results/{simUuid}/{unitUuid}',
+  resolve: {
+    simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let sim = archive.getSimulation($stateParams.simUuid);
+      return sim;
+    }],
+    unitUuid: ["$stateParams",($stateParams) => {
+      return $stateParams.unitUuid;
+    }]
+  },
+  views: {
+    '@^.^.^': 'berSimulatorResultsUnitDetail'
+  }
+};

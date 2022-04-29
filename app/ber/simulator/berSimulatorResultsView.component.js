@@ -30,6 +30,10 @@ class berSimulatorResultsViewController {
   toggleEvents(index) {
     this.ui.turns[index] = !this.ui.turns[index];
   }
+
+  gotoUnitDetail(uuid) {
+    this.$state.go('.unit',{simUuid: this.simulation.uuid,unitUuid: uuid});
+  }
 }
 
 berSimulatorResultsViewController.$inject = ["$scope","$state","berArchive","$stateParams","berUnit"];
