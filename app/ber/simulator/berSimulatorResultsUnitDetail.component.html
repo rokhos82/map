@@ -3,7 +3,9 @@
     <div class="panel panel-default">
       <div class="panel-heading">Unit Detail</div>
       <div class="panel-body">
-        CONTENT GOES HERE
+        <ul class="list-group">
+          <li class="list-group-item" ng-repeat="event in $ctrl.events track by $index">{{event.msg}}</li>
+        </ul>
       </div>
     </div>
   </div>

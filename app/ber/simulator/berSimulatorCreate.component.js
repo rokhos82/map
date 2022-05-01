@@ -52,6 +52,7 @@ class berSimulatorCreateController {
     sim.turns = [];
     sim.fleets = {};
     sim.factions = {};
+    sim.units = {};
 
     // Setup the attacking faction
     let attacker = this.archive.getFleet(this.ui.attacker);
@@ -80,6 +81,13 @@ class berSimulatorCreateController {
     // Setup enemies
     sim.factions.attackers.enemy.push(defender.uuid);
     sim.factions.defenders.enemy.push(attacker.uuid);
+
+    // Setup global units list
+    _.forEach(sim.fleets,(fleet) => {
+      _.forEach(fleet.units,(unit) => {
+        sim.units[unit.uuid] = unit;
+      });
+    });
 
     console.info(sim);
 

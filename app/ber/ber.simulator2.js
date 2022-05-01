@@ -65,6 +65,9 @@ export function simulator2(library) {
           simulation.done = true;
         }
 
+        // Clean up the state
+        stateCleanup(state);
+
         // 5 Save the new state
         simulation.turns.push(state);
         console.info(state);
@@ -170,7 +173,9 @@ export function simulator2(library) {
     return state;
   }
 
-  function cleanupState(state) {}
+  function stateCleanup(state) {
+    console.info(`stateCleanup()`);
+  }
 
   // Faction Functions ---------------------------------------------------------
 function factionDoDoneCheck(faction,fleets) {
@@ -413,6 +418,8 @@ function fleetDoDoneCheck(fleet) {
     if(action) {
       evt.actor = action.actor ? action.actor.name : "";
       evt.actee = action.actee ? action.actee.name : "";
+      evt.actorId = action.actor ? action.actor.uuid : "";
+      evt.acteeId = action.actee ? action.actee.uuid : "";
       evt.type = action.type || "";
       evt.channel = action.channel || null;
       evt.amount = action.amount || 0;
@@ -902,6 +909,7 @@ function fleetDoDoneCheck(fleet) {
       // fled >> flee >> damage >> break >> reserve >> delay >> time
       if(unit.tags.fled) {
         // The unit has fled combat.  Remove the unit from the simulation.
+        stateCreateEvent(state,`${unit.name} has fled the battle space!`,{actor:unit});
         stateRemoveUnit(state,unit);
       }
       else if(unit.tags.flee) {
@@ -1025,10 +1033,18 @@ function fleetDoDoneCheck(fleet) {
   function stateProcessCrit(state,unit,crit) {
     console.info(`stateProcessCrit(${unit.name}:${crit.text})`);
     console.info(crit);
+    console.info(unit);
+    console.info(state.fleets[unit.fleetId]);
+
+    unit = state.fleets[unit.fleetId].units[unit.uuid];
+
+    if(!_.isObject(unit)) {
+      return;
+    }
 
     // Is the crit type a simple damage type?  Meaning it is of type 'damage' and a numerical amount of damage.
     if(crit.type === "damage" && _.isNumber(crit.amount)) {
-      console.info(`Processing damage crit (${crit.ammount} damage)`);
+      console.info(`Processing damage crit (${crit.amount} damage)`);
       let token = {
         uuid: unit.uuid,
         fleetUuid: unit.fleetUuid,
@@ -1061,10 +1077,10 @@ function fleetDoDoneCheck(fleet) {
     }
     else if(crit.type === "effect") {
       if(crit.effect === "offline") {
-        unitApplyTag(unit,{key:"offline",value:1,spread:crit.spread},"bracket");
+        unitApplyTag(unit,{key:"offline",value:2,spread:crit.spread},"bracket");
       }
       else if(crit.effect === "disabled") {
-        unitApplyTag(unit,{key:"disabled",spred:crit.spread},"bracket")
+        unitApplyTag(unit,{key:"disabled",spread:crit.spread},"bracket")
       }
       else if(crit.effect === "drifting") {
         unitApplyTag(unit,{key:"drifting",value:true},"unit");
@@ -1192,7 +1208,8 @@ function fleetDoDoneCheck(fleet) {
   }
 
   function unitApplyTag(unit,tag,realm) {
-    console.info(`unitApplyTag(${unit.name}:${realm})`);
+    console.info(`unitApplyTag(${unit.name}:${tag.key}:${realm})`);
+    console.info(tag);
     if(realm === "unit") {
       unit.tags[tag.key] = tag.value;
     }
@@ -1213,10 +1230,11 @@ function fleetDoDoneCheck(fleet) {
       // Are there brackets to process?
       if(brackets) {
         _.forEach(brackets,(bracket) => {
-          bracket.tags[tag.key] = tag.value;
+          bracket[tag.key] = tag.value;
         });
       }
     }
+    console.info(unit);
   }
 
   function unitCheckBreak(unit,state) {

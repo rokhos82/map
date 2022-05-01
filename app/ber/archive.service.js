@@ -40,13 +40,46 @@ export function archive($localStorage) {
 
   _service.serializeSimulations = () => {
     // Save the entire simulations object to $localStorage
-    $localStorage.set(simRealm,_simulations);
+    // TODO: Setup some logic to remove circular references.
+
+    // Get the list of simulation keys
+    let simKeys = [];
+
+    // Clean up the simulations
+    _.forEach(_simulations,(sim) => {
+      // Remove the global units list.  This is a circular reference
+      delete sim.units;
+
+      // Save the simulation to $localStorage
+      let sk = simRealm + sim.uuid;
+      simKeys.push(sim.uuid);
+      $localStorage.set(sk,sim);
+    });
+
+    $localStorage.set(simRealm,simKeys);
   };
 
   _service.deserializeSimulations = () => {
     // Retrieve the simulation objects from $localStorage.
     // If the key doesn't exist, initialize to an empty object.
-    _simulations = $localStorage.get(simRealm) || {};
+    let simKeys = $localStorage.get(simRealm) || [];
+    _simulations = {};
+
+    // Reconstitue the simulations
+    _.forEach(simKeys,(simUuid) => {
+      let sk = simRealm + simUuid;
+      let sim = $localStorage.get(sk) || {};
+
+      // Rebuild the global units list
+      sim.units = {};
+      _.forEach(sim.fleets,(fleet) => {
+        _.forEach(fleet.units,(unit) => {
+          sim.units[unit.uuid] = unit;
+        });
+      });
+
+      _simulations[simUuid] = sim;
+    });
   };
 
   // Fleet Archive Services ----------------------------------------------------
