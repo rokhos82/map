@@ -175,6 +175,11 @@ export function simulator2(library) {
 
   function stateCleanup(state) {
     console.info(`stateCleanup()`);
+
+    // Remove the critTables
+    delete state.critTables;
+    delete state.datalink;
+    delete state.units;
   }
 
   // Faction Functions ---------------------------------------------------------
@@ -421,8 +426,6 @@ function fleetDoDoneCheck(fleet) {
       evt.actorId = action.actor ? action.actor.uuid : "";
       evt.acteeId = action.actee ? action.actee.uuid : "";
       evt.type = action.type || "";
-      evt.channel = action.channel || null;
-      evt.amount = action.amount || 0;
     }
 
     state.events.push(evt);
