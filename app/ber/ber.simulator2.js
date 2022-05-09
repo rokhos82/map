@@ -8,7 +8,7 @@ export function simulator2(library) {
     console.info(`Simulation:`,simulation);
 
     // Setup the factions
-    _.forEach(simulation.factions,(faction,factionUuid) => {
+    _.forEach(simulation.factions,(faction) => {
       setupFaction(simulation,faction);
     });
 
@@ -440,7 +440,7 @@ function fleetDoDoneCheck(fleet) {
     // If the datalink group does have a target then simply return that target.
     let dlGroupName = unit.tags.dl;
     let target = false;
-    if(!!state.datalink[dlGroupName]) {
+    if(_.has(state.datalink,dlGroupName)) {
       // The group already has a target.
       target = stateGetUnitById(state,state.datalink[dlGroupName]);
     }
@@ -544,7 +544,7 @@ function fleetDoDoneCheck(fleet) {
     });
   }
 
-  function stateDoDamage(state,action,stack) {
+  function stateDoDamage(state,action) {
     // Apply the damage to the target
     let actor = action.actor;
     let actee = action.actee;
@@ -704,7 +704,6 @@ function fleetDoDoneCheck(fleet) {
     // Setup the stacks used to process the turn;
     let unitStack = [];
     let movementStack = [];
-    let critStack = [];
     let resolveStack = [];
 
     // Get a list of units that are participating in the round
@@ -817,8 +816,6 @@ function fleetDoDoneCheck(fleet) {
       // Check for a multi attack
       else if(action.type === "multi") {
         // Process the multi attack
-        let actor = action.actor;
-
         // Multi works thusly:
         // Generate a number of attacks according to VOLLEY/MULTI (rounding down)
         // The new attack uses MULTI for the volley size
@@ -1083,7 +1080,7 @@ function fleetDoDoneCheck(fleet) {
         unitApplyTag(unit,{key:"offline",value:2,spread:crit.spread},"bracket");
       }
       else if(crit.effect === "disabled") {
-        unitApplyTag(unit,{key:"disabled",spread:crit.spread},"bracket")
+        unitApplyTag(unit,{key:"disabled",spread:crit.spread},"bracket");
       }
       else if(crit.effect === "drifting") {
         unitApplyTag(unit,{key:"drifting",value:true},"unit");
@@ -1156,7 +1153,6 @@ function fleetDoDoneCheck(fleet) {
     // Apply the damage from the action to the unit
     let damage = action.damage;
     let crit = action.crit;
-    let hullHit = false;
     let token = {};
     token.uuid = unit.uuid;
     token.fleetUuid = unit.fleetId;
@@ -1335,7 +1331,7 @@ function fleetDoDoneCheck(fleet) {
   }
 
   function unitCheckTime(unit) {
-    console.info(`Entering unitTimeCheck()`)
+    console.info(`Entering unitTimeCheck()`);
     // Check for a time tag.
     let flee = false;
     return flee;
@@ -1605,13 +1601,13 @@ function fleetDoDoneCheck(fleet) {
     });
   }
 
-  function unitUpdateTagString(unit) {
+  /*function unitUpdateTagString(unit) {
     console.info(`unitUpdateTagString(${unit.name})`);
 
     // Loop through each bracket and update it's tag string
     _.forEach(unit.brackets,bracket => unitBracketUpdateTagString(bracket));
   }
-
+//*/
   function unitBracketUpdateTagString(bracket) {
     // Start with volley
     let tagString = `[${bracket.volley}`;

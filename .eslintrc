@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2015
+  },
+  "globals": {
+    "console": "readonly",
+    "_": "readonly"
+  },
+  "rules": {
+    "semi": ["error","always"],
+  }
+}
