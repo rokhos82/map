@@ -3,11 +3,12 @@
   "extends": "eslint:recommended",
   "parserOptions": {
     "sourceType": "module",
-    "ecmaVersion": 2015
+    "ecmaVersion": 2018
   },
   "globals": {
     "console": "readonly",
-    "_": "readonly"
+    "_": "readonly",
+    "require": "readonly",
   },
   "rules": {
     "semi": ["error","always"],
