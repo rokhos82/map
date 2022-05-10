@@ -1489,7 +1489,7 @@ function fleetDoDoneCheck(fleet) {
     // TODO: What to do about action hull tags vs unit hull tags
     let target = false;
     let tries = 0;
-    let maxTries = 5;
+    let maxTries = state.options.hullTargetMaxTries || 5;
     let hullMax = unit.tags.hull.upper;
     let hullMin = unit.tags.hull.lower;
 
