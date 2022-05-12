@@ -2,8 +2,8 @@ export const fleetPresetsMap = {
   "preset-001": "Simple Red Team",
   "preset-002": "Simple Blue Team",
   "preset-003": "Corvette Fleet Plus Fighter Screen",
-  "preset-004": "Hunt for the Bismarck [HULL Targeting]",
-  "preset-005": "Force H"
+  "preset-004": "Force H [HULL Targeting]",
+  "preset-005": "Rheinubung"
 };
 export const fleetPresets = {
   "preset-001": `Red,Simple 1,50,5,20,0,0,0,0
@@ -293,11 +293,11 @@ F1-4-0238 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[1 mis0041 ammo 2 target 15] DE
 F1-4-0239 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[1 mis0041 ammo 2 target 15] DEFENSE 15 FIGHTER
 F1-4-0240 (Fighter Mk 1-4),0,0,0,0,4,4,1,1,0,0,0,[1 mis0041 ammo 2 target 15] DEFENSE 15 FIGHTER`,
   "preset-004": `British Royal Navy,Force H,50,5,20,0,0,0,0
-Blue Team Corvette 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
-Blue Team Corvette 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
-Blue Team Corvette 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
-Blue Team Corvette 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
-Blue Team Corvette 5,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70`,
+Adminal Cruiser 1,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
+Adminal Cruiser 2,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
+Adminal Cruiser 3,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
+Adminal Cruiser 4,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70
+Adminal Cruiser 5,1,1,5,5,0,0,5,5,0,0,0,[1 target 90 yield 90 hull 20 5] DEFENSE 25 DAMAGE 70`,
   "preset-005": `Kriegsmarine,Rheinubung,50,102,100,0,0,0,0
 BB-0001 (Bismarck),70,70,0,0,0,0,30,30,0,0,0,[40 target 15][15 target 15][15 target 15] DEFENSE 15
 CH-0001 (Prinz Eugene),20,20,0,0,0,0,17,17,0,0,0,[20 target 15] DEFENSE 15
