@@ -23,9 +23,6 @@
               Load Presets <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-              <li role="menuitem"><a ng-click="$ctrl.loadAttackFleet()" href="">Attack Fleet</a></li>
-              <li role="menuitem"><a ng-click="$ctrl.loadDefenseFleet()" href="">Defense Fleet</a></li>
-              <li role="menuitem"><a ng-click="$ctrl.loadFighterFleet()" href="">Fighter Fleet</a></li>
               <li role="menuitem" ng-repeat="(key,label) in $ctrl.prebuiltFleetsList"><a ng-click="$ctrl.loadFleet(key)">{{label}}</a></li>
             </ul>
           </div>

@@ -12,6 +12,6 @@ let staticPath = path.join(__dirname,"../dist");
 console.log("Serving static path:",staticPath);
 app.use(express.static(staticPath));
 
-app.listen(8080,"0.0.0.0",() => {
-  console.log('Listening on port 8080!');
+app.listen(8088,"0.0.0.0",() => {
+  console.log('Listening on port 8088!');
 });

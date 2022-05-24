@@ -44,7 +44,8 @@ class berSimulatorCreateController {
     sim.maxTurns = this.ui.maxTurns;
     sim.options = {
       turns: this.ui.maxTurns,
-      baseToHit: 50
+      baseToHit: 50,
+      hullTargetMaxTries: 5
     };
 
     // Setup other required fields for the simulation object

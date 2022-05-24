@@ -1096,7 +1096,6 @@ function fleetDoDoneCheck(fleet) {
     else if(crit.type === "death") {
       stateDoDeath(state,unit);
     }
-    else {}
   }
 
   function stateGetUnitById(state,hash) {
@@ -1334,6 +1333,12 @@ function fleetDoDoneCheck(fleet) {
     console.info(`Entering unitTimeCheck()`);
     // Check for a time tag.
     let flee = false;
+
+    if(unitHasTag(unit,"time")) {
+      // See if the unit should leave reserve.
+      // Otherwise, decrement the time counter.
+    }
+
     return flee;
   }
 
@@ -1484,7 +1489,7 @@ function fleetDoDoneCheck(fleet) {
     // TODO: What to do about action hull tags vs unit hull tags
     let target = false;
     let tries = 0;
-    let maxTries = 5;
+    let maxTries = state.options.hullTargetMaxTries || 5;
     let hullMax = unit.tags.hull.upper;
     let hullMin = unit.tags.hull.lower;
 
@@ -1526,8 +1531,12 @@ function fleetDoDoneCheck(fleet) {
       let hull = t.hlMax;
 
       // Is the target in the hull range?
-      if(!target && hull >= scanMin && hull <= scanMax) {}
+      if(!target && hull >= scanMin && hull <= scanMax) {
+        target = t;
+      }
     });
+
+    return target;
   }
 
   function unitHasTag(unit,tag) {
