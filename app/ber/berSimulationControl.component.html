@@ -6,11 +6,27 @@
   </div>
   <ber-fleet-info-list fleets="$ctrl.simulation.fleets"></ber-fleet-info-list>
   <div class="panel-body">
-    <div class="btn-group btn-group-justified">
-      <a class="btn btn-default" ng-click="$ctrl.round()">One Round</a>
-      <a class="btn btn-default" ng-click="$ctrl.run()">Fight</a>
-      <a class="btn btn-default" ng-click="$ctrl.results()">Results</a>
-      <a class="btn btn-danger" ng-click="$ctrl.delete()">Remove</a>
+    <div class="form">
+      <div class="form-group">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" ng-click="$ctrl.round()">One Round</button>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" ng-click="$ctrl.run()">Fight</button>
+        </div>
+        <div class="btn-group" uib-dropdown>
+          <button type="button" class="btn btn-default" ng-click="$ctrl.results()">Results</button>
+          <button type="button" class="btn btn-default" uib-dropdown-toggle>
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+            <li role="menuitem"><a href="" ng-click="$ctrl.exportTxt()">Export Results (TXT)</a></li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger" ng-click="$ctrl.delete()">Remove</button>
+        </div>
+      </div>
     </div>
   </div>
   <div class="panel-footer"></div>

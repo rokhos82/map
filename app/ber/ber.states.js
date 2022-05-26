@@ -186,3 +186,17 @@ export const berSimulatorResultsUnitDetailState = {
     '@^.^.^': 'berSimulatorResultsUnitDetail'
   }
 };
+
+export const berSimulatorResultsExportTxtState = {
+  name: 'berRoot.simulator.results.txt',
+  url: '/results/{simUuid}/txt',
+  resolve: {
+    simulation: ["berArchive","$stateParams",(archive,$stateParams) => {
+      let sim = archive.getSimulation($stateParams.simUuid);
+      return sim;
+    }]
+  },
+  views: {
+    '@^.^.^': 'berSimulatorResultsExportTxt'
+  }
+};

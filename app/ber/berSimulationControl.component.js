@@ -59,6 +59,11 @@ class berSimulationControlController {
     console.info(`Go to results!`);
     this.$state.go('^.results',{simUuid: this.simulation.uuid});
   }
+
+  exportTxt() {
+    console.info(`Exporting text results`);
+    this.$state.go('^.results.txt',{simUuid: this.simulation.uuid});
+  }
 }
 
 berSimulationControlController.$inject = ["$scope","$state","berArchive","berSimulator","berSimulator2"];

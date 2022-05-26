@@ -26,6 +26,7 @@ import {berSimulatorView} from "./simulator/berSimulatorView.component.js";
 import {berSimulatorCreate} from "./simulator/berSimulatorCreate.component.js";
 import {berSimulatorResultsView} from "./simulator/berSimulatorResultsView.component.js";
 import {berSimulatorResultsUnitDetail} from "./simulator/berSimulatorResultsUnitDetail.component.js";
+import {berSimulatorResultsExportTxt} from "./simulator/berSimulatorResultsExportTxt.component.js";
 
 import {unit} from "./unit.service.js";
 import {fleets} from "./fleet.service.js";
@@ -41,7 +42,7 @@ import {
   berRootState,
   berWelcomeState,
   berFleetsRootState,berFleetsListState,berFleetsImportState,berFleetsDetailState,
-  berSimulatorRootState,berSimulatorListState,berSimulatorViewState,berSimulatorCreateState,berSimulatorFleetDetailState,berSimulatorResultsViewState,berSimulatorResultsUnitDetailState
+  berSimulatorRootState,berSimulatorListState,berSimulatorViewState,berSimulatorCreateState,berSimulatorFleetDetailState,berSimulatorResultsViewState,berSimulatorResultsUnitDetailState,berSimulatorResultsExportTxtState
 } from "./ber.states.js";
 
 export const BER = angular.module("mobius-ber",["ui.router"]);
@@ -64,7 +65,7 @@ function berModuleController($uiRouter) {
 
   $stateRegistry.register(berRootState);
   $stateRegistry.register(berWelcomeState);
-  $stateRegistry.register(berFleetsRootState)
+  $stateRegistry.register(berFleetsRootState);
   $stateRegistry.register(berFleetsListState);
   //$stateRegistry.register(berFleetsViewState);
   $stateRegistry.register(berFleetsImportState);
@@ -77,6 +78,7 @@ function berModuleController($uiRouter) {
   $stateRegistry.register(berSimulatorFleetDetailState);
   $stateRegistry.register(berSimulatorResultsViewState);
   $stateRegistry.register(berSimulatorResultsUnitDetailState);
+  $stateRegistry.register(berSimulatorResultsExportTxtState);
 }
 
 BER.component('berRoot',berRoot);
@@ -85,7 +87,7 @@ BER.component('berImport',berImport);
 BER.component('berFleetsView',berFleetsView);
 BER.component('berSimulation',berSimulation);
 BER.component('berSimulationControl',berSimulationControl);
-BER.component('berResultView',berResultView)
+BER.component('berResultView',berResultView);
 
 BER.component('berFleetsRoot',berFleetsRoot);
 BER.component('berFleetList',berFleetList);
@@ -102,6 +104,7 @@ BER.component('berSimulatorView',berSimulatorView);
 BER.component('berSimulatorCreate',berSimulatorCreate);
 BER.component('berSimulatorResultsView',berSimulatorResultsView);
 BER.component('berSimulatorResultsUnitDetail',berSimulatorResultsUnitDetail);
+BER.component('berSimulatorResultsExportTxt',berSimulatorResultsExportTxt);
 
 BER.factory('berUnit',unit);
 BER.factory('berFleets',fleets);
